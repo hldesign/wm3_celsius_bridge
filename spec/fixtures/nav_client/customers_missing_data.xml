@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<Soap:Envelope xmlns:Soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <Soap:Body>
+    <Customers_Result xmlns="urn:microsoft-dynamics-schemas/codeunit/WSManagement">
+      <customers>
+      </customers>
+    </Customers_Result>
+  </Soap:Body>
+</Soap:Envelope>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+  <s:Body>
+    <s:Fault>
+      <faultcode xmlns:a="urn:microsoft-dynamics-schemas/error">a:Microsoft.Dynamics.Nav.Service.WebMetadata.ServiceBrokerException</faultcode>
+      <faultstring xml:lang="en-US">Parameter systemId in method Customers in service WSManagement is null! </faultstring>
+      <detail>
+        <string xmlns="http://schemas.microsoft.com/2003/10/Serialization/">Parameter systemId in method Customers in service WSManagement is null! </string>
+      </detail>
+    </s:Fault>
+  </s:Body>
+</s:Envelope>
