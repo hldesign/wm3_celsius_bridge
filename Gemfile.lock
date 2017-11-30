@@ -3,7 +3,7 @@ PATH
   specs:
     wm3_celsius_bridge (0.1.0)
       rubyntlm (~> 0.6.2)
-      savon (~> 2.11.2)
+      savon (~> 2.11.1)
 
 GEM
   remote: https://rubygems.org/

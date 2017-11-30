@@ -23,6 +23,10 @@ module Wm3CelsiusBridge
         namespace "urn:microsoft-dynamics-schemas/codeunit/WSManagement"
         convert_request_keys_to :none
         element_form_default :qualified
+        logger Rails.logger if defined?(Rails)
+        log true
+        # log_level :debug
+        pretty_print_xml true
       end
     end
 
@@ -41,6 +45,24 @@ module Wm3CelsiusBridge
       dig_response(response, :resources_result, :w_s_resources, :resource)
     end
 
+    # <Contacts_Result xmlns="urn:microsoft-dynamics-schemas/codeunit/WSManagement">
+    #   <wSContacts>
+    #     <ContactBusinessRelation xmlns="urn:microsoft-dynamics-nav/xmlports/x50006" ContactNo="K10001">
+    #       <Contacts>
+    #         <Contact>
+    #           <No>K10001</No>
+    #           <Name>Kyl &amp; Frysexpressen           </Name>
+    #           <SearchName>KYL &amp; FRYSEXPRESSEN</SearchName>
+    #         </Contact>
+    #         <Contact>
+    #           <No>K10001</No>
+    #           <Name>Kyl &amp; Frysexpressen           </Name>
+    #           <SearchName>KYL &amp; FRYSEXPRESSEN</SearchName>
+    #         </Contact>
+    #       </Contacts>
+    #     </ContactBusinessRelation>
+    #   </wSContacts>
+    #  </Contacts_Result>
     def get_contacts
       response = call(:Contacts, { wSContacts: {} })
       dig_response(response, :contacts_result, :w_s_contacts, :contact)
