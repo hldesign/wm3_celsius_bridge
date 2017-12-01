@@ -1,3 +1,4 @@
+require 'wm3_celsius_bridge/commands/parse_chillers'
 require 'wm3_celsius_bridge/commands/import_chillers'
 
 module Wm3CelsiusBridge
@@ -21,14 +22,22 @@ module Wm3CelsiusBridge
     end
 
     def call
-      import_chillers
+      sync_chillers
     end
 
     private
 
-    def import_chillers
-      data = client.get_chillers
-      ImportChillers.new(data).call
+    def sync_chillers
+      resp = client.get_chillers
+
+      unless resp.ok?
+        Wm3CelsiusBridge.logger.error(resp.message)
+        return
+      end
+
+      chillers = ParseChillers.new(resp.data).call
+
+      ImportChillers.new(chillers).call
     end
   end
 end

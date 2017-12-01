@@ -5,5 +5,9 @@ module Wm3CelsiusBridge
     rake_tasks do
       load "wm3_celsius_bridge/tasks/celsius.rake"
     end
+
+    initializer 'Rails logger' do
+      Wm3CelsiusBridge.logger = Rails.logger
+    end
   end
 end

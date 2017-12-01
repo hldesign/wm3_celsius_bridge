@@ -1,22 +1,24 @@
 module Wm3CelsiusBridge
 
-  # The ImportChillers Class formats chiller
-  # data from NAV and imports it into WM3.
+  # The ImportChillers command imports parsed chillers into WM3.
   class ImportChillers
-    attr_reader :chillers_data
+    attr_reader :chillers
 
-    def initialize(chillers_data)
-      @chillers_data = chillers_data
+    def initialize(chillers = [])
+      @chillers = chillers
     end
 
     def call
-      chillers_data.map { |c| build_chiller(c) }
+      imported = chillers.map { |c| import_chiller(c) }.compact
+      Wm3CelsiusBridge.logger.info("Imported #{imported.size} of #{chillers.size} chillers.")
+      imported
     end
 
     private
 
-    def build_chiller(data)
-      Chiller.new(data)
+    def import_chiller(chiller)
+      # TODO: import chiller
+      chiller
     end
   end
 end

@@ -14,7 +14,7 @@ module Wm3CelsiusBridge
   #
   #   NavClient.new.get_chillers
   class NavClient
-    SOAP_TIMEOUT = 30
+    SOAP_TIMEOUT = 60
 
     def initialize(debug: false)
       config = Wm3CelsiusBridge.config
@@ -30,7 +30,7 @@ module Wm3CelsiusBridge
         namespace "urn:microsoft-dynamics-schemas/codeunit/WSManagement"
         convert_request_keys_to :none
         element_form_default :qualified
-        logger Rails.logger if defined?(Rails)
+        logger Wm3CelsiusBridge.logger.unwrap
         if debug
           log true
           log_level :debug
@@ -89,11 +89,11 @@ module Wm3CelsiusBridge
           success(response)
         end
       rescue Timeout::Error => e
-        failure(e.message)
-      rescue Savon::SOAPFault => e
-        failure(e.message)
-      rescue Savon::UnknownOperationError, Savon::HTTPError, Savon::InvalidResponseError, Errno::EADDRNOTAVAIL, Errno::ETIMEDOUT, Errno::ECONNREFUSED => e
-        failure(e.message)
+        failure("Timeout when calling NAV: #{e.message}")
+      rescue Savon::SOAPFault, Savon::UnknownOperationError, Savon::HTTPError, Savon::InvalidResponseError => e
+        failure("SOAP error when calling NAV: #{e.message}")
+      rescue Errno::EADDRNOTAVAIL, Errno::ETIMEDOUT, Errno::ECONNREFUSED => e
+        failure("Connection error when calling NAV: #{e.message}")
       end
     end
 
@@ -110,7 +110,7 @@ module Wm3CelsiusBridge
 
       data = response.data.respond_to?(:dig) && response.data.dig(*path)
       if data.nil?
-        failure("Could not dig response path #{path.inspect}")
+        failure("Unexpected NAV response structure. Could find path #{path.inspect}")
       else
         success(data)
       end

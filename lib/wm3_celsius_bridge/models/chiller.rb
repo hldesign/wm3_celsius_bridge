@@ -1,3 +1,5 @@
+require 'wm3_celsius_bridge/models/types'
+
 module Wm3CelsiusBridge
 
   # The Chiller Class wraps the SOAP
@@ -24,7 +26,7 @@ module Wm3CelsiusBridge
     attribute :coolants_type, Types::String
     attribute :coolants_volume, Types::Coercible::Float
     attribute :safety_pressure, Types::Coercible::Float
-    attribute :low_pressure_guard, Types::Coercible::Float
+    attribute :low_pressure_guard, Types::String # Types::Coercible::Float failure "29,415.00"
     attribute :high_pressure_guard, Types::Coercible::Float
     attribute :interntnr, Types::String
     attribute :co2_coefficient, Types::String

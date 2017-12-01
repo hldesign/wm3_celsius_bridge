@@ -6,7 +6,7 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
 
     context "when request is good" do
 	    before do
-	      fixture = File.read("spec/fixtures/nav_client/customers.xml")
+	      fixture = File.read("spec/fixtures/soap_responses/customers_success.xml")
 	      msg = { customers: {}, systemId: "run" }
 	      savon.expects(:Customers).with(message: msg).returns(fixture)
 	    end
@@ -33,7 +33,7 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
 
     context "when request is bad" do
 	    before do
-	      soap_fault = File.read("spec/fixtures/nav_client/customers_missing_parameter.xml")
+	      soap_fault = File.read("spec/fixtures/soap_responses/customers_missing_parameter.xml")
 	      response = { code: 500, headers: {}, body: soap_fault }
 	      msg = { customers: {}, systemId: "run" }
 	      savon.expects(:Customers).with(message: msg).returns(response)
@@ -50,7 +50,7 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
 
     context "when response data is bad" do
 	    before do
-	      fixture = File.read("spec/fixtures/nav_client/customers_missing_data.xml")
+	      fixture = File.read("spec/fixtures/soap_responses/customers_missing_data.xml")
 	      msg = { customers: {}, systemId: "run" }
 	      savon.expects(:Customers).with(message: msg).returns(fixture)
 	    end
@@ -71,7 +71,7 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
   	let(:error_message) { response.message }
 
 		before do
-			fixture = File.read("spec/fixtures/nav_client/chillers.xml")
+			fixture = File.read("spec/fixtures/soap_responses/chillers_success.xml")
 			msg = { chiller: {}, systemId: "run" }
 			savon.expects(:Chillers).with(message: msg).returns(fixture)
 		end
