@@ -1,15 +1,22 @@
 require 'savon'
 require 'ostruct'
 
-#
-# The NavClient Class retrieves data
-# from NAV through SOAP.
-#
 module Wm3CelsiusBridge
+
+  # The NavClient Class retrieves data
+  # from NAV through SOAP.
+  #
+  # ==== Attributes
+  #
+  # * +debug+ - Set debug mode to log SOAP requests.
+  #
+  # ==== Examples
+  #
+  #   NavClient.new.get_chillers
   class NavClient
     SOAP_TIMEOUT = 30
 
-    def initialize
+    def initialize(debug: false)
       config = Wm3CelsiusBridge.config
 
       @client = Savon.client do
@@ -24,9 +31,11 @@ module Wm3CelsiusBridge
         convert_request_keys_to :none
         element_form_default :qualified
         logger Rails.logger if defined?(Rails)
-        log true
-        # log_level :debug
-        pretty_print_xml true
+        if debug
+          log true
+          log_level :debug
+          pretty_print_xml true
+        end
       end
     end
 
@@ -45,27 +54,24 @@ module Wm3CelsiusBridge
       dig_response(response, :resources_result, :w_s_resources, :resource)
     end
 
-    # <Contacts_Result xmlns="urn:microsoft-dynamics-schemas/codeunit/WSManagement">
-    #   <wSContacts>
-    #     <ContactBusinessRelation xmlns="urn:microsoft-dynamics-nav/xmlports/x50006" ContactNo="K10001">
-    #       <Contacts>
-    #         <Contact>
-    #           <No>K10001</No>
-    #           <Name>Kyl &amp; Frysexpressen           </Name>
-    #           <SearchName>KYL &amp; FRYSEXPRESSEN</SearchName>
-    #         </Contact>
-    #         <Contact>
-    #           <No>K10001</No>
-    #           <Name>Kyl &amp; Frysexpressen           </Name>
-    #           <SearchName>KYL &amp; FRYSEXPRESSEN</SearchName>
-    #         </Contact>
-    #       </Contacts>
-    #     </ContactBusinessRelation>
-    #   </wSContacts>
-    #  </Contacts_Result>
     def get_contacts
       response = call(:Contacts, { wSContacts: {} })
       dig_response(response, :contacts_result, :w_s_contacts, :contact)
+    end
+
+    def get_prices
+      response = call(:Prices, { wSPrices: {} })
+      dig_response(response, :prices_result, :w_s_prices)
+    end
+
+    def get_service_ledger_entries
+      response = call(:ServiceLedgerEntries, { wSServiceLedgerEntries: {} })
+      dig_response(response, :service_ledger_entries_result, :w_s_service_ledger_entries)
+    end
+
+    def get_parts_and_service_types
+      response = call(:PartsAndServiceTypes, { partsServiceTypes: {} })
+      dig_response(response, :parts_and_service_types_result, :w_s_service_ledger_entries)
     end
 
     def client

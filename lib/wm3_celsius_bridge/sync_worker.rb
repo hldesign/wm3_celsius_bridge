@@ -1,6 +1,18 @@
 require 'wm3_celsius_bridge/commands/import_chillers'
 
 module Wm3CelsiusBridge
+
+  # SyncWorker starts a complete import of
+  # data from NAV
+  #
+  # ==== Attributes
+  #
+  # * +client+ - A client to make requests to NAV.
+  #
+  # ==== Examples
+  #
+  #   client = NavClient.new(debug: true)
+  #   SyncWorker.new(client).call
   class SyncWorker
     attr_reader :client
 

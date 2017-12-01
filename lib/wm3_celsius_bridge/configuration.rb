@@ -1,18 +1,18 @@
 require 'singleton'
 
-#
-# Configuration class for Wm3CelsiusBridge. This allows a
-# configuration block to be used on an initializer.
-#
-# @example
-#   Wm3CelsiusBridge.configure do |config|
-#     config.user_name = ENV['NAV_USER_NAME']
-#     config.user_domain = ENV['NAV_USER_DOMAIN']
-#     config.password = ENV['NAV_PASSWORD']
-#     config.endpoint = ENV['NAV_ENDPOINT']
-#   end
-#
 module Wm3CelsiusBridge
+
+  # Configuration class for Wm3CelsiusBridge. This allows a
+  # configuration block to be used on an initializer.
+  #
+  # ==== Examples
+  #
+  #   Wm3CelsiusBridge.configure do |config|
+  #     config.user_name = ENV['NAV_USER_NAME']
+  #     config.user_domain = ENV['NAV_USER_DOMAIN']
+  #     config.password = ENV['NAV_PASSWORD']
+  #     config.endpoint = ENV['NAV_ENDPOINT']
+  #   end
   class Configuration
 
     include Singleton
