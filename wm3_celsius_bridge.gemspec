@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "savon", "~> 2.11.1"
   spec.add_dependency "rubyntlm", "~> 0.6.2"
+  spec.add_dependency "dry-struct", "~> 0.4.0"
 
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 10.0"

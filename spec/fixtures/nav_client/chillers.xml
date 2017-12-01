@@ -1,0 +1,304 @@
+<?xml version="1.0"?>
+<Soap:Envelope xmlns:Soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <Soap:Body>
+    <Chillers_Result xmlns="urn:microsoft-dynamics-schemas/codeunit/WSManagement">
+      <chiller>
+        <Filter xmlns="urn:microsoft-dynamics-nav/xmlports/x50003">
+          <Filter_No/>
+          <Filter_SerialNo/>
+        </Filter>
+        <Chiller xmlns="urn:microsoft-dynamics-nav/xmlports/x50003">
+          <No>10001</No>
+          <SerialNo>0045187</SerialNo>
+          <ServiceItemGroupCode/>
+          <Description>Frigoblock FK 13</Description>
+          <Description2/>
+          <Status>Installed</Status>
+          <Priority>Medium</Priority>
+          <CustomerNo>1337</CustomerNo>
+          <ShiptoCode/>
+          <ItemNo/>
+          <UnitofMeasureCode>ST</UnitofMeasureCode>
+          <LocationofServiceItem/>
+          <SalesUnitPrice>0.00</SalesUnitPrice>
+          <SalesUnitCost>0.00</SalesUnitCost>
+          <WarrantyStartingDateLabor/>
+          <WarrantyEndingDateLabor/>
+          <WarrantyStartingDateParts/>
+          <WarrantyEndingDateParts/>
+          <WarrantyParts>0</WarrantyParts>
+          <WarrantyLabor>0</WarrantyLabor>
+          <ResponseTimeHours>0</ResponseTimeHours>
+          <InstallationDate/>
+          <SalesDate/>
+          <LastServiceDate/>
+          <DefaultContractValue>0.00</DefaultContractValue>
+          <DefaultContractDiscount>0</DefaultContractDiscount>
+          <NoofActiveContracts>0</NoofActiveContracts>
+          <VendorNo/>
+          <VendorItemNo/>
+          <NoSeries>SERV-ARTIK</NoSeries>
+          <ItemDescription/>
+          <Name>MT FJ&#xC4;RR AB                   </Name>
+          <Address>G&#xE4;rdesv. 13                   </Address>
+          <Address2/>
+          <PostCode>342 50</PostCode>
+          <City>VISLANDA                      </City>
+          <Contact>Mikael Svanbring              </Contact>
+          <PhoneNo>0472-71776                    </PhoneNo>
+          <ShiptoName/>
+          <ShiptoAddress/>
+          <ShiptoAddress2/>
+          <ShiptoPostCode/>
+          <ShiptoCity/>
+          <ShiptoContact/>
+          <ShiptoPhoneNo/>
+          <UsageCost>0.00</UsageCost>
+          <UsageAmount>0.00</UsageAmount>
+          <InvoicedAmount>0.00</InvoicedAmount>
+          <TotalQuantity>0</TotalQuantity>
+          <TotalQtyInvoiced>0</TotalQtyInvoiced>
+          <ResourcesUsed>0.00</ResourcesUsed>
+          <PartsUsed>0.00</PartsUsed>
+          <CostUsed>0.00</CostUsed>
+          <VendorName/>
+          <VendorItemName/>
+          <Comment>No</Comment>
+          <ServiceItemComponents>No</ServiceItemComponents>
+          <PreferredResource/>
+          <VariantCode/>
+          <County/>
+          <ShiptoCounty/>
+          <ContractCost>0.00</ContractCost>
+          <CountryRegionCode/>
+          <ShiptoCountryRegionCode/>
+          <Name2/>
+          <ShiptoName2/>
+          <ServicePriceGroupCode/>
+          <DefaultContractCost>0.00</DefaultContractCost>
+          <PrepaidAmount>0.00</PrepaidAmount>
+          <SearchDescription/>
+          <ServiceContracts>No</ServiceContracts>
+          <TotalQtyConsumed>0</TotalQtyConsumed>
+          <DateFilter/>
+          <TypeFilter/>
+          <ContractFilter/>
+          <ServiceOrderFilter/>
+          <SalesServShptDocumentNo/>
+          <SalesServShptLineNo>0</SalesServShptLineNo>
+          <ShipmentType>Sales</ShipmentType>
+          <RegNo/>
+          <Model>FRIGOBLOCK FK 13</Model>
+          <EngineNo/>
+          <CompressorNo/>
+          <CoolantsType/>
+          <GWP>0.00</GWP>
+          <CoolantsVolume>0.00</CoolantsVolume>
+          <SafetyPressure>0.00</SafetyPressure>
+          <LowPressureGuard>0.00</LowPressureGuard>
+          <HighPressureGuard>0.00</HighPressureGuard>
+          <Interntnr/>
+          <CO2Coefficient>0.00</CO2Coefficient>
+          <DateofLastService/>
+          <DateofLastSeepagecontrol/>
+          <DateofLastTempControl/>
+          <ItemType/>
+        </Chiller>
+        <Chiller xmlns="urn:microsoft-dynamics-nav/xmlports/x50003">
+          <No>10002</No>
+          <SerialNo>0051112</SerialNo>
+          <ServiceItemGroupCode/>
+          <Description>Frigoblock FK 8</Description>
+          <Description2/>
+          <Status>Installed</Status>
+          <Priority>Medium</Priority>
+          <CustomerNo>2165</CustomerNo>
+          <ShiptoCode/>
+          <ItemNo/>
+          <UnitofMeasureCode>ST</UnitofMeasureCode>
+          <LocationofServiceItem/>
+          <SalesUnitPrice>0.00</SalesUnitPrice>
+          <SalesUnitCost>0.00</SalesUnitCost>
+          <WarrantyStartingDateLabor/>
+          <WarrantyEndingDateLabor/>
+          <WarrantyStartingDateParts/>
+          <WarrantyEndingDateParts/>
+          <WarrantyParts>0</WarrantyParts>
+          <WarrantyLabor>0</WarrantyLabor>
+          <ResponseTimeHours>0</ResponseTimeHours>
+          <InstallationDate/>
+          <SalesDate/>
+          <LastServiceDate/>
+          <DefaultContractValue>0.00</DefaultContractValue>
+          <DefaultContractDiscount>0</DefaultContractDiscount>
+          <NoofActiveContracts>0</NoofActiveContracts>
+          <VendorNo/>
+          <VendorItemNo/>
+          <NoSeries>SERV-ARTIK</NoSeries>
+          <ItemDescription/>
+          <Name>Alba Handels AB               </Name>
+          <Address>Box 74                        </Address>
+          <Address2>24010 Dalby</Address2>
+          <PostCode>24010</PostCode>
+          <City>Dalby                         </City>
+          <Contact/>
+          <PhoneNo/>
+          <ShiptoName/>
+          <ShiptoAddress/>
+          <ShiptoAddress2/>
+          <ShiptoPostCode/>
+          <ShiptoCity/>
+          <ShiptoContact/>
+          <ShiptoPhoneNo/>
+          <UsageCost>0.00</UsageCost>
+          <UsageAmount>0.00</UsageAmount>
+          <InvoicedAmount>0.00</InvoicedAmount>
+          <TotalQuantity>0</TotalQuantity>
+          <TotalQtyInvoiced>0</TotalQtyInvoiced>
+          <ResourcesUsed>0.00</ResourcesUsed>
+          <PartsUsed>0.00</PartsUsed>
+          <CostUsed>0.00</CostUsed>
+          <VendorName/>
+          <VendorItemName/>
+          <Comment>No</Comment>
+          <ServiceItemComponents>No</ServiceItemComponents>
+          <PreferredResource/>
+          <VariantCode/>
+          <County/>
+          <ShiptoCounty/>
+          <ContractCost>0.00</ContractCost>
+          <CountryRegionCode/>
+          <ShiptoCountryRegionCode/>
+          <Name2/>
+          <ShiptoName2/>
+          <ServicePriceGroupCode/>
+          <DefaultContractCost>0.00</DefaultContractCost>
+          <PrepaidAmount>0.00</PrepaidAmount>
+          <SearchDescription/>
+          <ServiceContracts>No</ServiceContracts>
+          <TotalQtyConsumed>0</TotalQtyConsumed>
+          <DateFilter/>
+          <TypeFilter/>
+          <ContractFilter/>
+          <ServiceOrderFilter/>
+          <SalesServShptDocumentNo/>
+          <SalesServShptLineNo>0</SalesServShptLineNo>
+          <ShipmentType>Sales</ShipmentType>
+          <RegNo>HYL 811</RegNo>
+          <Model>FRIGOBLOCK FK 8</Model>
+          <EngineNo/>
+          <CompressorNo/>
+          <CoolantsType/>
+          <GWP>0.00</GWP>
+          <CoolantsVolume>0.00</CoolantsVolume>
+          <SafetyPressure>0.00</SafetyPressure>
+          <LowPressureGuard>0.00</LowPressureGuard>
+          <HighPressureGuard>0.00</HighPressureGuard>
+          <Interntnr/>
+          <CO2Coefficient>0.00</CO2Coefficient>
+          <DateofLastService/>
+          <DateofLastSeepagecontrol/>
+          <DateofLastTempControl/>
+          <ItemType/>
+        </Chiller>
+        <Chiller xmlns="urn:microsoft-dynamics-nav/xmlports/x50003">
+          <No>10003</No>
+          <SerialNo>026200004BL</SerialNo>
+          <ServiceItemGroupCode/>
+          <Description>Mitsubishi TDJ300 DL1</Description>
+          <Description2/>
+          <Status>Installed</Status>
+          <Priority>Medium</Priority>
+          <CustomerNo>1624</CustomerNo>
+          <ShiptoCode/>
+          <ItemNo/>
+          <UnitofMeasureCode>ST</UnitofMeasureCode>
+          <LocationofServiceItem/>
+          <SalesUnitPrice>0.00</SalesUnitPrice>
+          <SalesUnitCost>0.00</SalesUnitCost>
+          <WarrantyStartingDateLabor/>
+          <WarrantyEndingDateLabor/>
+          <WarrantyStartingDateParts/>
+          <WarrantyEndingDateParts>06/20/13</WarrantyEndingDateParts>
+          <WarrantyParts>100</WarrantyParts>
+          <WarrantyLabor>0</WarrantyLabor>
+          <ResponseTimeHours>0</ResponseTimeHours>
+          <InstallationDate>06/20/11</InstallationDate>
+          <SalesDate/>
+          <LastServiceDate>06/20/11</LastServiceDate>
+          <DefaultContractValue>0.00</DefaultContractValue>
+          <DefaultContractDiscount>0</DefaultContractDiscount>
+          <NoofActiveContracts>0</NoofActiveContracts>
+          <VendorNo/>
+          <VendorItemNo/>
+          <NoSeries>SERV-ARTIK</NoSeries>
+          <ItemDescription/>
+          <Name>ABC KAROSSEN I M&#xD6;NSTER&#xC5;S AB   </Name>
+          <Address>Box 111                       </Address>
+          <Address2>Kvarngatan 40 / 383 32 M&#xF6;nster&#xE5;s</Address2>
+          <PostCode>383 23</PostCode>
+          <City>M&#xD6;NSTER&#xC5;S                     </City>
+          <Contact/>
+          <PhoneNo>0499-13240/ 0499-13268        </PhoneNo>
+          <ShiptoName/>
+          <ShiptoAddress/>
+          <ShiptoAddress2/>
+          <ShiptoPostCode/>
+          <ShiptoCity/>
+          <ShiptoContact/>
+          <ShiptoPhoneNo/>
+          <UsageCost>0.00</UsageCost>
+          <UsageAmount>0.00</UsageAmount>
+          <InvoicedAmount>0.00</InvoicedAmount>
+          <TotalQuantity>0</TotalQuantity>
+          <TotalQtyInvoiced>0</TotalQtyInvoiced>
+          <ResourcesUsed>0.00</ResourcesUsed>
+          <PartsUsed>0.00</PartsUsed>
+          <CostUsed>0.00</CostUsed>
+          <VendorName/>
+          <VendorItemName/>
+          <Comment>No</Comment>
+          <ServiceItemComponents>No</ServiceItemComponents>
+          <PreferredResource/>
+          <VariantCode/>
+          <County/>
+          <ShiptoCounty/>
+          <ContractCost>0.00</ContractCost>
+          <CountryRegionCode>SE</CountryRegionCode>
+          <ShiptoCountryRegionCode/>
+          <Name2/>
+          <ShiptoName2/>
+          <ServicePriceGroupCode/>
+          <DefaultContractCost>0.00</DefaultContractCost>
+          <PrepaidAmount>0.00</PrepaidAmount>
+          <SearchDescription/>
+          <ServiceContracts>No</ServiceContracts>
+          <TotalQtyConsumed>0</TotalQtyConsumed>
+          <DateFilter/>
+          <TypeFilter/>
+          <ContractFilter/>
+          <ServiceOrderFilter/>
+          <SalesServShptDocumentNo/>
+          <SalesServShptLineNo>0</SalesServShptLineNo>
+          <ShipmentType>Sales</ShipmentType>
+          <RegNo>BTT 166</RegNo>
+          <Model>MITSUBISHI TDJ300 DL1</Model>
+          <EngineNo/>
+          <CompressorNo/>
+          <CoolantsType>R404A</CoolantsType>
+          <GWP>6,667.00</GWP>
+          <CoolantsVolume>1.70</CoolantsVolume>
+          <SafetyPressure>35.00</SafetyPressure>
+          <LowPressureGuard>0.10</LowPressureGuard>
+          <HighPressureGuard>31.00</HighPressureGuard>
+          <Interntnr/>
+          <CO2Coefficient>11,333.90</CO2Coefficient>
+          <DateofLastService>06/20/11</DateofLastService>
+          <DateofLastSeepagecontrol/>
+          <DateofLastTempControl/>
+          <ItemType/>
+        </Chiller>
+      </chiller>
+    </Chillers_Result>
+  </Soap:Body>
+</Soap:Envelope>

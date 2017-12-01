@@ -1,10 +1,7 @@
-require 'wm3_celsius_bridge/models/chiller'
-
-#
-# The ImportChillers Class formats chiller
-# data from NAV and imports it into WM3.
-#
 module Wm3CelsiusBridge
+
+  # The ImportChillers Class formats chiller
+  # data from NAV and imports it into WM3.
   class ImportChillers
     attr_reader :chillers_data
 
@@ -19,7 +16,7 @@ module Wm3CelsiusBridge
     private
 
     def build_chiller(data)
-      Chiller.build(data)
+      Chiller.new(data)
     end
   end
 end

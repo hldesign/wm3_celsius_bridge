@@ -64,4 +64,36 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
 	    end
 	  end
   end
+
+  describe "#get_chillers", soap: true do
+  	let(:response) { subject.get_chillers }
+	 	let(:chillers) { response.data }
+  	let(:error_message) { response.message }
+
+		before do
+			fixture = File.read("spec/fixtures/nav_client/chillers.xml")
+			msg = { chiller: {}, systemId: "run" }
+			savon.expects(:Chillers).with(message: msg).returns(fixture)
+		end
+
+		it "successfully requests chillers" do
+			expect(response).to be_ok
+		end
+
+		it "returns no error message" do
+			expect(error_message).to be_blank
+		end
+
+		it "fetches list of chillers" do
+			expect(chillers.size).to eq(3)
+		end
+
+		it "fetches correct chiller data" do
+			chiller = chillers.first
+			expect(chiller[:no]).to eq("10001")
+			expect(chiller[:serial_no]).to eq("0045187")
+			expect(chiller[:priority]).to eq("Medium")
+			expect(chiller[:customer_no]).to eq("1337")
+		end
+  end
 end
