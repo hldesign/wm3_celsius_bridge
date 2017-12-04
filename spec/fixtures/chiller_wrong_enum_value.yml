@@ -23,8 +23,9 @@
 :status: !ruby/string:Nori::StringWithAttributes
   str: Installed
   attributes: {}
+# INVALID: Wrong enum value
 :priority: !ruby/string:Nori::StringWithAttributes
-  str: Medium
+  str: Dummy
   attributes: {}
 :customer_no: !ruby/string:Nori::StringWithAttributes
   str: '2165'
@@ -177,7 +178,7 @@
   str: '0.00'
   attributes: {}
 :coolants_volume: !ruby/string:Nori::StringWithAttributes
-  str: '1, 234.56'
+  str: '0.00'
   attributes: {}
 :safety_pressure: !ruby/string:Nori::StringWithAttributes
   str: '0.00'

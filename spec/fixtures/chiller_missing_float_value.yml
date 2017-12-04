@@ -10,14 +10,14 @@
 
 ---
 :no: !ruby/string:Nori::StringWithAttributes
-  str: '10001'
+  str: '10002'
   attributes: {}
 :serial_no: !ruby/string:Nori::StringWithAttributes
-  str: '0045187'
+  str: '0051112'
   attributes: {}
 :service_item_group_code:
 :description: !ruby/string:Nori::StringWithAttributes
-  str: Frigoblock FK 13
+  str: Frigoblock FK 8
   attributes: {}
 :description2:
 :status: !ruby/string:Nori::StringWithAttributes
@@ -27,7 +27,7 @@
   str: Medium
   attributes: {}
 :customer_no: !ruby/string:Nori::StringWithAttributes
-  str: '1337'
+  str: '2165'
   attributes: {}
 :shipto_code:
 :item_no:
@@ -41,18 +41,10 @@
 :sales_unit_cost: !ruby/string:Nori::StringWithAttributes
   str: '0.00'
   attributes: {}
-:warranty_starting_date_labor: !ruby/string:Nori::StringWithAttributes
-  str: '2013-06-21'
-  attributes: {}
-:warranty_ending_date_labor: !ruby/string:Nori::StringWithAttributes
-  str: '13-07-22'
-  attributes: {}
-:warranty_starting_date_parts: !ruby/string:Nori::StringWithAttributes
-  str: '08/23/2013'
-  attributes: {}
-:warranty_ending_date_parts: !ruby/string:Nori::StringWithAttributes
-  str: '08/24/13'
-  attributes: {}
+:warranty_starting_date_labor:
+:warranty_ending_date_labor:
+:warranty_starting_date_parts:
+:warranty_ending_date_parts:
 :warranty_parts: !ruby/string:Nori::StringWithAttributes
   str: '0'
   attributes: {}
@@ -81,24 +73,22 @@
   attributes: {}
 :item_description:
 :name: !ruby/string:Nori::StringWithAttributes
-  str: 'MT FJÄRR AB                   '
+  str: 'Alba Handels AB               '
   attributes: {}
 :address: !ruby/string:Nori::StringWithAttributes
-  str: 'Gärdesv. 13                   '
+  str: 'Box 74                        '
   attributes: {}
-:address2:
+:address2: !ruby/string:Nori::StringWithAttributes
+  str: 24010 Dalby
+  attributes: {}
 :post_code: !ruby/string:Nori::StringWithAttributes
-  str: 342 50
+  str: '24010'
   attributes: {}
 :city: !ruby/string:Nori::StringWithAttributes
-  str: 'VISLANDA                      '
+  str: 'Dalby                         '
   attributes: {}
-:contact: !ruby/string:Nori::StringWithAttributes
-  str: 'Mikael Svanbring              '
-  attributes: {}
-:phone_no: !ruby/string:Nori::StringWithAttributes
-  str: '0472-71776                    '
-  attributes: {}
+:contact:
+:phone_no:
 :shipto_name:
 :shipto_address:
 :shipto_address2:
@@ -174,9 +164,11 @@
 :shipment_type: !ruby/string:Nori::StringWithAttributes
   str: Sales
   attributes: {}
-:reg_no:
+:reg_no: !ruby/string:Nori::StringWithAttributes
+  str: HYL 811
+  attributes: {}
 :model: !ruby/string:Nori::StringWithAttributes
-  str: FRIGOBLOCK FK 13
+  str: FRIGOBLOCK FK 8
   attributes: {}
 :engine_no:
 :compressor_no:
@@ -184,11 +176,12 @@
 :gwp: !ruby/string:Nori::StringWithAttributes
   str: '0.00'
   attributes: {}
+# INVALID: Missing float value
 :coolants_volume: !ruby/string:Nori::StringWithAttributes
-  str: '1, 234.56'
+  str: ''
   attributes: {}
 :safety_pressure: !ruby/string:Nori::StringWithAttributes
-  str: '1.23'
+  str: '0.00'
   attributes: {}
 :low_pressure_guard: !ruby/string:Nori::StringWithAttributes
   str: '0.00'

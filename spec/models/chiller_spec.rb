@@ -14,15 +14,28 @@ RSpec.describe Wm3CelsiusBridge::Chiller do
 
     it "parses chiller floats" do
       expect(chiller.safety_pressure).to be_a(Float)
-      expect(chiller.coolants_volume).to eq(1.23)
+      expect(chiller.safety_pressure).to eq(1.23)
+      expect(chiller.coolants_volume).to eq(1234.56)
+    end
+
+    it "parses chiller enums" do
+      expect(chiller.priority).to eq("Medium")
     end
   end
 
-  context "with invalid data" do
-    let(:data) { YAML.load_file("spec/fixtures/chiller_invalid_data.yml") }
+  context "with missing float value" do
+    let(:data) { YAML.load_file("spec/fixtures/chiller_missing_float_value.yml") }
 
-    it "raises error" do
+    it "throws exception" do
       expect{chiller}.to raise_error(ArgumentError)
+    end
+  end
+
+  context "with wrong enum value" do
+    let(:data) { YAML.load_file("spec/fixtures/chiller_wrong_enum_value.yml") }
+
+    it "throws exception" do
+      expect{chiller}.to raise_error(Dry::Struct::Error)
     end
   end
 end

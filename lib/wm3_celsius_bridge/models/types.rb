@@ -21,6 +21,16 @@ module Wm3CelsiusBridge
       rescue ArgumentError, TypeError
       end || Types::Form::Date[*args]
     end
+
+    # CustomFloat removes comma and space separators
+    # before coercing into float. Ex:
+    # "11,333.90" => "11333.90" => 11333.9
+    CustomFloat = Types::Float.constructor do |arg|
+      val = (arg || "").gsub(/[^0-9\.]/,'')
+      Types::Coercible::Float[val]
+    end
+
+    Priorities = Types::Strict::String.enum('Low', 'Medium', 'High')
   end
 end
 

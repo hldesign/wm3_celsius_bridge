@@ -7,7 +7,7 @@ module Wm3CelsiusBridge
   class Chiller < Dry::Struct
     attribute :no, Types::String
     attribute :serial_no, Types::String
-    attribute :priority, Types::String
+    attribute :priority, Types::Priorities
     attribute :customer_no, Types::String
     attribute :warranty_starting_date_labor, Types::CustomDate
     attribute :warranty_ending_date_labor, Types::CustomDate
@@ -24,10 +24,10 @@ module Wm3CelsiusBridge
     attribute :engine_no, Types::String
     attribute :compressor_no, Types::String
     attribute :coolants_type, Types::String
-    attribute :coolants_volume, Types::Coercible::Float
-    attribute :safety_pressure, Types::Coercible::Float
-    attribute :low_pressure_guard, Types::String # Types::Coercible::Float failure "29,415.00"
-    attribute :high_pressure_guard, Types::Coercible::Float
+    attribute :coolants_volume, Types::CustomFloat
+    attribute :safety_pressure, Types::CustomFloat
+    attribute :low_pressure_guard, Types::CustomFloat
+    attribute :high_pressure_guard, Types::CustomFloat
     attribute :interntnr, Types::String
     attribute :co2_coefficient, Types::String
     attribute :dateof_last_service, Types::CustomDate

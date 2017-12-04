@@ -1,7 +1,8 @@
 # frozen_string_literal: true
+
 namespace :celsius do
-  desc 'Test rake task'
-  task test: :environment do
-    puts "Celsius rake task."
+  desc 'Sync data from NAV'
+  task sync: :environment do
+    Wm3CelsiusBridge.sync
   end
 end
