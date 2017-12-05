@@ -13,6 +13,7 @@ module Wm3CelsiusBridge
   #     config.user_domain = ENV['NAV_USER_DOMAIN']
   #     config.password = ENV['NAV_PASSWORD']
   #     config.endpoint = ENV['NAV_ENDPOINT']
+  #     config.subdomain = "celsius" # default
   #   end
   class Configuration
     include Singleton
@@ -21,17 +22,18 @@ module Wm3CelsiusBridge
       user_name: '',
       user_domain: '',
       password: '',
-      endpoint: ''
+      endpoint: '',
+      subdomain: 'celsius'
     }
 
-    attr_accessor :user_name, :user_domain, :password, :endpoint
+    attr_accessor :user_name, :user_domain, :password, :endpoint, :subdomain
 
     def self.defaults
       @@defaults
     end
 
     def initialize
-      @@defaults.each_pair { |k, v| send("#{k}=", v) }
+      @@defaults.each_pair { |key, val| send("#{key}=", val) }
     end
   end
 

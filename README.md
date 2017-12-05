@@ -39,6 +39,7 @@ CelsiusBridge.configure do |config|
   config.user_domain = ENV['NAV_USER_DOMAIN']
   config.password = ENV['NAV_PASSWORD']
   config.endpoint = ENV['NAV_ENDPOINT']
+  config.subdomain = "celsius" # default
 end
 ```
 

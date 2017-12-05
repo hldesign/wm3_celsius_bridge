@@ -3,10 +3,11 @@
 module Wm3CelsiusBridge
   # The ImportChillers command imports parsed chillers into WM3.
   class ImportChillers
-    attr_reader :chillers
+    attr_reader :chillers, :store
 
-    def initialize(chillers = [])
+    def initialize(chillers: [], store:)
       @chillers = chillers
+      @store = store
     end
 
     def call
@@ -18,8 +19,8 @@ module Wm3CelsiusBridge
     private
 
     def import_chiller(chiller)
-      # TODO: import chiller
-      chiller
+      # TODO: import chiller to store
+      true
     end
   end
 end

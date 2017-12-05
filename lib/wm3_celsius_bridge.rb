@@ -16,15 +16,32 @@ require 'wm3_celsius_bridge/railtie' if defined?(Rails)
 #   Wm3CelsiusBridge.sync
 module Wm3CelsiusBridge
   def self.sync(debug: false)
+    logger = Wm3CelsiusBridge.logger
     client = NavClient.new(debug: debug)
-    SyncWorker.new(client).call
+    subdomain = Wm3CelsiusBridge.config.subdomain
+
+    site = Site.where(subdomain: subdomain).first
+    if site.nil?
+      logger.fatal("Could not find site '#{subdomain}'.")
+      return
+    end
+
+    store = site.store
+    if store.nil?
+      logger.fatal("Site '#{subdomain}' has no store.")
+      return
+    end
+
+    SyncWorker.new(client: client, store: store).call
   end
 
   def self.logger
-    @@logger ||= CelsiusLogger.new(Logger.new(STDOUT))
+    @logger ||= CelsiusLogger.new(Logger.new(STDOUT))
   end
 
   def self.logger=(logger)
-    @@logger = CelsiusLogger.new(logger)
+    @logger = CelsiusLogger.new(logger)
   end
 end
+
+require 'wm3_celsius_bridge/mocks' unless defined?(Rails)

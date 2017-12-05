@@ -16,10 +16,11 @@ module Wm3CelsiusBridge
   #   client = NavClient.new(debug: true)
   #   SyncWorker.new(client).call
   class SyncWorker
-    attr_reader :client
+    attr_reader :client, :store
 
-    def initialize(client)
+    def initialize(client:, store:)
       @client = client
+      @store = store
     end
 
     def call
@@ -38,7 +39,7 @@ module Wm3CelsiusBridge
 
       chillers = ParseChillers.new(resp.data).call
 
-      ImportChillers.new(chillers).call
+      ImportChillers.new(chillers: chillers, store: store).call
     end
   end
 end
