@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'dry-struct'
 
 module Wm3CelsiusBridge
-
   # The Types module defines data types
   # used when parsing data from NAV.
   module Types
@@ -26,12 +27,10 @@ module Wm3CelsiusBridge
     # before coercing into float. Ex:
     # "11,333.90" => "11333.90" => 11333.9
     CustomFloat = Types::Float.constructor do |arg|
-      val = (arg || "").gsub(/[^0-9\.]/,'')
+      val = (arg || "").gsub(/[^0-9\.]/, '')
       Types::Coercible::Float[val]
     end
 
     Priorities = Types::Strict::String.enum('Low', 'Medium', 'High')
   end
 end
-
-

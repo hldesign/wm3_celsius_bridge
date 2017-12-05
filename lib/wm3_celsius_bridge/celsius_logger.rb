@@ -1,5 +1,6 @@
-module Wm3CelsiusBridge
+# frozen_string_literal: true
 
+module Wm3CelsiusBridge
   # CelsiusLogger wraps Ruby or Rails logger.
   class CelsiusLogger
     attr_reader :unwrap
@@ -8,7 +9,7 @@ module Wm3CelsiusBridge
       @logger = @unwrap = logger
     end
 
-    %w(debug info warn error).each do |name|
+    %w[debug info warn error].each do |name|
       define_method(name) do |msg|
         logger.send(name, format_message(msg))
       end

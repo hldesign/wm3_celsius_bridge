@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'wm3_celsius_bridge/models/chiller'
 
 module Wm3CelsiusBridge
-
   # The ParseChillers command parses chiller
   # data fetched from NAV.
   class ParseChillers
@@ -20,14 +21,12 @@ module Wm3CelsiusBridge
     private
 
     def parse_chiller(data)
-      begin
-        Chiller.new(data)
-      rescue ArgumentError => e
-        msg = "Could not parse chiller (no=#{data[:no]}, serial_no=#{data[:serial_no]})"
-        Wm3CelsiusBridge.logger.error(msg)
-        Wm3CelsiusBridge.logger.error(e.message)
-        return nil
-      end
+      Chiller.new(data)
+    rescue ArgumentError => e
+      msg = "Could not parse chiller (no=#{data[:no]}, serial_no=#{data[:serial_no]})"
+      Wm3CelsiusBridge.logger.error(msg)
+      Wm3CelsiusBridge.logger.error(e.message)
+      return nil
     end
   end
 end

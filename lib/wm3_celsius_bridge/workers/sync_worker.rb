@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 require 'wm3_celsius_bridge/commands/parse_chillers'
 require 'wm3_celsius_bridge/commands/import_chillers'
 
 module Wm3CelsiusBridge
-
   # SyncWorker starts a complete import of
   # data from NAV
   #
@@ -28,7 +29,7 @@ module Wm3CelsiusBridge
     private
 
     def sync_chillers
-      resp = client.get_chillers
+      resp = client.chillers
 
       unless resp.ok?
         Wm3CelsiusBridge.logger.error(resp.message)

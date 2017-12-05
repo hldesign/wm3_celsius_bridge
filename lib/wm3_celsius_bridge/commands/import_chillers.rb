@@ -1,5 +1,6 @@
-module Wm3CelsiusBridge
+# frozen_string_literal: true
 
+module Wm3CelsiusBridge
   # The ImportChillers command imports parsed chillers into WM3.
   class ImportChillers
     attr_reader :chillers

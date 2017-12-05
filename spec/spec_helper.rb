@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "bundler/setup"
 require "savon/mock/spec_helper"
 require "wm3_celsius_bridge"
@@ -15,7 +17,7 @@ RSpec.configure do |config|
 
   config.include(Savon::SpecHelper, soap: true)
   config.around(:each, soap: true) do |example|
-		savon.mock!
+    savon.mock!
     example.run
     savon.unmock!
   end

@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 require 'savon'
 require 'ostruct'
 
 module Wm3CelsiusBridge
-
   # The NavClient Class retrieves data
   # from NAV through SOAP.
   #
@@ -12,9 +13,11 @@ module Wm3CelsiusBridge
   #
   # ==== Examples
   #
-  #   NavClient.new.get_chillers
+  #   NavClient.new.chillers
   class NavClient
     SOAP_TIMEOUT = 60
+
+    attr_reader :client
 
     def initialize(debug: false)
       config = Wm3CelsiusBridge.config
@@ -31,51 +34,45 @@ module Wm3CelsiusBridge
         convert_request_keys_to :none
         element_form_default :qualified
         logger Wm3CelsiusBridge.logger.unwrap
-        if debug
-          log true
-          log_level :debug
-          pretty_print_xml true
-        end
+        log true if debug
+        log_level :debug if debug
+        pretty_print_xml true if debug
       end
     end
 
-    def get_chillers
-      response = call(:Chillers, { chiller: {} })
+    def chillers
+      response = call(:Chillers, chiller: {})
       dig_response(response, :chillers_result, :chiller, :chiller)
     end
 
-    def get_customers
-      response = call(:Customers, { customers: {} })
+    def customers
+      response = call(:Customers, customers: {})
       dig_response(response, :customers_result, :customers, :customer)
     end
 
-    def get_resources
-      response = call(:Resources, { wSResources: {} })
+    def resources
+      response = call(:Resources, wSResources: {})
       dig_response(response, :resources_result, :w_s_resources, :resource)
     end
 
-    def get_contacts
-      response = call(:Contacts, { wSContacts: {} })
+    def contacts
+      response = call(:Contacts, wSContacts: {})
       dig_response(response, :contacts_result, :w_s_contacts, :contact)
     end
 
-    def get_prices
-      response = call(:Prices, { wSPrices: {} })
+    def prices
+      response = call(:Prices, wSPrices: {})
       dig_response(response, :prices_result, :w_s_prices)
     end
 
-    def get_service_ledger_entries
-      response = call(:ServiceLedgerEntries, { wSServiceLedgerEntries: {} })
+    def service_ledger_entries
+      response = call(:ServiceLedgerEntries, wSServiceLedgerEntries: {})
       dig_response(response, :service_ledger_entries_result, :w_s_service_ledger_entries)
     end
 
-    def get_parts_and_service_types
-      response = call(:PartsAndServiceTypes, { partsServiceTypes: {} })
+    def parts_and_service_types
+      response = call(:PartsAndServiceTypes, partsServiceTypes: {})
       dig_response(response, :parts_and_service_types_result, :w_s_service_ledger_entries)
-    end
-
-    def client
-      @client
     end
 
     private
@@ -90,7 +87,10 @@ module Wm3CelsiusBridge
         end
       rescue Timeout::Error => e
         failure("Timeout when calling NAV: #{e.message}")
-      rescue Savon::SOAPFault, Savon::UnknownOperationError, Savon::HTTPError, Savon::InvalidResponseError => e
+      rescue Savon::SOAPFault,
+             Savon::UnknownOperationError,
+             Savon::HTTPError,
+             Savon::InvalidResponseError => e
         failure("SOAP error when calling NAV: #{e.message}")
       rescue Errno::EADDRNOTAVAIL, Errno::ETIMEDOUT, Errno::ECONNREFUSED => e
         failure("Connection error when calling NAV: #{e.message}")
@@ -98,11 +98,11 @@ module Wm3CelsiusBridge
     end
 
     def success(data)
-      OpenStruct.new({ "ok?": true, data: data })
+      OpenStruct.new("ok?": true, data: data)
     end
 
     def failure(message)
-      OpenStruct.new({ "ok?": false, message: message })
+      OpenStruct.new("ok?": false, message: message)
     end
 
     def dig_response(response, *path)

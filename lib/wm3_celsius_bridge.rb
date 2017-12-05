@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "wm3_celsius_bridge/version"
 require 'wm3_celsius_bridge/configuration'
 

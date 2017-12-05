@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'singleton'
 
 module Wm3CelsiusBridge
-
   # Configuration class for Wm3CelsiusBridge. This allows a
   # configuration block to be used on an initializer.
   #
@@ -14,7 +15,6 @@ module Wm3CelsiusBridge
   #     config.endpoint = ENV['NAV_ENDPOINT']
   #   end
   class Configuration
-
     include Singleton
 
     @@defaults = {
@@ -31,7 +31,7 @@ module Wm3CelsiusBridge
     end
 
     def initialize
-      @@defaults.each_pair{|k,v| self.send("#{k}=",v)}
+      @@defaults.each_pair { |k, v| send("#{k}=", v) }
     end
   end
 

@@ -1,5 +1,6 @@
-module Wm3CelsiusBridge
+# frozen_string_literal: true
 
+module Wm3CelsiusBridge
   # Railtie for adding rake tasks
   class Railtie < ::Rails::Railtie
     rake_tasks do
