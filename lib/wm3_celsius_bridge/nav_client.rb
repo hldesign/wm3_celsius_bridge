@@ -33,7 +33,7 @@ module Wm3CelsiusBridge
         namespace "urn:microsoft-dynamics-schemas/codeunit/WSManagement"
         convert_request_keys_to :none
         element_form_default :qualified
-        logger Wm3CelsiusBridge.logger.unwrap
+        logger Wm3CelsiusBridge.logger
         log true if debug
         log_level :debug if debug
         pretty_print_xml true if debug
