@@ -31,6 +31,13 @@ module Wm3CelsiusBridge
       Types::Coercible::Float[val]
     end
 
-    Priorities = Types::Strict::String.enum('Low', 'Medium', 'High')
+    # A ChillerNo must be at least five characters.
+    ChillerNo = Types::Strict::String.constrained(min_size: 5)
+
+    # A SerialNo cannot be blank.
+    SerialNo = Types::Strict::String.constrained(min_size: 1)
+
+    # A CustomerNo cannot be blank.
+    CustomerNo = Types::Strict::String.constrained(min_size: 1)
   end
 end

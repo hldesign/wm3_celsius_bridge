@@ -8,8 +8,8 @@ module Wm3CelsiusBridge
   class ParseChillers
     attr_reader :data
 
-    def initialize(data = [])
-      @data = data
+    def initialize(data)
+      @data = data || []
     end
 
     def call
@@ -21,8 +21,9 @@ module Wm3CelsiusBridge
     private
 
     def parse_chiller(data)
+      # TODO: Unique checks (no)
       Chiller.new(data)
-    rescue ArgumentError => e
+    rescue StandardError => e
       msg = "Could not parse chiller (no=#{data[:no]}, serial_no=#{data[:serial_no]})"
       Wm3CelsiusBridge.logger.error(msg)
       Wm3CelsiusBridge.logger.error(e.message)

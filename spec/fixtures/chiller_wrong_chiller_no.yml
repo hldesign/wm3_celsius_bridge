@@ -9,8 +9,9 @@
 #
 
 ---
+# INVALID: Wrong chiller no
 :no: !ruby/string:Nori::StringWithAttributes
-  str: '10002'
+  str: '1'
   attributes: {}
 :serial_no: !ruby/string:Nori::StringWithAttributes
   str: '0051112'
@@ -23,9 +24,8 @@
 :status: !ruby/string:Nori::StringWithAttributes
   str: Installed
   attributes: {}
-# INVALID: Wrong enum value
 :priority: !ruby/string:Nori::StringWithAttributes
-  str: Dummy
+  str: Medium
   attributes: {}
 :customer_no: !ruby/string:Nori::StringWithAttributes
   str: '2165'

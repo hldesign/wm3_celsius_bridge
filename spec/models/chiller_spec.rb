@@ -7,11 +7,9 @@ RSpec.describe Wm3CelsiusBridge::Chiller do
     let(:data) { YAML.load_file("spec/fixtures/chiller_valid_data.yml") }
 
     it "parses chiller dates" do
-      expect(chiller.warranty_starting_date_labor).to be_a(Date)
-      expect(chiller.warranty_ending_date_labor).to be_a(Date)
       expect(chiller.warranty_starting_date_parts).to be_a(Date)
       expect(chiller.warranty_ending_date_parts).to be_a(Date)
-      expect(chiller.last_service_date).to be_nil
+      expect(chiller.dateof_last_service).to be_nil
     end
 
     it "parses chiller floats" do
@@ -20,8 +18,8 @@ RSpec.describe Wm3CelsiusBridge::Chiller do
       expect(chiller.coolants_volume).to eq(1234.56)
     end
 
-    it "parses chiller enums" do
-      expect(chiller.priority).to eq("Medium")
+    it "parses chiller no" do
+      expect(chiller.no).to eq("10001")
     end
   end
 
@@ -33,8 +31,8 @@ RSpec.describe Wm3CelsiusBridge::Chiller do
     end
   end
 
-  context "with wrong enum value" do
-    let(:data) { YAML.load_file("spec/fixtures/chiller_wrong_enum_value.yml") }
+  context "with wrong chiller no" do
+    let(:data) { YAML.load_file("spec/fixtures/chiller_wrong_chiller_no.yml") }
 
     it "throws exception" do
       expect { chiller }.to raise_error(Dry::Struct::Error)
