@@ -11,11 +11,16 @@ require 'wm3_celsius_bridge/railtie' if defined?(Rails)
 
 # Module that sync data from NAV.
 #
+# ==== Attributes
+#
+# * +debug+ - Debug logging.
+# * +limit+ - Max amount of chillers to import.
+#
 # ==== Examples
 #
 #   Wm3CelsiusBridge.sync
 module Wm3CelsiusBridge
-  def self.sync(debug: false)
+  def self.sync(debug: false, limit: 0)
     logger = Wm3CelsiusBridge.logger
     client = NavClient.new(debug: debug)
     subdomain = Wm3CelsiusBridge.config.subdomain
@@ -32,7 +37,11 @@ module Wm3CelsiusBridge
       return
     end
 
-    SyncWorker.new(client: client, store: store).call
+    SyncWorker.new(
+      client: client,
+      store: store,
+      limit: limit
+    ).call
   end
 
   def self.logger

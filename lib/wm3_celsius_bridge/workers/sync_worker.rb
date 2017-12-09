@@ -10,17 +10,20 @@ module Wm3CelsiusBridge
   # ==== Attributes
   #
   # * +client+ - A client to make requests to NAV.
+  # * +store+ - Storage for parsed chillers.
+  # * +limit+ - Max amount of chillers to import.
   #
   # ==== Examples
   #
   #   client = NavClient.new(debug: true)
   #   SyncWorker.new(client).call
   class SyncWorker
-    attr_reader :client, :store
+    attr_reader :client, :store, :limit
 
-    def initialize(client:, store:)
+    def initialize(client:, store:, limit: 0)
       @client = client
       @store = store
+      @limit = limit
     end
 
     def call
@@ -39,7 +42,12 @@ module Wm3CelsiusBridge
 
       chillers = ParseChillers.new(resp.data).call
 
-      ImportChillers.new(chillers: chillers, store: store).call
+      limited_chillers = limit > 0 ? chillers.take(limit) : chillers
+
+      ImportChillers.new(
+        chillers: limited_chillers,
+        store: store
+      ).call
     end
   end
 end
