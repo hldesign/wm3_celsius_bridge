@@ -13,7 +13,7 @@ module Wm3CelsiusBridge
   #     config.user_domain = ENV['NAV_USER_DOMAIN']
   #     config.password = ENV['NAV_PASSWORD']
   #     config.endpoint = ENV['NAV_ENDPOINT']
-  #     config.subdomain = "celsius" # default
+  #     config.subdomain = ENV['SUBDOMAIN']
   #   end
   class Configuration
     include Singleton
@@ -23,7 +23,7 @@ module Wm3CelsiusBridge
       user_domain: '',
       password: '',
       endpoint: '',
-      subdomain: 'celsius'
+      subdomain: ''
     }
 
     attr_accessor :user_name, :user_domain, :password, :endpoint, :subdomain
