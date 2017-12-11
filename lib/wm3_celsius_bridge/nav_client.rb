@@ -15,7 +15,7 @@ module Wm3CelsiusBridge
   #
   #   NavClient.new.chillers
   class NavClient
-    SOAP_TIMEOUT = 60
+    SOAP_TIMEOUT = 900
 
     attr_reader :client
 
@@ -33,6 +33,8 @@ module Wm3CelsiusBridge
         namespace "urn:microsoft-dynamics-schemas/codeunit/WSManagement"
         convert_request_keys_to :none
         element_form_default :qualified
+        open_timeout SOAP_TIMEOUT
+        read_timeout SOAP_TIMEOUT
         logger Wm3CelsiusBridge.logger
         log true if debug
         log_level :debug if debug
@@ -72,7 +74,7 @@ module Wm3CelsiusBridge
 
     def parts_and_service_types
       response = call(:PartsAndServiceTypes, partsServiceTypes: {})
-      dig_response(response, :parts_and_service_types_result, :w_s_service_ledger_entries)
+      dig_response(response, :parts_and_service_types_result, :parts_service_types, :part)
     end
 
     private
@@ -110,7 +112,7 @@ module Wm3CelsiusBridge
 
       data = response.data.respond_to?(:dig) && response.data.dig(*path)
       if data.nil?
-        failure("Unexpected NAV response structure. Could find path #{path.inspect}")
+        failure("Unexpected NAV response structure. Could not find path #{path.inspect}")
       else
         success(data)
       end
