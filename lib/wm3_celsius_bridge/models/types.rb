@@ -34,10 +34,7 @@ module Wm3CelsiusBridge
     # A ChillerNo must be at least five characters.
     ChillerNo = Types::Strict::String.constrained(min_size: 5)
 
-    # A SerialNo cannot be blank.
-    SerialNo = Types::Strict::String.constrained(min_size: 1)
-
-    # A CustomerNo cannot be blank.
-    CustomerNo = Types::Strict::String.constrained(min_size: 1)
+    # A NonBlankStrippedString cannot be blank or contain only white space.
+    NonBlankStrippedString = Types::StrippedString.constrained(min_size: 1)
   end
 end
