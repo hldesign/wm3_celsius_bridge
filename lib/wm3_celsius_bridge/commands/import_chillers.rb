@@ -11,20 +11,33 @@ module Wm3CelsiusBridge
     end
 
     def call
+      @group = find_or_build_group
+      unless @group.save
+        Wm3CelsiusBridge.logger.fatal("Could not save group #{group.url}: #{group.errors.inspect}")
+        return false
+      end
+
       imported = chillers.map { |c| import_chiller(c) }.compact
       Wm3CelsiusBridge.logger.info("Imported #{imported.size} of #{chillers.size} chillers.")
     end
 
     private
 
+    attr_reader :group
+
     def import_chiller(chiller)
       product = find_or_build_product(
         sku: "CH-#{chiller.no}",
         name: chiller.model
       )
-
       unless product.save
         Wm3CelsiusBridge.logger.error("Could not update product #{product.id}: #{product.errors.inspect}")
+        return false
+      end
+
+      product_group = find_or_create_product_group(product)
+      if product_group.new_record?
+        Wm3CelsiusBridge.logger.error("Could not create or update product group for #{product.id}: #{product_group.errors.inspect}")
         return false
       end
 
@@ -73,6 +86,16 @@ module Wm3CelsiusBridge
         p.master.assign_attributes(sku: sku)
         p.default_editable.assign_attributes(name: name)
       end
+    end
+
+    def find_or_build_group
+      store.groups.where(url: "chillers").first_or_initialize.tap do |g|
+        g.name = "Chillers"
+      end
+    end
+
+    def find_or_create_product_group(product)
+      product.product_groups.where(group: group).first_or_create
     end
 
     def product_by_sku(sku)

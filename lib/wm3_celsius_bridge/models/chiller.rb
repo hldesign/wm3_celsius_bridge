@@ -14,8 +14,7 @@ module Wm3CelsiusBridge
     attribute :reg_no, Types::StrippedString
 
     # Customer
-    # attribute :customer_no, Types::CustomerNo
-    attribute :customer_no, Types::StrippedString
+    attribute :customer_no, Types::CustomerNo
 
     # Details
     attribute :installation_date, Types::CustomDate
