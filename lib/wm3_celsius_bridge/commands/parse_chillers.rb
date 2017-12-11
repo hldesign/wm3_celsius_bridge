@@ -21,7 +21,6 @@ module Wm3CelsiusBridge
     private
 
     def parse_chiller(data)
-      # TODO: Unique checks (no)
       Chiller.new(data)
     rescue StandardError => e
       msg = "Could not parse chiller (no=#{data[:no]}, serial_no=#{data[:serial_no]})"

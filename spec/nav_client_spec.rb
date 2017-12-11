@@ -27,7 +27,7 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
 
       it "fetches correct customer data" do
         expect(customers.first[:no]).to eq("0000")
-        # expect(customers.first[:name]).to eq("VÄXJÖ TRANSPORTKYLA AB ")
+        expect(customers.first[:name]).to eq("VAXJO TRANSPORTKYLA AB ")
         expect(customers.last[:no]).to eq("0002")
         expect(customers.last[:address]).to eq("STREET")
       end

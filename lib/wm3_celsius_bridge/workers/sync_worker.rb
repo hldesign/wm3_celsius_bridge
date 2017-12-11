@@ -2,6 +2,7 @@
 
 require 'wm3_celsius_bridge/commands/parse_chillers'
 require 'wm3_celsius_bridge/commands/import_chillers'
+require 'wm3_celsius_bridge/commands/parse_customers'
 
 module Wm3CelsiusBridge
   # SyncWorker starts a complete import of
@@ -27,10 +28,29 @@ module Wm3CelsiusBridge
     end
 
     def call
+      sync_customers
       sync_chillers
     end
 
     private
+
+    def sync_customers
+      resp = client.customers
+
+      unless resp.ok?
+        Wm3CelsiusBridge.logger.error(resp.message)
+        return
+      end
+
+      chillers = ParseCustomers.new(resp.data).call
+
+      limited_customers = limit > 0 ? customers.take(limit) : customers
+
+      ImportCustomers.new(
+        customers: limited_customers,
+        store: store
+      ).call
+    end
 
     def sync_chillers
       resp = client.chillers

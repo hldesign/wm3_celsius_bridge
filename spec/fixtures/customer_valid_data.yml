@@ -1,0 +1,193 @@
+---
+:no: !ruby/string:Nori::StringWithAttributes
+  str: '0000'
+  attributes: {}
+:name: !ruby/string:Nori::StringWithAttributes
+  str: 'VAXJO TRANSPORTKYLA AB        '
+  attributes: {}
+:address: !ruby/string:Nori::StringWithAttributes
+  str: 'RENVÄGEN 17                   '
+  attributes: {}
+:address2:
+:post_code: !ruby/string:Nori::StringWithAttributes
+  str: 352 45
+  attributes: {}
+:city: !ruby/string:Nori::StringWithAttributes
+  str: 'VÄXJÖ                         '
+  attributes: {}
+:country_region_code:
+:phone_no:
+- !ruby/string:Nori::StringWithAttributes
+  str: '0470-48700                    '
+  attributes: {}
+- !ruby/string:Nori::StringWithAttributes
+  str: '0470-48700                    '
+  attributes: {}
+:primary_contact_no:
+:contact:
+:search_name: !ruby/string:Nori::StringWithAttributes
+  str: VÄXJÖ TRANSPORTKYLA AB
+  attributes: {}
+:balance_lcy: !ruby/string:Nori::StringWithAttributes
+  str: '0.00'
+  attributes: {}
+:credit_limit_lcy: !ruby/string:Nori::StringWithAttributes
+  str: '0.00'
+  attributes: {}
+:salesperson_code:
+:responsibility_center:
+:service_zone_code:
+:blocked: !ruby/string:Nori::StringWithAttributes
+  str: '0'
+  attributes: {}
+:last_date_modified: 2016-06-14
+:shipto_code:
+:registration_no: !ruby/string:Nori::StringWithAttributes
+  str: '5565459350'
+  attributes: {}
+:fax_no:
+:e_mail:
+:home_page:
+:ic_partner_code:
+:billto_customer_no:
+:invoice_copies: !ruby/string:Nori::StringWithAttributes
+  str: '0'
+  attributes: {}
+:invoice_disc_code:
+:copy_sellto_addrto_qte_from: !ruby/string:Nori::StringWithAttributes
+  str: '0'
+  attributes: {}
+:gen_bus_posting_group: !ruby/string:Nori::StringWithAttributes
+  str: NAT
+  attributes: {}
+:vat_bus_posting_group: !ruby/string:Nori::StringWithAttributes
+  str: NAT
+  attributes: {}
+:customer_posting_group: !ruby/string:Nori::StringWithAttributes
+  str: KUND
+  attributes: {}
+:customer_price_group: !ruby/string:Nori::StringWithAttributes
+  str: SLUT
+  attributes: {}
+:customer_disc_group: !ruby/string:Nori::StringWithAttributes
+  str: SLUT
+  attributes: {}
+:allow_line_disc: true
+:prices_including_vat: false
+:prepayment: !ruby/string:Nori::StringWithAttributes
+  str: '0'
+  attributes: {}
+:application_method: !ruby/string:Nori::StringWithAttributes
+  str: '0'
+  attributes: {}
+:partner_type: !ruby/string:Nori::StringWithAttributes
+  str: '0'
+  attributes: {}
+:payment_terms_code: !ruby/string:Nori::StringWithAttributes
+  str: '0'
+  attributes: {}
+:payment_method_code:
+:inder_terms_code: !ruby/string:Nori::StringWithAttributes
+  str: '1'
+  attributes: {}
+:fin_charge_terms_code: !ruby/string:Nori::StringWithAttributes
+  str: '1'
+  attributes: {}
+:ment_terms_code:
+:print_statements: false
+:last_statement_no: !ruby/string:Nori::StringWithAttributes
+  str: '0'
+  attributes: {}
+:block_payment_tolerance: false
+:preferred_bank_account:
+:auto_giro_type: !ruby/string:Nori::StringWithAttributes
+  str: '0'
+  attributes: {}
+:bank_giro_no:
+:plus_giro_no:
+:approval_status: !ruby/string:Nori::StringWithAttributes
+  str: '0'
+  attributes: {}
+:location_code:
+:combine_shipments: false
+:reserve: !ruby/string:Nori::StringWithAttributes
+  str: '1'
+  attributes: {}
+:shipping_advice: !ruby/string:Nori::StringWithAttributes
+  str: '0'
+  attributes: {}
+:shipment_method_code:
+:shipping_agent_code:
+:shipping_agent_service_code:
+:shipping_time:
+:base_calendar_code:
+:currency_code:
+:language_code:
+:vat_registration_no:
+:extra_code1:
+:extra_code2:
+:extra_code3:
+:extra_code4:
+:extra_code5:
+:extra_code6:
+:extra_code7:
+:extra_code8:
+:extra_text1:
+:extra_text2:
+:extra_text3:
+:extra_text4:
+:extra_decimal1: !ruby/string:Nori::StringWithAttributes
+  str: '0.00'
+  attributes: {}
+:extra_decimal2: !ruby/string:Nori::StringWithAttributes
+  str: '0.00'
+  attributes: {}
+:extra_decimal3: !ruby/string:Nori::StringWithAttributes
+  str: '0.00'
+  attributes: {}
+:extra_decimal4: !ruby/string:Nori::StringWithAttributes
+  str: '0.00'
+  attributes: {}
+:extra_integer1: !ruby/string:Nori::StringWithAttributes
+  str: '0'
+  attributes: {}
+:extra_integer2: !ruby/string:Nori::StringWithAttributes
+  str: '0'
+  attributes: {}
+:extra_integer3: !ruby/string:Nori::StringWithAttributes
+  str: '0'
+  attributes: {}
+:extra_integer4: !ruby/string:Nori::StringWithAttributes
+  str: '0'
+  attributes: {}
+:extra_date1:
+:extra_date2:
+:extra_date3:
+:extra_date4:
+:extra_boolean1: false
+:extra_boolean2: false
+:extra_boolean3: false
+:extra_boolean4: false
+:contact_business_relation:
+  :contact_no: !ruby/string:Nori::StringWithAttributes
+    str: K10080
+    attributes: {}
+  :business_relation_code: !ruby/string:Nori::StringWithAttributes
+    str: KUND
+    attributes: {}
+  :linkto_table: !ruby/string:Nori::StringWithAttributes
+    str: '1'
+    attributes: {}
+  :linkto_table_text: !ruby/string:Nori::StringWithAttributes
+    str: Customer
+    attributes: {}
+  :no: !ruby/string:Nori::StringWithAttributes
+    str: '0000'
+    attributes: {}
+  :business_relation_description: !ruby/string:Nori::StringWithAttributes
+    str: Kunder
+    attributes: {}
+  :contact_name: !ruby/string:Nori::StringWithAttributes
+    str: 'VÄXJÖ TRANSPORTKYLA AB        '
+    attributes: {}
+:@xmlns: urn:microsoft-dynamics-nav/xmlports/x50005
