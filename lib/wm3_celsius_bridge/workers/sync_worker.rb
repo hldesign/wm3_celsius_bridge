@@ -1,23 +1,25 @@
 # frozen_string_literal: true
 
-require 'wm3_celsius_bridge/commands/parse_chillers'
-require 'wm3_celsius_bridge/commands/import_chillers'
-require 'wm3_celsius_bridge/commands/parse_customers'
-
 module Wm3CelsiusBridge
   # SyncWorker starts a complete import of
   # data from NAV
   #
   # ==== Attributes
   #
-  # * +client+ - A client to make requests to NAV.
-  # * +store+ - Storage for parsed chillers.
-  # * +limit+ - Max amount of chillers to import.
+  # * +client+ - A client to request data from NAV.
+  # * +store+ - Storage for parsed NAV items.
+  # * +limit+ - Max amount of NAV items to import.
   #
   # ==== Examples
   #
   #   client = NavClient.new(debug: true)
-  #   SyncWorker.new(client).call
+  #   store = Shop::Store.first
+  #
+  #   SyncWorker.new(
+  #     client: client,
+  #     store: store,
+  #     limit: 100
+  #   ).call
   class SyncWorker
     attr_reader :client, :store, :limit
 
@@ -42,7 +44,10 @@ module Wm3CelsiusBridge
         return
       end
 
-      chillers = ParseCustomers.new(resp.data).call
+      customers = ParseItems.new(
+        data: resp.data,
+        item_class: Customer
+      ).call
 
       limited_customers = limit > 0 ? customers.take(limit) : customers
 
@@ -60,7 +65,10 @@ module Wm3CelsiusBridge
         return
       end
 
-      chillers = ParseChillers.new(resp.data).call
+      chillers = ParseItems.new(
+        data: resp.data,
+        item_class: Chillers
+      ).call
 
       limited_chillers = limit > 0 ? chillers.take(limit) : chillers
 

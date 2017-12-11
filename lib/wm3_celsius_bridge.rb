@@ -7,6 +7,14 @@ require 'wm3_celsius_bridge/celsius_logger'
 require 'wm3_celsius_bridge/nav_client'
 require 'wm3_celsius_bridge/workers/sync_worker'
 
+require 'wm3_celsius_bridge/commands/parse_items'
+require 'wm3_celsius_bridge/commands/import_chillers'
+
+require 'wm3_celsius_bridge/models/types'
+require 'wm3_celsius_bridge/models/chiller'
+require 'wm3_celsius_bridge/models/customer'
+require 'wm3_celsius_bridge/models/article'
+
 require 'wm3_celsius_bridge/railtie' if defined?(Rails)
 
 # Module that sync data from NAV.

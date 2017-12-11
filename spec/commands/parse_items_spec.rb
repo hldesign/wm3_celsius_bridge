@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
-RSpec.describe Wm3CelsiusBridge::ParseChillers do
-  let(:result) { Wm3CelsiusBridge::ParseChillers.new(data).call }
+RSpec.describe Wm3CelsiusBridge::ParseItems do
+  let(:result) do
+    Wm3CelsiusBridge::ParseItems.new(
+      data: data,
+      item_class: Wm3CelsiusBridge::Chiller
+    ).call
+  end
 
   before do
     allow(Wm3CelsiusBridge::Chiller).to receive(:new) do |arg|
@@ -18,7 +23,7 @@ RSpec.describe Wm3CelsiusBridge::ParseChillers do
       ]
     end
 
-    it "parses all chiller data" do
+    it "parses all item data" do
       expect(result.size).to eq(data.size)
     end
   end
@@ -32,7 +37,7 @@ RSpec.describe Wm3CelsiusBridge::ParseChillers do
       ]
     end
 
-    it "parses only valid chiller data" do
+    it "parses only valid item data" do
       expect(result.size).to eq(2)
     end
   end

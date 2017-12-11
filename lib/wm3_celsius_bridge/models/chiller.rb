@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'wm3_celsius_bridge/models/types'
-
 module Wm3CelsiusBridge
   # The Chiller Class wraps the SOAP
   # response into something simpler.
