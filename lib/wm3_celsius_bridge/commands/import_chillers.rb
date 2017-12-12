@@ -13,7 +13,7 @@ module Wm3CelsiusBridge
     def call
       @group = find_or_build_group
       unless @group.save
-        Wm3CelsiusBridge.logger.fatal("Could not save group #{group.url}: #{group.errors.inspect}")
+        Wm3CelsiusBridge.logger.fatal("Could not save group #{group.url}: #{group.errors.full_messages}")
         return false
       end
 
@@ -31,14 +31,20 @@ module Wm3CelsiusBridge
         name: chiller.model
       )
       unless product.save
-        Wm3CelsiusBridge.logger.error("Could not update product #{product.id}: #{product.errors.inspect}")
-        return false
+        Wm3CelsiusBridge.logger.error("Could not update product #{product.id}: #{product.errors.full_messages}")
+        return
+      end
+
+      # Add product to customer product group
+      # TODO: customer_no cannot be blank.
+      unless chiller.customer_no.blank?
+        add_to_customer_product_group(chiller.customer_no, product.id)
       end
 
       product_group = find_or_create_product_group(product)
       if product_group.new_record?
-        Wm3CelsiusBridge.logger.error("Could not create or update product group for #{product.id}: #{product_group.errors.inspect}")
-        return false
+        Wm3CelsiusBridge.logger.error("Could not create or update product group for #{product.id}: #{product_group.errors.full_messages}")
+        return
       end
 
       # Create or update properties
@@ -85,6 +91,7 @@ module Wm3CelsiusBridge
       product.tap do |p|
         p.master.assign_attributes(sku: sku)
         p.default_editable.assign_attributes(name: name)
+        p.customer_group_specific = true
       end
     end
 
@@ -107,6 +114,19 @@ module Wm3CelsiusBridge
 
       store.properties.where(name: name).first_or_initialize.tap do |p|
         p.presentation = { locale => name.to_s.titleize }
+      end
+    end
+
+    def add_to_customer_product_group(customer_no, product_id)
+      group = store.customer_groups.where(name: customer_no).first_or_create
+      if group.new_record?
+        Wm3CelsiusBridge.logger.error("Could not create or find customer group for customer number #{customer_no}.")
+        return
+      end
+
+      group_product = group.customer_group_products.where(product_id: product_id).first_or_create
+      if group_product.new_record?
+        Wm3CelsiusBridge.logger.error("Could not create customer product group for customer number #{customer_no}.")
       end
     end
   end

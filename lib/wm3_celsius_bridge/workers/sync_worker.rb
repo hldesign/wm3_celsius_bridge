@@ -68,7 +68,7 @@ module Wm3CelsiusBridge
 
       chillers = ParseItems.new(
         data: resp.data,
-        item_class: Chillers
+        item_class: Chiller
       ).call
 
       limited_chillers = limit > 0 ? chillers.take(limit) : chillers
