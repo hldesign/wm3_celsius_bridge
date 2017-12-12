@@ -30,6 +30,7 @@ module Wm3CelsiusBridge
     end
 
     def call
+      # Note that import order matters.
       sync_customers
       sync_chillers
     end

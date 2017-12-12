@@ -5,7 +5,7 @@ module Wm3CelsiusBridge
   # response into something simpler.
   class Customer < Dry::Struct
     # General
-    attribute :no, Types::NonBlankStrippedString
+    attribute :no, Types::NonBlankStrippedString # Uniq, no blanks.
     attribute :name, Types::StrippedString
     attribute :address, Types::StrippedString
     attribute :post_code, Types::StrippedString

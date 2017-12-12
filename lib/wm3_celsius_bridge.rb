@@ -9,6 +9,7 @@ require 'wm3_celsius_bridge/workers/sync_worker'
 
 require 'wm3_celsius_bridge/commands/parse_items'
 require 'wm3_celsius_bridge/commands/import_chillers'
+require 'wm3_celsius_bridge/commands/import_customers'
 
 require 'wm3_celsius_bridge/models/types'
 require 'wm3_celsius_bridge/models/chiller'
@@ -26,7 +27,7 @@ require 'wm3_celsius_bridge/railtie' if defined?(Rails)
 #
 # ==== Examples
 #
-#   Wm3CelsiusBridge.sync
+#   Wm3CelsiusBridge.sync(debug: true, limit: 1000)
 module Wm3CelsiusBridge
   def self.sync(debug: false, limit: 0)
     logger = Wm3CelsiusBridge.logger
