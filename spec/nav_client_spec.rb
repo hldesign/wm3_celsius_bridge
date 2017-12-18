@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe Wm3CelsiusBridge::NavClient do
+  let(:data) { response.data }
+  let(:error_message) { response.message }
+
   describe "#customers", soap: true do
     let(:response) { subject.customers }
-    let(:customers) { response.data }
-    let(:error_message) { response.message }
 
     context "when request is good" do
       before do
@@ -22,14 +23,14 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
       end
 
       it "fetches customer list" do
-        expect(customers.size).to eq(3)
+        expect(data.size).to eq(3)
       end
 
       it "fetches correct customer data" do
-        expect(customers.first[:no]).to eq("0000")
-        expect(customers.first[:name]).to eq("VAXJO TRANSPORTKYLA AB ")
-        expect(customers.last[:no]).to eq("0002")
-        expect(customers.last[:address]).to eq("STREET")
+        expect(data.first[:no]).to eq("0000")
+        expect(data.first[:name]).to eq("VAXJO TRANSPORTKYLA AB ")
+        expect(data.last[:no]).to eq("0002")
+        expect(data.last[:address]).to eq("STREET")
       end
     end
 
@@ -69,8 +70,6 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
 
   describe "#chillers", soap: true do
     let(:response) { subject.chillers }
-    let(:chillers) { response.data }
-    let(:error_message) { response.message }
 
     before do
       fixture = File.read("spec/fixtures/soap_responses/chillers_success.xml")
@@ -87,15 +86,67 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
     end
 
     it "fetches list of chillers" do
-      expect(chillers.size).to eq(3)
+      expect(data.size).to eq(3)
     end
 
     it "fetches correct chiller data" do
-      chiller = chillers.first
+      chiller = data.first
       expect(chiller[:no]).to eq("10001")
       expect(chiller[:serial_no]).to eq("0045187")
       expect(chiller[:priority]).to eq("Medium")
       expect(chiller[:customer_no]).to eq("1337")
+    end
+  end
+
+  describe "#parts_and_service_types", soap: true do
+    let(:response) { subject.parts_and_service_types(modified_after_date: "2017-12-14") }
+    let(:fixture) { File.read("spec/fixtures/soap_responses/parts_and_service_types_3_elements_success.xml") }
+
+    before do
+      msg = {
+        partsServiceTypes: {
+          "x50:Filter" => {
+            "x50:Filter_ModifiedDateAfter" => "2017-12-14"
+          }
+        },
+        systemId: "run"
+      }
+
+      savon.expects(:PartsAndServiceTypes).with(message: msg).returns(fixture)
+    end
+
+    it "successfully requests data" do
+      expect(response).to be_ok
+    end
+
+    it "returns no error message" do
+      expect(error_message).to be_blank
+    end
+
+    it "fetches list of parts and service types" do
+      expect(data.size).to eq(2)
+    end
+
+    it "fetches correct data" do
+      type = data.first
+      expect(type[:no]).to eq("M-ACA201A032L")
+      expect(type[:description]).to eq("CR2323LL-L")
+    end
+
+    context "reply contains one element" do
+      let(:fixture) { File.read("spec/fixtures/soap_responses/parts_and_service_types_1_element_success.xml") }
+
+      it "fetches list of parts and service types" do
+        expect(data.size).to eq(1)
+      end
+    end
+
+    context "reply contains no elements" do
+      let(:fixture) { File.read("spec/fixtures/soap_responses/parts_and_service_types_no_elements_success.xml") }
+
+      it "fetches list of parts and service types" do
+        expect(data).to eq([])
+      end
     end
   end
 end

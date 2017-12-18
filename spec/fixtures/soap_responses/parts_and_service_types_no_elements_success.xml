@@ -1,0 +1,13 @@
+<Soap:Envelope xmlns:Soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <Soap:Body>
+    <PartsAndServiceTypes_Result xmlns="urn:microsoft-dynamics-schemas/codeunit/WSManagement">
+      <partsServiceTypes>
+        <Filter xmlns="urn:microsoft-dynamics-nav/xmlports/x50004">
+          <Filter_ModifiedDateAfter>2017-10-10</Filter_ModifiedDateAfter>
+          <Filter_2/>
+          <Filter_3/>
+        </Filter>
+      </partsServiceTypes>
+    </PartsAndServiceTypes_Result>
+  </Soap:Body>
+</Soap:Envelope>

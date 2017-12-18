@@ -2,6 +2,7 @@
 
 require 'savon'
 require 'ostruct'
+require 'date'
 
 module Wm3CelsiusBridge
   # The NavClient Class retrieves data
@@ -31,6 +32,7 @@ module Wm3CelsiusBridge
         endpoint config.endpoint
         namespace_identifier :wsm
         namespace "urn:microsoft-dynamics-schemas/codeunit/WSManagement"
+        namespaces({ "xmlns:x50" => "urn:microsoft-dynamics-nav/xmlports/x50004" })
         convert_request_keys_to :none
         element_form_default :qualified
         open_timeout SOAP_TIMEOUT
@@ -72,9 +74,11 @@ module Wm3CelsiusBridge
       dig_response(response, :service_ledger_entries_result, :w_s_service_ledger_entries)
     end
 
-    def parts_and_service_types
-      response = call(:PartsAndServiceTypes, partsServiceTypes: {})
-      dig_response(response, :parts_and_service_types_result, :parts_service_types, :part)
+    def parts_and_service_types(modified_after_date: Date.today - 1)
+      filter = modified_after_date.nil? ? {} : { "x50:Filter" => { "x50:Filter_ModifiedDateAfter" => modified_after_date.to_s } }
+
+      response = call(:PartsAndServiceTypes, partsServiceTypes: filter )
+      dig_parts_and_service_types_response(response, :parts_and_service_types_result, :parts_service_types)
     end
 
     private
@@ -116,6 +120,27 @@ module Wm3CelsiusBridge
       else
         success(data)
       end
+    end
+
+    def dig_parts_and_service_types_response(response, *path)
+      digged = dig_response(response, *path)
+
+      return digged unless digged.ok?
+
+      # Parts is nil when no filter matches was found.
+      # Parts is a Hash when one match was found.
+      # Parts is an Array otherwise.
+      parts = digged.data[:part]
+
+      parsed_parts = if parts.nil?
+        []
+      elsif parts.is_a?(Hash)
+        [parts]
+      else
+        parts
+      end
+
+      success(parsed_parts)
     end
   end
 end
