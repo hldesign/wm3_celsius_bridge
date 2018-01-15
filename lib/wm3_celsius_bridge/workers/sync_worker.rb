@@ -33,11 +33,13 @@ module Wm3CelsiusBridge
       # Note that import order matters.
       sync_customers
       sync_chillers
+      sync_articles
     end
 
     private
 
     def sync_customers
+      Wm3CelsiusBridge.logger.info('Importing customers')
       resp = client.customers
 
       unless resp.ok?
@@ -59,6 +61,7 @@ module Wm3CelsiusBridge
     end
 
     def sync_chillers
+      Wm3CelsiusBridge.logger.info('Importing chillers')
       resp = client.chillers
 
       unless resp.ok?
@@ -74,8 +77,30 @@ module Wm3CelsiusBridge
       limited_chillers = limit > 0 ? chillers.take(limit) : chillers
 
       ImportChillers.new(
+        store: store,
         chillers: limited_chillers,
-        store: store
+      ).call
+    end
+
+    def sync_articles
+      Wm3CelsiusBridge.logger.info('Importing articles')
+      resp = client.parts_and_service_types
+
+      unless resp.ok?
+        Wm3CelsiusBridge.logger.error(resp.message)
+        return
+      end
+
+      articles = ParseItems.new(
+        data: resp.data,
+        item_class: Article
+      ).call
+
+      limited_articles = limit > 0 ? articles.take(limit) : articles
+
+      ImportArticles.new(
+        store: store,
+        articles: limited_articles,
       ).call
     end
   end

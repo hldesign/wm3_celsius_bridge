@@ -7,9 +7,11 @@ require 'wm3_celsius_bridge/celsius_logger'
 require 'wm3_celsius_bridge/nav_client'
 require 'wm3_celsius_bridge/workers/sync_worker'
 
+require 'wm3_celsius_bridge/commands/product_importer'
 require 'wm3_celsius_bridge/commands/parse_items'
 require 'wm3_celsius_bridge/commands/import_chillers'
 require 'wm3_celsius_bridge/commands/import_customers'
+require 'wm3_celsius_bridge/commands/import_articles'
 
 require 'wm3_celsius_bridge/models/types'
 require 'wm3_celsius_bridge/models/chiller'

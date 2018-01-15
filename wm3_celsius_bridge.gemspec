@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.name          = "wm3_celsius_bridge"
   spec.version       = Wm3CelsiusBridge::VERSION
   spec.authors       = ["Tobias Lindholm"]
-  spec.email         = ["infom@hldesign.se"]
+  spec.email         = ["tobias.lindholm@hldesign.se"]
 
   spec.summary       = "WM3 Celsius Bridge"
   spec.description   = "WM3 NAV integration."

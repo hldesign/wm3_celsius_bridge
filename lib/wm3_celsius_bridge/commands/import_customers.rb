@@ -18,13 +18,13 @@ module Wm3CelsiusBridge
     private
 
     def import_customer(c)
-      group = find_or_create_group(c.no)
+      group = find_or_create_customer_group(name: c.no)
       if group.new_record?
         Wm3CelsiusBridge.logger.error("Could not create customer group for customer #{c.no}")
         return
       end
 
-      customer = find_or_build_customer(c.no)
+      customer = find_or_build_customer(number: c.no)
 
       customer.customer_group = group
       customer.company = c.name
@@ -55,16 +55,16 @@ module Wm3CelsiusBridge
       true
     end
 
-    def find_or_create_group(name)
+    def find_or_create_customer_group(name:)
       store.customer_groups.where(name: name).first_or_create
     end
 
-    def find_or_build_customer(no)
-      store.customers.where(number: no).first_or_initialize.tap do |c|
+    def find_or_build_customer(number:)
+      store.customers.where(number: number).first_or_initialize.tap do |c|
         if c.new_record?
           c.primary_account.skip_registration_message = true
           c.primary_account.password = SecureRandom.hex(10)
-          c.primary_account.email = "customer-#{no}@example.com"
+          c.primary_account.email = "customer-#{number}@example.com"
         end
       end
     end
