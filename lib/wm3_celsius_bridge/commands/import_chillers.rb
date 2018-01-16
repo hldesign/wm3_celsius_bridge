@@ -5,17 +5,19 @@ module Wm3CelsiusBridge
   class ImportChillers
     include ProductImporter
 
-    attr_reader :store, :chillers
-
-    def initialize(store:, chillers:)
+    def initialize(store:, chillers:, reporter:)
       @chillers = chillers
       @store = store
+      @reporter = reporter
     end
 
     def call
       group = find_or_build_group(name: 'Chillers')
       unless group.save
-        Wm3CelsiusBridge.logger.fatal("Could not save group #{group.url}: #{group.errors.full_messages}")
+        reporter.error(
+          message: "Could not save group #{group.url}",
+          info: group.errors.full_messages,
+        )
         return false
       end
 
@@ -23,10 +25,12 @@ module Wm3CelsiusBridge
         import_chiller(chiller: chiller, group: group)
       end.compact
 
-      Wm3CelsiusBridge.logger.info("Imported #{imported.size} of #{chillers.size} chillers.")
+      reporter.finish(message: "Imported #{imported.size} of #{chillers.size} chillers.")
     end
 
     private
+
+    attr_reader :store, :chillers, :reporter
 
     def import_chiller(chiller:, group:)
       product = find_or_build_product(
@@ -34,7 +38,11 @@ module Wm3CelsiusBridge
         name: chiller.model
       )
       unless product.save
-        Wm3CelsiusBridge.logger.error("Could not update product #{product.id}: #{product.errors.full_messages}")
+        reporter.error(
+          message: "Could not update product #{product.id}",
+          model: chiller,
+          info: product.errors.full_messages,
+        )
         return
       end
 
@@ -49,7 +57,11 @@ module Wm3CelsiusBridge
 
       product_group = find_or_create_product_group(product, group)
       if product_group.new_record?
-        Wm3CelsiusBridge.logger.error("Could not create or update product group for #{product.id}: #{product_group.errors.full_messages}")
+        reporter.error(
+          message: "Could not create or update product group for #{product.id}",
+          info: product.errors.full_messages,
+          model: chiller,
+        )
         return
       end
 
@@ -64,13 +76,13 @@ module Wm3CelsiusBridge
     def add_to_customer_product_group(group_name:, product_id:)
       group = store.customer_groups.where(name: group_name).first_or_create
       if group.new_record?
-        Wm3CelsiusBridge.logger.error("Could not create or find customer group for customer number #{customer_no}.")
+        reporter.error(message: "Could not create or find customer group for customer #{group_name}.")
         return
       end
 
       group_product = group.customer_group_products.where(product_id: product_id).first_or_create
       if group_product.new_record?
-        Wm3CelsiusBridge.logger.error("Could not create customer product group for customer number #{customer_no}.")
+        reporter.error(message: "Could not create customer product group for customer #{customer_no}.")
       end
     end
   end

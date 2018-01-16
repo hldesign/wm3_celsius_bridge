@@ -99,7 +99,7 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
   end
 
   describe "#parts_and_service_types", soap: true do
-    let(:response) { subject.parts_and_service_types(modified_after_date: "2017-12-14") }
+    let(:response) { subject.parts_and_service_types(modified_after: "2017-12-14") }
     let(:fixture) { File.read("spec/fixtures/soap_responses/parts_and_service_types_3_elements_success.xml") }
 
     before do

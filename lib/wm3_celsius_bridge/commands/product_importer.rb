@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Wm3CelsiusBridge
-  # The ProductImporter class contains common
+  # The ProductImporter module contains common
   # product import functionality.
   module ProductImporter
     private
@@ -41,7 +41,10 @@ module Wm3CelsiusBridge
     def add_property_to_product(product:, name:, value:)
       property = find_or_build_property(name: name)
       unless property.save
-        Wm3CelsiusBridge.logger.error("Could not create or update property '#{name}' on product #{product.id}")
+        reporter.error(
+          message: "Could not create or update property '#{name}' on product #{product.id}",
+          info: property.errors.full_messages,
+        )
         return
       end
 
@@ -57,7 +60,10 @@ module Wm3CelsiusBridge
       ).first_or_create
 
       if property_value.new_record?
-        Wm3CelsiusBridge.logger.error("Could not create property value '#{value}' on property #{property.name} and product #{product.id}")
+        reporter.error(
+          message: "Could not create property value '#{value}' on property #{property.name} and product #{product.id}",
+          info: property_value.errors.full_messages,
+        )
         return
       end
 
@@ -67,7 +73,10 @@ module Wm3CelsiusBridge
       ).first_or_create
 
       if product_property.new_record?
-        Wm3CelsiusBridge.logger.error("Could not create product property with name '#{property.name}' and value #{property_value.value}")
+        reporter.error(
+          message: "Could not create product property with name '#{property.name}' and value #{property_value.value}",
+          info: product_property.errors.full_messages,
+        )
       end
     end
   end

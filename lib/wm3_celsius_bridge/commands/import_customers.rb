@@ -1,26 +1,32 @@
 # frozen_string_literal: true
+require 'ostruct'
 
 module Wm3CelsiusBridge
   # The ImportCustomers command imports parsed customers into WM3.
   class ImportCustomers
-    attr_reader :customers, :store
-
-    def initialize(customers:, store:)
+    def initialize(customers:, store:, reporter:)
       @customers = customers
       @store = store
+      @reporter = reporter
     end
 
     def call
       imported = customers.map { |c| import_customer(c) }.compact
-      Wm3CelsiusBridge.logger.info("Imported #{imported.size} of #{customers.size} customers.")
+      reporter.finish(message: "Imported #{imported.size} of #{customers.size} customers.")
     end
 
     private
 
+    attr_reader :customers, :store, :reporter
+
     def import_customer(c)
       group = find_or_create_customer_group(name: c.no)
+
       if group.new_record?
-        Wm3CelsiusBridge.logger.error("Could not create customer group for customer #{c.no}")
+        reporter.error(
+          message: "Could not create customer group for customer #{c.no}",
+          model: c,
+        )
         return
       end
 
@@ -34,8 +40,11 @@ module Wm3CelsiusBridge
       customer.primary_account.phone = c.phone_no
 
       unless customer.save
-        Wm3CelsiusBridge.logger.error("Could not create or update customer #{c.no}: #{customer.errors.full_messages}")
-        Wm3CelsiusBridge.logger.error("Customer data: #{c.inspect}")
+        reporter.error(
+          message: "Could not create or update customer #{c.no}",
+          model: c,
+          info: customer.errors.full_messages,
+        )
         return
       end
 
@@ -48,8 +57,11 @@ module Wm3CelsiusBridge
       end
 
       unless address.save
-        Wm3CelsiusBridge.logger.error("Could not create or update address for customer #{c.no}: #{address.errors.full_messages}")
-        Wm3CelsiusBridge.logger.error("Customer data: #{c.inspect}")
+        reporter.error(
+          message: "Could not create or update address for customer #{c.no}",
+          model: c,
+          info: address.errors.full_messages,
+        )
       end
 
       true

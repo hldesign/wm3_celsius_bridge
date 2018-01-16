@@ -7,6 +7,7 @@ require 'wm3_celsius_bridge/celsius_logger'
 require 'wm3_celsius_bridge/nav_client'
 require 'wm3_celsius_bridge/workers/sync_worker'
 
+require 'wm3_celsius_bridge/commands/event_reporter'
 require 'wm3_celsius_bridge/commands/product_importer'
 require 'wm3_celsius_bridge/commands/parse_items'
 require 'wm3_celsius_bridge/commands/import_chillers'
@@ -32,7 +33,7 @@ require 'wm3_celsius_bridge/railtie' if defined?(Rails)
 #   Wm3CelsiusBridge.sync(
 #     debug: true,
 #     limit: 1000,
-#     last_synced: '2018-01-01',
+#     last_sync: '2018-01-01',
 #   )
 module Wm3CelsiusBridge
   def self.sync(
@@ -56,12 +57,14 @@ module Wm3CelsiusBridge
       return
     end
 
-    SyncWorker.new(
+    report = SyncWorker.new(
       client: client,
       store: store,
       limit: limit,
       last_sync: last_sync,
     ).call
+
+    logger.info("Printing sync report.\n\n#{report}")
   end
 
   def self.logger
