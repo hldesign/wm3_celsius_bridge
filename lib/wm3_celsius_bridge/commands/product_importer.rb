@@ -38,7 +38,7 @@ module Wm3CelsiusBridge
       end
     end
 
-    def add_product_property(name:, value:)
+    def add_property_to_product(product:, name:, value:)
       property = find_or_build_property(name: name)
       unless property.save
         Wm3CelsiusBridge.logger.error("Could not create or update property '#{name}' on product #{product.id}")
@@ -53,7 +53,7 @@ module Wm3CelsiusBridge
 
       property_value = store.property_values.where(
         property: property,
-        value: value
+        value: value.to_s
       ).first_or_create
 
       if property_value.new_record?

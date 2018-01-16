@@ -46,7 +46,7 @@ module Wm3CelsiusBridge
 
       # Create or update properties
       article.to_hash.each_pair do |key, value|
-        add_product_property(name: key, value: value)
+        add_property_to_product(product: product, name: key, value: value)
       end
 
       true

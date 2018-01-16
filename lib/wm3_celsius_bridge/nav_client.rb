@@ -74,8 +74,8 @@ module Wm3CelsiusBridge
       dig_response(response, :service_ledger_entries_result, :w_s_service_ledger_entries)
     end
 
-    def parts_and_service_types(modified_after_date: Time.zone.today - 1)
-      filter = parts_and_service_type_filter(modified_after_date)
+    def parts_and_service_types(modified_after: Time.zone.today - 1)
+      filter = parts_and_service_type_filter(modified_after)
       response = call(:PartsAndServiceTypes, partsServiceTypes: filter )
       dig_parts_and_service_types_response(response, :parts_and_service_types_result, :parts_service_types)
     end
@@ -142,12 +142,12 @@ module Wm3CelsiusBridge
       success(parsed_parts)
     end
 
-    def parts_and_service_type_filter(modified_after_date)
-      return {} if modified_after_date.nil?
+    def parts_and_service_type_filter(modified_after)
+      return {} if modified_after.nil?
 
       {
         "x50:Filter" => {
-          "x50:Filter_ModifiedDateAfter" => modified_after_date.to_s
+          "x50:Filter_ModifiedDateAfter" => modified_after.to_s
         }
       }
     end

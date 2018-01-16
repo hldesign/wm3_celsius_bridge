@@ -29,9 +29,17 @@ require 'wm3_celsius_bridge/railtie' if defined?(Rails)
 #
 # ==== Examples
 #
-#   Wm3CelsiusBridge.sync(debug: true, limit: 1000)
+#   Wm3CelsiusBridge.sync(
+#     debug: true,
+#     limit: 1000,
+#     last_synced: '2018-01-01',
+#   )
 module Wm3CelsiusBridge
-  def self.sync(debug: false, limit: 0)
+  def self.sync(
+    debug: false,
+    limit: 0,
+    last_sync: Time.zone.today - 1)
+
     logger = Wm3CelsiusBridge.logger
     client = NavClient.new(debug: debug)
     subdomain = Wm3CelsiusBridge.config.subdomain
@@ -51,7 +59,8 @@ module Wm3CelsiusBridge
     SyncWorker.new(
       client: client,
       store: store,
-      limit: limit
+      limit: limit,
+      last_sync: last_sync,
     ).call
   end
 

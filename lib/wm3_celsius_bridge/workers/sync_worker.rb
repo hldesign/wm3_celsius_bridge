@@ -21,12 +21,18 @@ module Wm3CelsiusBridge
   #     limit: 100
   #   ).call
   class SyncWorker
-    attr_reader :client, :store, :limit
+    attr_reader :client, :store, :limit, :last_sync
 
-    def initialize(client:, store:, limit: 0)
+    def initialize(
+      client:,
+      store:,
+      limit: 0,
+      last_sync: Time.zone.today - 1)
+
       @client = client
       @store = store
       @limit = limit
+      @last_sync = last_sync
     end
 
     def call
@@ -84,7 +90,7 @@ module Wm3CelsiusBridge
 
     def sync_articles
       Wm3CelsiusBridge.logger.info('Importing articles')
-      resp = client.parts_and_service_types
+      resp = client.parts_and_service_types(modified_after: last_sync)
 
       unless resp.ok?
         Wm3CelsiusBridge.logger.error(resp.message)
