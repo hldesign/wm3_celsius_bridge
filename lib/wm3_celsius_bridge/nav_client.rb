@@ -61,7 +61,7 @@ module Wm3CelsiusBridge
 
     def contacts
       response = call(:Contacts, wSContacts: {})
-      dig_response(response, :contacts_result, :w_s_contacts, :contact)
+      dig_contacts_response(response, :contacts_result, :w_s_contacts, :contact_business_relation)
     end
 
     def prices
@@ -116,6 +116,18 @@ module Wm3CelsiusBridge
       data = response.data.respond_to?(:dig) && response.data.dig(*path)
       if data.nil?
         failure("Unexpected NAV response structure. Could not find path #{path.inspect}")
+      else
+        success(data)
+      end
+    end
+
+    def dig_contacts_response(contacts_response, *path)
+      response = dig_response(contacts_response, *path)
+      return response unless response.ok?
+
+      data = response.data.map { |item| item.dig(:contacts, :contact) }.flatten(1)
+      if data.nil?
+        failure("Unexpected NAV response structure. Could not find path [:contacts, :contact]")
       else
         success(data)
       end
