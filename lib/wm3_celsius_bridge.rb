@@ -2,6 +2,7 @@
 
 require "wm3_celsius_bridge/version"
 require 'wm3_celsius_bridge/configuration'
+require 'wm3_celsius_bridge/ext/hash_extensions'
 
 require 'wm3_celsius_bridge/celsius_logger'
 require 'wm3_celsius_bridge/nav_client'
@@ -18,6 +19,10 @@ require 'wm3_celsius_bridge/models/types'
 require 'wm3_celsius_bridge/models/chiller'
 require 'wm3_celsius_bridge/models/customer'
 require 'wm3_celsius_bridge/models/article'
+require 'wm3_celsius_bridge/models/service_line'
+require 'wm3_celsius_bridge/models/service_item_line'
+require 'wm3_celsius_bridge/models/service_header'
+require 'wm3_celsius_bridge/models/service_order'
 
 require 'wm3_celsius_bridge/railtie' if defined?(Rails)
 

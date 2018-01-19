@@ -1,0 +1,7 @@
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+  <s:Body>
+    <ImportServiceOrder_Result xmlns="urn:microsoft-dynamics-schemas/codeunit/WSManagement">
+      <return_value>ok</return_value>
+    </ImportServiceOrder_Result>
+  </s:Body>
+</s:Envelope>

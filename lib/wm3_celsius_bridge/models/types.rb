@@ -36,5 +36,11 @@ module Wm3CelsiusBridge
 
     # A NonBlankStrippedString cannot be blank or contain only white space.
     NonBlankStrippedString = Types::StrippedString.constrained(min_size: 1)
+
+    # ImportServiceOrder types
+    MandatoryString = Types::Strict::String
+    OptionalString = Types::Strict::String.optional.default('')
+    OptionalDate = Types::Strict::Date.optional.default(nil)
+    OptionalFloat = Strict::Float.optional.default(0.0)
   end
 end

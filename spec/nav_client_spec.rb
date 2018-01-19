@@ -105,8 +105,8 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
     before do
       msg = {
         partsServiceTypes: {
-          "x50:Filter" => {
-            "x50:Filter_ModifiedDateAfter" => "2017-12-14"
+          "x50004:Filter" => {
+            "x50004:Filter_ModifiedDateAfter" => "2017-12-14"
           }
         },
         systemId: "run"
@@ -146,6 +146,101 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
 
       it "fetches list of parts and service types" do
         expect(data).to eq([])
+      end
+    end
+  end
+
+  describe "#import_service_order", soap: true do
+    let(:response) { subject.import_service_order(service_order) }
+    let(:action_date) { Date.today }
+
+    let(:service_order) do
+      sh = Wm3CelsiusBridge::ServiceHeader.new(execution_workshop_cust_no: "1016", serial_no: "abc", action_date: action_date)
+      sl1 = Wm3CelsiusBridge::ServiceLine.new(no: "123", quantity: 1, line_amount: 2.0, description: 'desc', parts_or_time: 'Parts')
+      sl2 = Wm3CelsiusBridge::ServiceLine.new(no: "456", quantity: 2, line_amount: 3.5, description: 'desc2', parts_or_time: 'Time')
+      sil = Wm3CelsiusBridge::ServiceItemLine.new(service_lines: [sl1, sl2])
+
+      Wm3CelsiusBridge::ServiceOrder.new(service_header: sh, service_item_line: sil)
+    end
+
+    let(:request_message) do
+      {
+        wSServiceOrder: {
+          "x50010:ServiceHeader" => {
+            "x50010:ExecutionWorkshopCustNo" => "1016",
+            "x50010:SerialNo" => "abc",
+            "x50010:ActionDate" => action_date,
+            "x50010:RegNo" => "",
+            "x50010:Model" => ""
+          },
+          "x50010:ServiceItemLine" => {
+            "x50010:Mileage" => 0.0,
+            "x50010:RuntimeTotal" => 0.0,
+            "x50010:RuntimeDay" => 0.0,
+            "x50010:RuntimeNight" => 0.0,
+            "x50010:RegNo" => "",
+            "x50010:ServiceLines" => {
+              "x50010:ServiceLine" => [
+                {
+                  "x50010:No" => "123",
+                  "x50010:Quantity" => 1,
+                  "x50010:LineAmount" => 2.0,
+                  "x50010:Description" => "desc",
+                  "x50010:PartsOrTime" => "Parts",
+                  "x50010:UnitofMeasure" => "",
+                  "x50010:LocationCode" => ""
+                },
+                {
+                  "x50010:No" => "456",
+                  "x50010:Quantity" => 2,
+                  "x50010:LineAmount" => 3.5,
+                  "x50010:Description" => "desc2",
+                  "x50010:PartsOrTime" => "Time",
+                  "x50010:UnitofMeasure" => "",
+                  "x50010:LocationCode" => ""
+                }
+              ]
+            }
+          }
+        },
+        systemId: "run"
+      }
+    end
+
+    context "successful request" do
+      let(:fixture) { File.read("spec/fixtures/soap_responses/import_service_order_success.xml") }
+
+      before do
+        savon.expects(:ImportServiceOrder).with(message: request_message).returns(fixture)
+      end
+
+      it "successfully requests data" do
+        expect(response).to be_ok
+      end
+
+      it "returns no error message" do
+        expect(response.message).to be_blank
+      end
+
+      it "returns success string" do
+        expect(response.data).to eq('ok')
+      end
+    end
+
+    context "failed request" do
+      let(:fixture) { File.read("spec/fixtures/soap_responses/import_service_order_failure.xml") }
+
+      before do
+        response = { code: 500, headers: {}, body: fixture }
+        savon.expects(:ImportServiceOrder).with(message: request_message).returns(response)
+      end
+
+      it "fails to request customers" do
+        expect(response).to_not be_ok
+      end
+
+      it "returns an error message" do
+        expect(error_message).to_not be_blank
       end
     end
   end

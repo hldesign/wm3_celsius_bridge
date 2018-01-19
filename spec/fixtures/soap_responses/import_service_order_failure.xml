@@ -1,0 +1,11 @@
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+  <s:Body>
+    <s:Fault>
+      <faultcode xmlns:a="urn:microsoft-dynamics-schemas/error">a:Microsoft.Dynamics.Nav.Types.Exceptions.NavCSideValidateTableRelationException</faultcode>
+      <faultstring xml:lang="en-US">The field No. of table Service Line contains a value (5086) that cannot be found in the related table (G/L Account).</faultstring>
+      <detail>
+        <string xmlns="http://schemas.microsoft.com/2003/10/Serialization/">The field No. of table Service Line contains a value (5086) that cannot be found in the related table (G/L Account).</string>
+      </detail>
+    </s:Fault>
+  </s:Body>
+</s:Envelope>

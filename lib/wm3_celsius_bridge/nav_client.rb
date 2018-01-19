@@ -18,6 +18,7 @@ module Wm3CelsiusBridge
   class NavClient
     SOAP_TIMEOUT = 900
 
+    using HashExtensions
     attr_reader :client
 
     def initialize(debug: false)
@@ -32,7 +33,11 @@ module Wm3CelsiusBridge
         endpoint config.endpoint
         namespace_identifier :wsm
         namespace "urn:microsoft-dynamics-schemas/codeunit/WSManagement"
-        namespaces("xmlns:x50" => "urn:microsoft-dynamics-nav/xmlports/x50004")
+        namespaces({
+          "xmlns:x50004" => "urn:microsoft-dynamics-nav/xmlports/x50004",
+          "xmlns:x50009" => "urn:microsoft-dynamics-nav/xmlports/x50009",
+          "xmlns:x50010" => "urn:microsoft-dynamics-nav/xmlports/x50010"
+        })
         convert_request_keys_to :none
         element_form_default :qualified
         open_timeout SOAP_TIMEOUT
@@ -69,15 +74,22 @@ module Wm3CelsiusBridge
       dig_response(response, :prices_result, :w_s_prices)
     end
 
-    def service_ledger_entries
-      response = call(:ServiceLedgerEntries, wSServiceLedgerEntries: {})
-      dig_response(response, :service_ledger_entries_result, :w_s_service_ledger_entries)
+    def service_ledger_entries(posting_date: Date.today - 1)
+      filter = service_ledger_entries_filter(posting_date)
+      response = call(:ServiceLedgerEntries, wSServiceLedgerEntries: filter)
+      dig_response(response, :service_ledger_entries_result, :w_s_service_ledger_entries, :service_ledger_entry)
     end
 
-    def parts_and_service_types(modified_after: Time.zone.today - 1)
+    def parts_and_service_types(modified_after: Date.today - 1)
       filter = parts_and_service_type_filter(modified_after)
       response = call(:PartsAndServiceTypes, partsServiceTypes: filter )
-      dig_parts_and_service_types_response(response, :parts_and_service_types_result, :parts_service_types)
+      dig_response(response, :parts_and_service_types_result, :parts_service_types, :part)
+    end
+
+    def import_service_order(service_order)
+      payload = service_order_payload(service_order)
+      response = call(:ImportServiceOrder, wSServiceOrder: payload)
+      dig_response(response, :import_service_order_result, :return_value)
     end
 
     private
@@ -113,12 +125,26 @@ module Wm3CelsiusBridge
     def dig_response(response, *path)
       return response unless response.ok?
 
+      last_path = path.pop
+
       data = response.data.respond_to?(:dig) && response.data.dig(*path)
-      if data.nil?
-        failure("Unexpected NAV response structure. Could not find path #{path.inspect}")
+      return failure("Unexpected NAV response structure. Could not find path #{path.inspect}") if data.nil?
+
+      # When using filter:
+      # Result is nil when no filter matches was found.
+      # Result is a Hash when one match was found.
+      # Result is an Array otherwise.
+      result = data.dig(last_path)
+
+      parsed_result = if result.nil?
+        []
+      elsif result.is_a?(Hash)
+        [result]
       else
-        success(data)
+        result
       end
+
+      success(parsed_result)
     end
 
     def dig_contacts_response(contacts_response, *path)
@@ -133,33 +159,36 @@ module Wm3CelsiusBridge
       end
     end
 
-    def dig_parts_and_service_types_response(response, *path)
-      digged = dig_response(response, *path)
+    def service_order_payload(service_order)
+      payload = service_order.to_hash
+      service_item_line = payload[:service_item_line]
+      service_item_line.delete(:warranty) if service_item_line[:warranty].nil?
+      service_lines = service_item_line[:service_lines]
+      payload[:service_item_line][:service_lines] = { service_line: service_lines }
 
-      return digged unless digged.ok?
-
-      # Parts is nil when no filter matches was found.
-      # Parts is a Hash when one match was found.
-      # Parts is an Array otherwise.
-      parts = digged.data[:part]
-
-      parsed_parts = if parts.nil?
-        []
-      elsif parts.is_a?(Hash)
-        [parts]
-      else
-        parts
-      end
-
-      success(parsed_parts)
+      payload.pascalcase_keys.prefix_keys('x50010:')
     end
+
 
     def parts_and_service_type_filter(modified_after)
       return {} if modified_after.nil?
 
       {
-        "x50:Filter" => {
-          "x50:Filter_ModifiedDateAfter" => modified_after.to_s
+        "x50004:Filter" => {
+          "x50004:Filter_ModifiedDateAfter" => modified_after.to_s
+        }
+      }
+    end
+
+    def service_ledger_entries_filter(posting_date)
+      return {} if posting_date.nil?
+
+      date = posting_date.is_a?(Date) ? posting_date : Date.parse(posting_date)
+
+      # Filter parameter only accepts US formatted dates.
+      {
+        "x50009:Filter" => {
+          "x50009:Filter_PostingDate" => date.strftime('%D')
         }
       }
     end
