@@ -71,7 +71,7 @@ module Wm3CelsiusBridge
 
     def prices
       response = call(:Prices, wSPrices: {})
-      dig_response(response, :prices_result, :w_s_prices)
+      dig_response(response, :prices_result, :w_s_prices, :sales_price)
     end
 
     def service_ledger_entries(posting_date: Date.today - 1)

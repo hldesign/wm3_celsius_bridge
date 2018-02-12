@@ -19,9 +19,10 @@ module Wm3CelsiusBridge
 
     attribute :execution_workshop_cust_no, Types::MandatoryString.constrained(max_size: 20)
     attribute :serial_no, Types::MandatoryString.constrained(max_size: 20)
-    # attribute :your_reference, Types::OptionalString.constrained(max_size: 35)
-    # attribute :description, Types::OptionalString.constrained(max_size: 50)
-    # attribute :service_order_type, Types::OptionalString.constrained(max_size: 10)
+    attribute :your_reference, Types::OptionalString.constrained(max_size: 35)
+    attribute :description, Types::OptionalString.constrained(max_size: 50)
+    # INTERN, GARANTI, AVTAL?
+    attribute :service_order_type, Types::OptionalString.constrained(max_size: 10)
     attribute :action_date, Types::OptionalDate
     attribute :reg_no, Types::OptionalString.constrained(max_size: 20)
     attribute :model, Types::OptionalString.constrained(max_size: 50)
