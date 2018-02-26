@@ -11,7 +11,19 @@ module Wm3CelsiusBridge
     end
 
     def call
-      imported = customers.map { |c| import_customer(c) }.compact
+      group = find_or_build_customer_group(name: 'Slutkunder')
+      unless group.save
+        reporter.error(
+          message: "Could not save customer group #{group.name}",
+          info: group.errors.full_messages,
+        )
+        return false
+      end
+
+      imported = customers.map do |customer|
+        import_customer(customer: customer, group: group)
+      end.compact
+
       reporter.finish(message: "Imported #{imported.size} of #{customers.size} customers.")
     end
 
@@ -19,47 +31,37 @@ module Wm3CelsiusBridge
 
     attr_reader :customers, :store, :reporter
 
-    def import_customer(c)
-      group = find_or_create_customer_group(name: c.no)
+    def import_customer(customer:, group:)
+      cust = find_or_build_customer(number: customer.no)
 
-      if group.new_record?
+      cust.customer_group = group
+      cust.company = customer.name
+      cust.customer_type = :company
+
+      cust.primary_account.verified = true
+      cust.primary_account.phone = customer.phone_no
+
+      unless cust.save
         reporter.error(
-          message: "Could not create customer group for customer #{c.no}",
-          model: c,
+          message: "Could not create or update customer #{customer.no}",
+          model: customer,
+          info: cust.errors.full_messages,
         )
         return
       end
 
-      customer = find_or_build_customer(number: c.no)
-
-      customer.customer_group = group
-      customer.company = c.name
-      customer.customer_type = :company
-
-      customer.primary_account.verified = true
-      customer.primary_account.phone = c.phone_no
-
-      unless customer.save
-        reporter.error(
-          message: "Could not create or update customer #{c.no}",
-          model: c,
-          info: customer.errors.full_messages,
-        )
-        return
-      end
-
-      address = customer.addresses.first_or_initialize.tap do |a|
+      address = cust.addresses.first_or_initialize.tap do |a|
         a.country = store.default_country if a.new_record?
-        a.address1 = c.address
-        a.zipcode = c.post_code
-        a.city = c.city
-        a.phone = c.phone_no
+        a.address1 = customer.address
+        a.zipcode = customer.post_code
+        a.city = customer.city
+        a.phone = customer.phone_no
       end
 
       unless address.save
         reporter.error(
-          message: "Could not create or update address for customer #{c.no}",
-          model: c,
+          message: "Could not create or update address for customer #{customer.no}",
+          model: customer,
           info: address.errors.full_messages,
         )
       end
@@ -67,8 +69,10 @@ module Wm3CelsiusBridge
       true
     end
 
-    def find_or_create_customer_group(name:)
-      store.customer_groups.where(name: name).first_or_create
+    def find_or_build_customer_group(name:)
+      store.customer_groups.where(name: name).first_or_initialize.tap do |g|
+        g.name = name
+      end
     end
 
     def find_or_build_customer(number:)

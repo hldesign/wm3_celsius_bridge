@@ -46,15 +46,6 @@ module Wm3CelsiusBridge
         return
       end
 
-      # Add product to customer product group
-      # TODO: customer_no cannot be blank.
-      if chiller.customer_no.present?
-        add_to_customer_product_group(
-          group_name: chiller.customer_no,
-          product_id: product.id
-        )
-      end
-
       product_group = find_or_create_product_group(product, group)
       if product_group.new_record?
         reporter.error(
@@ -71,19 +62,6 @@ module Wm3CelsiusBridge
       end
 
       true
-    end
-
-    def add_to_customer_product_group(group_name:, product_id:)
-      group = store.customer_groups.where(name: group_name).first_or_create
-      if group.new_record?
-        reporter.error(message: "Could not create or find customer group for customer #{group_name}.")
-        return
-      end
-
-      group_product = group.customer_group_products.where(product_id: product_id).first_or_create
-      if group_product.new_record?
-        reporter.error(message: "Could not create customer product group for customer #{customer_no}.")
-      end
     end
   end
 end

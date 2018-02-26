@@ -34,7 +34,7 @@ export NAV_ENDPOINT="http://example.com/soap/endpoint"
 ```
 ```ruby
 # You can then configure the bridge in the code
-CelsiusBridge.configure do |config|
+Wm3CelsiusBridge.configure do |config|
   config.user_name = ENV['NAV_USER_NAME']
   config.user_domain = ENV['NAV_USER_DOMAIN']
   config.password = ENV['NAV_PASSWORD']
