@@ -16,9 +16,9 @@ module Wm3CelsiusBridge
       product = product_by_sku(sku) || store.products.new
 
       product.tap do |p|
-        p.master.assign_attributes(sku: sku)
+        p.master.assign_attributes(sku: sku, track_inventory: false)
         p.default_editable.assign_attributes(name: name)
-        p.customer_group_specific = true
+        p.customer_group_specific = false
       end
     end
 
