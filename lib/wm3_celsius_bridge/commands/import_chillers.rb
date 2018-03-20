@@ -34,7 +34,7 @@ module Wm3CelsiusBridge
 
     def import_chiller(chiller:, group:)
       product = find_or_build_product(
-        sku: "CH-#{chiller.no}",
+        sku: chiller.serial_no,
         name: chiller.model
       )
       unless product.save
