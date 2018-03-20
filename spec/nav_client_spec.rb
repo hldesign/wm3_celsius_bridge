@@ -169,6 +169,9 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
           "x50010:ServiceHeader" => {
             "x50010:ExecutionWorkshopCustNo" => "1016",
             "x50010:SerialNo" => "abc",
+            "x50010:YourReference" => "",
+            "x50010:Description" => "",
+            "x50010:ServiceOrderType" => "",
             "x50010:ActionDate" => action_date,
             "x50010:RegNo" => "",
             "x50010:Model" => ""

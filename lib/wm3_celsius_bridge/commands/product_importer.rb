@@ -19,6 +19,7 @@ module Wm3CelsiusBridge
         p.master.assign_attributes(sku: sku, track_inventory: false)
         p.default_editable.assign_attributes(name: name)
         p.customer_group_specific = false
+        p.available_on = DateTime.now if p.available_on.nil?
       end
     end
 

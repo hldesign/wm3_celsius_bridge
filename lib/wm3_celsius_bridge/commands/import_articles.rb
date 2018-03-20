@@ -5,6 +5,8 @@ module Wm3CelsiusBridge
   class ImportArticles
     include ProductImporter
 
+    CATEGORY_CODE_WHITELIST = ['MHI RES_DL', 'ZAN RES_DL']
+
     def initialize(store:, articles:, reporter:)
       @articles = articles
       @store = store
@@ -21,9 +23,10 @@ module Wm3CelsiusBridge
         return false
       end
 
-      imported = articles.map do |article|
-        import_article(article: article, group: group)
-      end.compact
+      imported = articles
+        .select { |a| CATEGORY_CODE_WHITELIST.include?(a.item_category_code) }
+        .map { |a| import_article(article: a, group: group) }
+        .compact
 
       reporter.finish(message: "Imported #{imported.size} of #{articles.size} articles.")
     end
