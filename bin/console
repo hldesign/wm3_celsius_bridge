@@ -17,13 +17,13 @@ Wm3CelsiusBridge.configure do |config|
   config.subdomain = ENV['NAV_SUBDOMAIN']
 end
 
-service_header = Wm3CelsiusBridge::ServiceHeader.new(execution_workshop_cust_no: "1016", serial_no: "abc", action_date: Date.today)
-service_line1 = Wm3CelsiusBridge::ServiceLine.new(no: "123", quantity: 1, line_amount: 2.0, description: 'desc', parts_or_time: 'Parts')
-service_line2 = Wm3CelsiusBridge::ServiceLine.new(no: "456", quantity: 2, line_amount: 3.5, description: 'desc2', parts_or_time: 'Time')
-service_item_line = Wm3CelsiusBridge::ServiceItemLine.new(service_lines: [service_line1, service_line2])
-service_order = Wm3CelsiusBridge::ServiceOrder.new(service_header: service_header, service_item_line: service_item_line)
-client = Wm3CelsiusBridge::NavClient.new(debug: true);nil
-res = client.import_service_order(service_order)
+# service_header = Wm3CelsiusBridge::ServiceHeader.new(execution_workshop_cust_no: "1016", serial_no: "abc", action_date: Date.today)
+# service_line1 = Wm3CelsiusBridge::ServiceLine.new(no: "123", quantity: 1, line_amount: 2.0, description: 'desc', parts_or_time: 'Parts')
+# service_line2 = Wm3CelsiusBridge::ServiceLine.new(no: "456", quantity: 2, line_amount: 3.5, description: 'desc2', parts_or_time: 'Time')
+# service_item_line = Wm3CelsiusBridge::ServiceItemLine.new(service_lines: [service_line1, service_line2])
+# service_order = Wm3CelsiusBridge::ServiceOrder.new(service_header: service_header, service_item_line: service_item_line)
+# client = Wm3CelsiusBridge::NavClient.new(debug: true);nil
+# res = client.import_service_order(service_order)
 
 require 'pry'
 Pry.start

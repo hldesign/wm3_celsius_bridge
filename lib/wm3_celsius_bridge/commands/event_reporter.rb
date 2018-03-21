@@ -30,6 +30,10 @@ module Wm3CelsiusBridge
       log(message: 'INFO: ' + message, model: model, info: info)
     end
 
+    def warning(message: '', model: nil, info: nil)
+      log(message: 'WARNING: ' + message, model: model, info: info)
+    end
+
     def error(message: '', model: nil, info: nil)
       log(message: 'ERROR: ' + message, model: model, info: info)
     end

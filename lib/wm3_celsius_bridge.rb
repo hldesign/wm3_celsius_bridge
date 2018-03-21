@@ -10,6 +10,7 @@ require 'wm3_celsius_bridge/workers/sync_worker'
 
 require 'wm3_celsius_bridge/commands/event_reporter'
 require 'wm3_celsius_bridge/commands/product_importer'
+require 'wm3_celsius_bridge/commands/uniq_checker'
 require 'wm3_celsius_bridge/commands/parse_items'
 require 'wm3_celsius_bridge/commands/import_chillers'
 require 'wm3_celsius_bridge/commands/import_customers'

@@ -76,6 +76,18 @@ module Wm3CelsiusBridge
         return
       end
 
+      sub_reporter = main_reporter.sub_report(title: 'Check unique constraints')
+      begin
+        UniqChecker.new(
+          models: customers,
+          prop_names: [:no],
+          reporter: sub_reporter
+        ).call
+      rescue StandardError => e
+        sub_reporter.error(message: e.message)
+        return
+      end
+
       sub_reporter = main_reporter.sub_report(title: 'Store parsed customer data')
       begin
         limited_customers = limit > 0 ? customers.take(limit) : customers
@@ -111,7 +123,19 @@ module Wm3CelsiusBridge
         chillers = ParseItems.new(
           data: resp.data,
           item_class: Chiller,
-          reporter: sub_reporter,
+          reporter: sub_reporter
+        ).call
+      rescue StandardError => e
+        sub_reporter.error(message: e.message)
+        return
+      end
+
+      sub_reporter = main_reporter.sub_report(title: 'Check unique constraints')
+      begin
+        UniqChecker.new(
+          models: chillers,
+          prop_names: [:no, :serial_no],
+          reporter: sub_reporter
         ).call
       rescue StandardError => e
         sub_reporter.error(message: e.message)
@@ -155,6 +179,18 @@ module Wm3CelsiusBridge
           data: resp.data,
           item_class: Article,
           reporter: sub_reporter,
+        ).call
+      rescue StandardError => e
+        sub_reporter.error(message: e.message)
+        return
+      end
+
+      sub_reporter = main_reporter.sub_report(title: 'Check unique constraints')
+      begin
+        UniqChecker.new(
+          models: articles,
+          prop_names: [:no],
+          reporter: sub_reporter
         ).call
       rescue StandardError => e
         sub_reporter.error(message: e.message)
