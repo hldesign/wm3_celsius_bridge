@@ -71,6 +71,8 @@ module Wm3CelsiusBridge
     ).call
 
     logger.info("Printing sync report.\n\n#{report}")
+
+    report
   end
 
   def self.logger
