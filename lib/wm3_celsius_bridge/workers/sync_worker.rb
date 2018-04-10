@@ -231,7 +231,6 @@ module Wm3CelsiusBridge
           store: store,
           reporter: sub_reporter,
         ).call
-        reporter.finish(message: "Collected #{celsius_orders.count} orders.")
       rescue StandardError => e
         sub_reporter.error(message: e.message)
         return
@@ -251,7 +250,9 @@ module Wm3CelsiusBridge
       sub_reporter = main_reporter.sub_report(title: 'Export service orders to NAV')
       begin
         resp = ExportServiceOrders.new(
-          data: nav_orders,
+          store: store,
+          client: client,
+          orders: nav_orders,
           reporter: sub_reporter,
         ).call
       rescue StandardError => e

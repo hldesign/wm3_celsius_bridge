@@ -18,6 +18,7 @@ require 'wm3_celsius_bridge/commands/import_customers'
 require 'wm3_celsius_bridge/commands/import_articles'
 require 'wm3_celsius_bridge/commands/collect_service_orders'
 require 'wm3_celsius_bridge/commands/build_service_orders'
+require 'wm3_celsius_bridge/commands/export_service_orders'
 
 require 'wm3_celsius_bridge/models/types'
 require 'wm3_celsius_bridge/models/chiller'
