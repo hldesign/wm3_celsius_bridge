@@ -62,6 +62,12 @@ module Wm3CelsiusBridge
       end
 
       true
+    rescue StandardError => e
+      reporter.error(
+        message: "Could not import chiller (serial_no=#{chiller.serial_no})",
+        info: e.message
+      )
+      return nil
     end
   end
 end

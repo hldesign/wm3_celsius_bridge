@@ -67,6 +67,12 @@ module Wm3CelsiusBridge
       end
 
       true
+    rescue StandardError => e
+      reporter.error(
+        message: "Could not import customer (no=#{customer.no})",
+        info: e.message
+      )
+      return nil
     end
 
     def find_or_build_customer_group(name:)

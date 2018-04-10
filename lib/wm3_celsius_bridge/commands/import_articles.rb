@@ -65,6 +65,12 @@ module Wm3CelsiusBridge
       end
 
       true
+    rescue StandardError => e
+      reporter.error(
+        message: "Could not import article (no=#{article.no})",
+        info: e.message
+      )
+      return nil
     end
   end
 end

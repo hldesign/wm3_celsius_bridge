@@ -40,6 +40,13 @@ module Wm3CelsiusBridge
       order_attrs
         .tap { |attrs| attrs[:chiller] = chiller_attributes(chiller) }
         .merge(order_items: order.order_items.map { |item| item_attributes(item) })
+
+    rescue StandardError => e
+      reporter.error(
+        message: "Could not collect data for WM3 order '#{order.id}'.",
+        info: e.message
+      )
+      return nil
     end
 
     def chiller_attributes(chiller)
