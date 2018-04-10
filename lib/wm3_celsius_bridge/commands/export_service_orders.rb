@@ -3,7 +3,7 @@
 module Wm3CelsiusBridge
   class ExportServiceOrders
 
-    def initialize(store:, client:, orders:, reporter:)
+    def initialize(store:, client:, orders:, reporter: NullReporter.new)
       @store = store
       @client = client
       @orders = orders

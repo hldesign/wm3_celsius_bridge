@@ -18,9 +18,9 @@ module Wm3CelsiusBridge
     constructor_type :strict_with_defaults
 
     attribute :execution_workshop_cust_no, Types::MandatoryString.constrained(max_size: 20)
-    attribute :serial_no, Types::MandatoryString.constrained(max_size: 20)
     attribute :your_reference, Types::OptionalString.constrained(max_size: 35)
     attribute :description, Types::OptionalString.constrained(max_size: 50)
+    attribute :serial_no, Types::MandatoryString.constrained(max_size: 20)
     # INTERN, GARANTI, AVTAL?
     attribute :service_order_type, Types::OptionalString.constrained(max_size: 10)
     attribute :action_date, Types::OptionalDate

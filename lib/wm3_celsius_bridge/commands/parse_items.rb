@@ -4,7 +4,7 @@ require 'ostruct'
 module Wm3CelsiusBridge
   # The ParseItems command parses data fetched from NAV.
   class ParseItems
-    def initialize(data:, item_class:, reporter:)
+    def initialize(data:, item_class:, reporter: NullReporter.new)
       @data = data || []
       @item_class = item_class
       @reporter = reporter

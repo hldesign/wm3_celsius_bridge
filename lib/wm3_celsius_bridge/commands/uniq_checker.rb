@@ -2,7 +2,7 @@
 
 module Wm3CelsiusBridge
   class UniqChecker
-    def initialize(models:, prop_names:, reporter:)
+    def initialize(models:, prop_names:, reporter: NullReporter.new)
       @store = {}
       @models = models
       @prop_names = prop_names

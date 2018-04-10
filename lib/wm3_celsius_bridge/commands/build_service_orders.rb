@@ -108,7 +108,7 @@ module Wm3CelsiusBridge
         # attribute :runtime_day, Types::OptionalFloat
         # attribute :runtime_night, Types::OptionalFloat
         # attribute :reg_no, Types::OptionalString
-        # attribute :warranty, Types::Strict::Bool.optional.default(nil)
+      # attribute :warranty, Types::Strict::Bool.optional.default(nil)
         # attribute :service_lines, Types.Array(ServiceLine).constrained(min_size: 1)
 
       item_line_attrs = {
@@ -116,7 +116,6 @@ module Wm3CelsiusBridge
         runtime_day: order[:uptime_diesel].to_f,
         runtime_night: order[:uptime_night].to_f,
         reg_no: order[:chiller][:reg_no],
-        warranty: order[:order_purpose] == 'warranty',
 
         service_lines: service_lines
       }

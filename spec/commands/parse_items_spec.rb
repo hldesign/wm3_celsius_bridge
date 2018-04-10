@@ -5,7 +5,6 @@ RSpec.describe Wm3CelsiusBridge::ParseItems do
     Wm3CelsiusBridge::ParseItems.new(
       data: data,
       item_class: Wm3CelsiusBridge::Chiller,
-      reporter: Wm3CelsiusBridge::EventReporter.new(title: 'test'),
     ).call
   end
 

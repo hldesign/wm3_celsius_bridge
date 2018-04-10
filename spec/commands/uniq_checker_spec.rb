@@ -5,7 +5,6 @@ RSpec.describe Wm3CelsiusBridge::UniqChecker do
     Wm3CelsiusBridge::UniqChecker.new(
       models: models,
       prop_names: prop_names,
-      reporter: Wm3CelsiusBridge::EventReporter.new(title: 'test'),
     ).call
   end
 
