@@ -41,6 +41,8 @@ module Wm3CelsiusBridge
       sync_chillers
       sync_articles
 
+      export_service_orders
+
       reporter
     end
 
@@ -203,6 +205,44 @@ module Wm3CelsiusBridge
         ImportArticles.new(
           store: store,
           articles: limited_articles,
+          reporter: sub_reporter,
+        ).call
+      rescue StandardError => e
+        sub_reporter.error(message: e.message)
+        return
+      end
+    end
+
+    def export_service_orders
+      main_reporter = reporter.sub_report(title: 'Export service orders')
+
+      sub_reporter = main_reporter.sub_report(title: 'Collect service orders from Celsius')
+      begin
+        celsius_orders = CollectServiceOrders.new(
+          store: store,
+          reporter: sub_reporter,
+        ).call
+        reporter.finish(message: "Collected #{celsius_orders.count} orders.")
+      rescue StandardError => e
+        sub_reporter.error(message: e.message)
+        return
+      end
+
+      sub_reporter = main_reporter.sub_report(title: 'Build NAV service orders')
+      begin
+        nav_orders = BuildServiceOrders.new(
+          data: celsius_orders,
+          reporter: sub_reporter,
+        ).call
+      rescue StandardError => e
+        sub_reporter.error(message: e.message)
+        return
+      end
+
+      sub_reporter = main_reporter.sub_report(title: 'Export service orders to NAV')
+      begin
+        resp = ExportServiceOrders.new(
+          data: nav_orders,
           reporter: sub_reporter,
         ).call
       rescue StandardError => e
