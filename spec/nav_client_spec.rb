@@ -160,7 +160,7 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
       sl2 = Wm3CelsiusBridge::ServiceLine.new(no: "456", quantity: 2, line_amount: 3.5, description: 'desc2', parts_or_time: 'Time')
       sil = Wm3CelsiusBridge::ServiceItemLine.new(service_lines: [sl1, sl2])
 
-      Wm3CelsiusBridge::ServiceOrder.new(service_header: sh, service_item_line: sil)
+      Wm3CelsiusBridge::ServiceOrder.new(id: 1, service_header: sh, service_item_line: sil)
     end
 
     let(:request_message) do
@@ -171,7 +171,6 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
             "x50010:SerialNo" => "abc",
             "x50010:YourReference" => "",
             "x50010:Description" => "",
-            "x50010:ServiceOrderType" => "",
             "x50010:ActionDate" => action_date,
             "x50010:RegNo" => "",
             "x50010:Model" => ""

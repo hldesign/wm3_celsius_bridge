@@ -161,8 +161,15 @@ module Wm3CelsiusBridge
 
     def service_order_payload(service_order)
       payload = service_order.to_hash
+
+      payload.delete(:id)
+
       service_item_line = payload[:service_item_line]
       service_item_line.delete(:warranty) if service_item_line[:warranty].nil?
+
+      service_header = payload[:service_header]
+      service_header.delete(:service_order_type) if service_header[:service_order_type].blank?
+
       service_lines = service_item_line[:service_lines]
       payload[:service_item_line][:service_lines] = { service_line: service_lines }
 

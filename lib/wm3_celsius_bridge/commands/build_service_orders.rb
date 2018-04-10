@@ -18,6 +18,14 @@ module Wm3CelsiusBridge
     attr_reader :data, :reporter
 
     def build_service_order(order)
+      if order[:id].blank?
+        reporter.error(
+          message: "Missing order ID for WM3 order.",
+          model: order,
+        )
+        return
+      end
+
       if order[:chiller].blank?
         reporter.error(
           message: "Missing chiller data for WM3 order '#{order[:id]}'",
@@ -41,6 +49,7 @@ module Wm3CelsiusBridge
       return if item_line.blank?
 
       ServiceOrder.new(
+        id: order[:id],
         service_header: header,
         service_item_line: item_line
       )
