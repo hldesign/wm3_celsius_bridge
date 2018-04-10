@@ -9,6 +9,7 @@ module Wm3CelsiusBridge
   # * +client+ - A client to request data from NAV.
   # * +store+ - Storage for parsed NAV items.
   # * +limit+ - Max amount of NAV items to import.
+  # * +enabled_syncs+ - Enable/disable syncs.
   #
   # ==== Examples
   #
@@ -18,37 +19,45 @@ module Wm3CelsiusBridge
   #   SyncWorker.new(
   #     client: client,
   #     store: store,
-  #     limit: 100
+  #     limit: 100,
+  #     enabled_syncs: {
+  #       customers: true,
+  #       chillers: true,
+  #       articles: true,
+  #       orders: true
+  #     }
   #   ).call
   class SyncWorker
     def initialize(
       client:,
       store:,
       limit: 0,
-      last_sync: Time.zone.today - 1)
+      last_sync: Time.zone.today - 1,
+      enabled_syncs:)
 
       @client = client
       @store = store
       @limit = limit
       @last_sync = last_sync
+      @enabled_syncs = enabled_syncs
     end
 
     def call
       @reporter = build_reporter
 
       # Note that import order matters.
-      sync_customers
-      sync_chillers
-      sync_articles
+      sync_customers if enabled_syncs[:customers]
+      sync_chillers if enabled_syncs[:chillers]
+      sync_articles if enabled_syncs[:articles]
 
-      export_service_orders
+      export_service_orders if enabled_syncs[:orders]
 
       reporter
     end
 
     private
 
-    attr_reader :client, :store, :limit, :last_sync, :reporter
+    attr_reader :client, :store, :limit, :last_sync, :enabled_syncs, :reporter
 
     def sync_customers
       main_reporter = reporter.sub_report(title: 'Import customers')

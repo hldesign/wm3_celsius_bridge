@@ -48,11 +48,19 @@ module Wm3CelsiusBridge
   def self.sync(
     debug: false,
     limit: 0,
-    last_sync: Time.zone.today - 1)
+    last_sync: Time.zone.today - 1,
+    enabled: {})
 
     logger = Wm3CelsiusBridge.logger
     client = NavClient.new(debug: debug)
     subdomain = Wm3CelsiusBridge.config.subdomain
+
+    enabled_syncs = {
+      customers: true,
+      chillers: true,
+      articles: true,
+      orders: true,
+    }.merge(enabled)
 
     site = Site.where(subdomain: subdomain).first
     if site.nil?
@@ -71,6 +79,7 @@ module Wm3CelsiusBridge
       store: store,
       limit: limit,
       last_sync: last_sync,
+      enabled_syncs: enabled_syncs
     ).call
 
     logger.info("Printing sync report.\n\n#{report}")
