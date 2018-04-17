@@ -52,7 +52,7 @@ namespace :celsius do
     end
 
     desc 'Sync articles from NAV'
-    task :customers, [:last_sync, :limit, :debug] => :environment do |t, args|
+    task :articles, [:last_sync, :limit, :debug] => :environment do |t, args|
       debug = args.debug == 'true'
       limit = args.limit.to_i
       last_sync = args.last_sync.blank? ? Time.zone.today - 1 : args.last_sync
