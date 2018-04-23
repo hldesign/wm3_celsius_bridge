@@ -41,6 +41,7 @@ module Wm3CelsiusBridge
     MandatoryString = Types::Strict::String
     OptionalString = Types::Strict::String.optional.default('')
     OptionalDate = Types::Strict::Date.optional.default(nil)
-    OptionalFloat = Strict::Float.optional.default(0.0)
+    OptionalInt = Types::Strict::Int.optional.default(nil)
+    OptionalFloat = Strict::Float.optional.default(nil)
   end
 end

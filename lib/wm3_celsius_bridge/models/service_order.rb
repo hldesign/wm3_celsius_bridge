@@ -2,6 +2,7 @@
 
 module Wm3CelsiusBridge
   class ServiceOrder < Dry::Struct
+    include OmitBlankAttributes
     constructor_type :strict_with_defaults
 
     attribute :id, Types::Strict::Int

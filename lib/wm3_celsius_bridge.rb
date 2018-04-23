@@ -20,6 +20,7 @@ require 'wm3_celsius_bridge/commands/collect_service_orders'
 require 'wm3_celsius_bridge/commands/build_service_orders'
 require 'wm3_celsius_bridge/commands/export_service_orders'
 
+require 'wm3_celsius_bridge/models/ext/omit_blank_attributes'
 require 'wm3_celsius_bridge/models/types'
 require 'wm3_celsius_bridge/models/chiller'
 require 'wm3_celsius_bridge/models/customer'
