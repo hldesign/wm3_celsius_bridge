@@ -20,8 +20,9 @@ module Wm3CelsiusBridge
     def order_attributes(order)
       order_attrs = {
         id: order.id,
-        submitted_at: order.completed_at.present? ? Date.strptime(order.completed_at.to_s, "%Y-%m-%d") : nil,
-        customer_no: order.customer.present? ? order.customer.number : nil
+        submitted_at: (Date.strptime(order.completed_at.to_s, "%Y-%m-%d") rescue nil),
+        customer_no: order.customer.present? ? order.customer.number : nil,
+        order_no: order.number,
       }.merge(order.dynamic_field_values
         .eager_load(:dynamic_field)
         .pluck('shop_dynamic_fields.name', 'value')

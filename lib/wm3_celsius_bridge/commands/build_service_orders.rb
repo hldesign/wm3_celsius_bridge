@@ -63,21 +63,12 @@ module Wm3CelsiusBridge
     end
 
     def build_service_header(order)
-        # attribute :execution_workshop_cust_no, Types::MandatoryString.constrained(max_size: 20)
-        # attribute :serial_no, Types::MandatoryString.constrained(max_size: 20)
-        # attribute :your_reference, Types::OptionalString.constrained(max_size: 35)
-      # attribute :description, Types::OptionalString.constrained(max_size: 50)
-      # # INTERN, GARANTI, AVTAL?
-      # attribute :service_order_type, Types::OptionalString.constrained(max_size: 10)
-        # attribute :action_date, Types::OptionalDate
-        # attribute :reg_no, Types::OptionalString.constrained(max_size: 20)
-        # attribute :model, Types::OptionalString.constrained(max_size: 50)
-
       header_attrs = {
         execution_workshop_cust_no: order[:customer_no],
         serial_no: order[:chiller_serial_no],
         your_reference: order[:ert_ordernr],
-        action_date: order[:submitted_at],
+        order_no: order[:order_no],
+        order_date: (Date.strptime(order[:reparation_date], "%Y-%m-%d") rescue nil),
         reg_no: order[:chiller][:reg_no],
         model: order[:chiller][:model],
       }
@@ -103,6 +94,8 @@ module Wm3CelsiusBridge
         return
       end
 
+      text_service_lines = build_text_service_lines(order)
+
         # attribute :mileage, Types::OptionalFloat
       # attribute :runtime_total, Types::OptionalFloat
         # attribute :runtime_day, Types::OptionalFloat
@@ -116,8 +109,7 @@ module Wm3CelsiusBridge
         runtime_day: order[:uptime_diesel].to_f,
         runtime_night: order[:uptime_night].to_f,
         reg_no: order[:chiller][:reg_no],
-
-        service_lines: service_lines
+        service_lines: service_lines + text_service_lines
       }
 
       ServiceItemLine.new(item_line_attrs)
@@ -131,28 +123,24 @@ module Wm3CelsiusBridge
     end
 
     def build_service_line(item)
-        # attribute :no, Types::MandatoryString.constrained(max_size: 20)
-        # attribute :quantity, Types::Strict::Int
-        # attribute :line_amount, Types::Strict::Float
-        # attribute :description, Types::MandatoryString.constrained(max_size: 100)
-        # attribute :parts_or_time, Types::Strict::String.enum('Parts', 'Time')
-      # attribute :unitof_measure, Types::OptionalString.constrained(max_size: 10)
-      # attribute :location_code, Types::OptionalString.constrained(max_size: 10)
-
       if item[:item_type] == 'activity'
-        no = 'V-9'
-        desc = item[:sku]
-
-      elsif item[:item_type] == 'additional'
-        no = 'V-9'
-        desc = item[:sku] + ' - ' + item[:name]
-
-      else # Article
+        type = 1 # Unconfirmed
         no = item[:sku]
         desc = item[:name]
+
+      elsif item[:item_type] == 'additional'
+        type = 1
+        no = 'V-9'
+        desc = item[:sku] + ' ' + item[:name]
+
+      else # Article
+        type = 1
+        no = 'V-9'
+        desc = item[:sku] + ' ' + item[:name]
       end
 
       service_line_attrs = {
+        type: type,
         no: no,
         quantity: item[:quantity].to_i,
         line_amount: item[:amount].to_f,
@@ -168,6 +156,27 @@ module Wm3CelsiusBridge
         model: item,
       )
       return
+    end
+
+    def build_text_service_lines(order)
+      order
+        .select { |k| [:reason, :diagnos, :correction].include?(k) }
+        .map { |_, v| (v || '').scan(/.{1,50}/) }
+        .flatten
+        .map do |line|
+          begin
+            ServiceLine.new({
+              type: 0, # 'Text' type
+              description: line
+            })
+          rescue StandardError => e
+            reporter.error(
+              message: "Could not build NAV text service line from WM3 order '#{order[:id]}'.",
+              info: e.message,
+              model: item,
+            )
+          end
+        end.compact
     end
   end
 end

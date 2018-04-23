@@ -19,6 +19,7 @@ RSpec.describe Wm3CelsiusBridge::BuildServiceOrders do
         {
           "id": 62163,
           "submitted_at": Date.parse('2018-04-01'),
+          "order_no": "O12345678",
           "customer_no": "0001",
           "ert_ordernr": "ert-order-nr",
           "reparation_date": "2018-04-01",
@@ -108,7 +109,10 @@ RSpec.describe Wm3CelsiusBridge::BuildServiceOrders do
 
       expect(service_header.execution_workshop_cust_no).to eq(wm3_order[:customer_no])
       expect(service_item_line.reg_no).to eq(wm3_order[:chiller][:reg_no])
-      expect(service_lines.size).to eq(wm3_order[:order_items].size)
+
+      # ServiceLines contains one entry per order item plus (at least)
+      # one entry per text fields 'reason', 'diagnos' and 'correction'.
+      expect(service_lines.size).to eq(wm3_order[:order_items].size + 3)
     end
   end
 end

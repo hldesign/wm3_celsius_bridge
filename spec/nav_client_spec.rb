@@ -152,12 +152,12 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
 
   describe "#import_service_order", soap: true do
     let(:response) { subject.import_service_order(service_order) }
-    let(:action_date) { Date.today }
+    let(:order_date) { Date.today }
 
     let(:service_order) do
-      sh = Wm3CelsiusBridge::ServiceHeader.new(execution_workshop_cust_no: "1016", serial_no: "abc", action_date: action_date)
-      sl1 = Wm3CelsiusBridge::ServiceLine.new(no: "123", quantity: 1, line_amount: 2.0, description: 'desc', parts_or_time: 'Parts')
-      sl2 = Wm3CelsiusBridge::ServiceLine.new(no: "456", quantity: 2, line_amount: 3.5, description: 'desc2', parts_or_time: 'Time')
+      sh = Wm3CelsiusBridge::ServiceHeader.new(execution_workshop_cust_no: "1016", serial_no: "abc", order_date: order_date)
+      sl1 = Wm3CelsiusBridge::ServiceLine.new(type: 1, no: "123", quantity: 1, line_amount: 2.0, description: 'desc', parts_or_time: 'Parts')
+      sl2 = Wm3CelsiusBridge::ServiceLine.new(type: 1, no: "456", quantity: 2, line_amount: 3.5, description: 'desc2', parts_or_time: 'Time')
       sil = Wm3CelsiusBridge::ServiceItemLine.new(service_lines: [sl1, sl2])
 
       Wm3CelsiusBridge::ServiceOrder.new(id: 1, service_header: sh, service_item_line: sil)
@@ -169,37 +169,26 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
           "x50010:ServiceHeader" => {
             "x50010:ExecutionWorkshopCustNo" => "1016",
             "x50010:SerialNo" => "abc",
-            "x50010:YourReference" => "",
-            "x50010:Description" => "",
-            "x50010:ActionDate" => action_date,
-            "x50010:RegNo" => "",
-            "x50010:Model" => ""
+            "x50010:OrderDate" => order_date
           },
           "x50010:ServiceItemLine" => {
-            "x50010:Mileage" => 0.0,
-            "x50010:RuntimeTotal" => 0.0,
-            "x50010:RuntimeDay" => 0.0,
-            "x50010:RuntimeNight" => 0.0,
-            "x50010:RegNo" => "",
             "x50010:ServiceLines" => {
               "x50010:ServiceLine" => [
                 {
+                  "x50010:Type" => 1,
                   "x50010:No" => "123",
                   "x50010:Quantity" => 1,
                   "x50010:LineAmount" => 2.0,
                   "x50010:Description" => "desc",
-                  "x50010:PartsOrTime" => "Parts",
-                  "x50010:UnitofMeasure" => "",
-                  "x50010:LocationCode" => ""
+                  "x50010:PartsOrTime" => "Parts"
                 },
                 {
+                  "x50010:Type" => 1,
                   "x50010:No" => "456",
                   "x50010:Quantity" => 2,
                   "x50010:LineAmount" => 3.5,
                   "x50010:Description" => "desc2",
-                  "x50010:PartsOrTime" => "Time",
-                  "x50010:UnitofMeasure" => "",
-                  "x50010:LocationCode" => ""
+                  "x50010:PartsOrTime" => "Time"
                 }
               ]
             }
