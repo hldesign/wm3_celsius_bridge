@@ -50,21 +50,8 @@ module Wm3CelsiusBridge
         return
       end
 
-      address = cust.addresses.first_or_initialize.tap do |a|
-        a.country = store.default_country if a.new_record?
-        a.address1 = customer.address
-        a.zipcode = customer.post_code
-        a.city = customer.city
-        a.phone = customer.phone_no
-      end
-
-      unless address.save
-        reporter.error(
-          message: "Could not create or update address for customer #{customer.no}",
-          model: customer,
-          info: address.errors.full_messages,
-        )
-      end
+      create_customer_address(cust, customer)
+      create_customer_discount_lists(customer)
 
       true
     rescue StandardError => e
@@ -73,6 +60,47 @@ module Wm3CelsiusBridge
         info: e.message
       )
       return nil
+    end
+
+    def create_customer_discount_lists(customer)
+      jour_list_name = "contract_jour_discount_list_customer_#{customer.no}"
+      no_jour_list_name = "contract_no_jour_discount_list_customer_#{customer.no}"
+
+      list = store.discount_lists.where(name: jour_list_name).first_or_initialize
+      unless list.save
+        reporter.warning(
+          message: "Could not create customer discount list '#{jour_list_name}' for customer #{customer.no}",
+          model: customer,
+          info: list.errors.full_messages,
+        )
+      end
+
+      list = store.discount_lists.where(name: no_jour_list_name).first_or_initialize
+      unless list.save
+        reporter.warning(
+          message: "Could not create customer discount list '#{no_jour_list_name}' for customer #{customer.no}",
+          model: customer,
+          info: list.errors.full_messages,
+        )
+      end
+    end
+
+    def create_customer_address(customer, customer_data)
+      address = customer.addresses.first_or_initialize.tap do |a|
+        a.country = store.default_country if a.new_record?
+        a.address1 = customer_data.address
+        a.zipcode = customer_data.post_code
+        a.city = customer_data.city
+        a.phone = customer_data.phone_no
+      end
+
+      unless address.save
+        reporter.warning(
+          message: "Could not create or update address for customer #{customer_data.no}",
+          model: customer_data,
+          info: address.errors.full_messages,
+        )
+      end
     end
 
     def find_or_build_customer_group(name:)
