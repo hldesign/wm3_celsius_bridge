@@ -76,9 +76,10 @@ module Wm3CelsiusBridge
 
     def event_lines
       events.map do |event|
+        model_data = event.model.respond_to?(:to_hash) ? "#<#{event.model.class.name} #{event.model.to_hash}>" : event.model.inspect
         str = prefix + event.message + "\n"
         str << prefix + "  Info: #{event.info.inspect}\n" unless event.info.nil?
-        str << prefix + "  Model: #{event.model.inspect}\n" unless event.model.nil?
+        str << prefix + "  Model: #{model_data}\n" unless event.model.nil?
         str << "\n"
         str
       end.join
