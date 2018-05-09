@@ -20,7 +20,7 @@ module Wm3CelsiusBridge
       end || begin
         ::Date.strptime(*args, "%m/%d/%Y")
       rescue ArgumentError, TypeError
-      end || Types::Form::Date[*args]
+      end || Types::Params::Date[*args]
     end
 
     # CustomFloat removes comma and space separators
@@ -41,7 +41,7 @@ module Wm3CelsiusBridge
     MandatoryString = Types::Strict::String
     OptionalString = Types::Strict::String.optional.default('')
     OptionalDate = Types::Strict::Date.optional.default(nil)
-    OptionalInt = Types::Strict::Int.optional.default(nil)
+    OptionalInt = Types::Strict::Integer.optional.default(nil)
     OptionalFloat = Strict::Float.optional.default(nil)
   end
 end

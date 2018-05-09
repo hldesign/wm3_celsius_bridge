@@ -27,7 +27,7 @@ RSpec.describe Wm3CelsiusBridge::Chiller do
     let(:data) { YAML.load_file("spec/fixtures/chiller_missing_float_value.yml") }
 
     it "throws exception" do
-      expect { chiller }.to raise_error(ArgumentError)
+      expect { chiller }.to raise_error(Dry::Struct::Error)
     end
   end
 

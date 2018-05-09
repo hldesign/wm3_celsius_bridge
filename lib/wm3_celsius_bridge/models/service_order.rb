@@ -5,7 +5,7 @@ module Wm3CelsiusBridge
     include OmitBlankAttributes
     constructor_type :strict_with_defaults
 
-    attribute :id, Types::Strict::Int
+    attribute :id, Types::Strict::Integer
     attribute :service_header, ServiceHeader
     attribute :service_item_line, ServiceItemLine
   end

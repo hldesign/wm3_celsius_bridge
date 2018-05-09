@@ -17,7 +17,7 @@ module Wm3CelsiusBridge
     include OmitBlankAttributes
     constructor_type :strict_with_defaults
 
-    attribute :type, Types::Strict::Int # Item type
+    attribute :type, Types::Strict::Integer # Item type
     attribute :no, Types::OptionalString.constrained(max_size: 20)
     attribute :quantity, Types::OptionalInt
     attribute :line_amount, Types::OptionalFloat
