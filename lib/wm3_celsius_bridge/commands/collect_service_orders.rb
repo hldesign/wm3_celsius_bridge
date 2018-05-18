@@ -61,13 +61,13 @@ module Wm3CelsiusBridge
         id: item.id,
         sku: item.sku,
         name: item.name,
-        price: item.price,
-        amount: item.amount
+        item_price: item.price,
+        item_amount: item.amount
       }.merge(item.dynamic_field_values
         .eager_load(:dynamic_field)
         .pluck('shop_dynamic_fields.name', 'value')
         .each_with_object({}) { |f, h| h[f[0].to_sym] = f[1] })
-        .merge(quantity: item.quantity)
+        .merge(item_quantity: item.quantity)
     end
 
     def chiller_by_serial(serial)

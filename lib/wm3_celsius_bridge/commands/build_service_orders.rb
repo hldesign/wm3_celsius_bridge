@@ -127,23 +127,30 @@ module Wm3CelsiusBridge
         type = 1 # Unconfirmed
         no = item[:sku]
         desc = item[:name]
+        quantity = item[:item_quantity].to_i
+        amount = item[:item_amount].to_f
 
       elsif item[:item_type] == 'additional'
         type = 1
         no = 'V-9'
         desc = item[:sku] + ' ' + item[:name]
+        quantity = item[:quantity].to_i # From dynamic field
+        amount = (quantity * item[:price].to_i).to_f # From dynamic field
 
       else # Article
         type = 1
         no = 'V-9'
         desc = item[:sku] + ' ' + item[:name]
+        quantity = item[:item_quantity].to_i
+        amount = item[:item_amount].to_f
+
       end
 
       service_line_attrs = {
         type: type,
         no: no,
-        quantity: item[:quantity].to_i,
-        line_amount: item[:amount].to_f,
+        quantity: quantity,
+        line_amount: amount,
         description: desc,
         parts_or_time: 'Parts',
       }
