@@ -171,10 +171,11 @@ module Wm3CelsiusBridge
 
     def parts_and_service_type_filter(modified_after)
       return {} if modified_after.nil?
+      date = modified_after.is_a?(Date) ? modified_after : Date.parse(modified_after)
 
       {
         "x50004:Filter" => {
-          "x50004:Filter_ModifiedDateAfter" => modified_after.to_s
+          "x50004:Filter_ModifiedDateAfter" => date.strftime('%Y-%m-%d')
         }
       }
     end

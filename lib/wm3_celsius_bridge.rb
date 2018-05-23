@@ -16,6 +16,7 @@ require 'wm3_celsius_bridge/commands/parse_items'
 require 'wm3_celsius_bridge/commands/import_chillers'
 require 'wm3_celsius_bridge/commands/import_customers'
 require 'wm3_celsius_bridge/commands/import_articles'
+require 'wm3_celsius_bridge/commands/import_service_ledger_entries'
 require 'wm3_celsius_bridge/commands/collect_service_orders'
 require 'wm3_celsius_bridge/commands/build_service_orders'
 require 'wm3_celsius_bridge/commands/export_service_orders'
@@ -29,6 +30,7 @@ require 'wm3_celsius_bridge/models/service_line'
 require 'wm3_celsius_bridge/models/service_item_line'
 require 'wm3_celsius_bridge/models/service_header'
 require 'wm3_celsius_bridge/models/service_order'
+require 'wm3_celsius_bridge/models/service_ledger_entry'
 
 require 'wm3_celsius_bridge/railtie' if defined?(Rails)
 
@@ -45,6 +47,9 @@ require 'wm3_celsius_bridge/railtie' if defined?(Rails)
 #     debug: true,
 #     limit: 1000,
 #     last_sync: '2018-01-01',
+#     enabled: {
+#       chillers: true
+#     }
 #   )
 module Wm3CelsiusBridge
   def self.sync(
@@ -58,10 +63,11 @@ module Wm3CelsiusBridge
     subdomain = Wm3CelsiusBridge.config.subdomain
 
     enabled_syncs = {
-      customers: true,
-      chillers: true,
-      articles: true,
-      orders: true,
+      customers: false,
+      chillers: false,
+      articles: false,
+      service_ledger: false,
+      orders: false,
     }.merge(enabled)
 
     site = Site.where(subdomain: subdomain).first

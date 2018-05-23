@@ -22,6 +22,15 @@ module Wm3CelsiusBridge
       rescue ArgumentError, TypeError
       end || Types::Params::Date[*args]
     end
+    MandatoryCustomDate = Types::Date.constructor do |*args|
+      begin
+        ::Date.strptime(*args, "%m/%d/%y")
+      rescue ArgumentError, TypeError
+      end || begin
+        ::Date.strptime(*args, "%m/%d/%Y")
+      rescue ArgumentError, TypeError
+      end || ::Date.strptime(*args, "%Y-%m-%d")
+    end
 
     # CustomFloat removes comma and space separators
     # before coercing into float. Ex:

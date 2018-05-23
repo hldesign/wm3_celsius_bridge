@@ -24,6 +24,7 @@ module Wm3CelsiusBridge
   #       customers: true,
   #       chillers: true,
   #       articles: true,
+  #       service_ledger: true,
   #       orders: true
   #     }
   #   ).call
@@ -49,6 +50,7 @@ module Wm3CelsiusBridge
       sync_customers if enabled_syncs[:customers]
       sync_chillers if enabled_syncs[:chillers]
       sync_articles if enabled_syncs[:articles]
+      sync_service_ledger_entries if enabled_syncs[:service_ledger]
 
       export_service_orders if enabled_syncs[:orders]
 
@@ -214,6 +216,48 @@ module Wm3CelsiusBridge
         ImportArticles.new(
           store: store,
           articles: limited_articles,
+          reporter: sub_reporter,
+        ).call
+      rescue StandardError => e
+        sub_reporter.error(message: e.message)
+        return
+      end
+    end
+
+    def sync_service_ledger_entries
+      main_reporter = reporter.sub_report(title: 'Import service ledger')
+
+      sub_reporter = main_reporter.sub_report(title: 'Fetch service ledger from NAV')
+      begin
+        resp = client.service_ledger_entries(posting_date: last_sync)
+        unless resp.ok?
+          sub_reporter.error(message: resp.message)
+          return
+        end
+        sub_reporter.finish(message: "Fetched #{resp.data.size} service ledger entries.")
+      rescue StandardError => e
+        sub_reporter.error(message: e.message)
+        return
+      end
+
+      sub_reporter = main_reporter.sub_report(title: 'Parse fetched service ledger data')
+      begin
+        entries = ParseItems.new(
+          data: resp.data,
+          item_class: ServiceLedgerEntry,
+          reporter: sub_reporter
+        ).call
+      rescue StandardError => e
+        sub_reporter.error(message: e.message)
+        return
+      end
+
+      sub_reporter = main_reporter.sub_report(title: 'Store parsed service ledger data')
+      begin
+        limited_entries = limit > 0 ? entries.take(limit) : entries
+        ImportServiceLedgerEntries.new(
+          store: store,
+          entries: limited_entries,
           reporter: sub_reporter,
         ).call
       rescue StandardError => e

@@ -8,7 +8,18 @@ namespace :celsius do
       limit = args.limit.to_i
       last_sync = args.last_sync.blank? ? Time.zone.today - 1 : args.last_sync
 
-      report = Wm3CelsiusBridge.sync(last_sync: last_sync, limit: limit, debug: debug)
+      report = Wm3CelsiusBridge.sync(
+        last_sync: last_sync,
+        limit: limit,
+        debug: debug,
+        enabled: {
+          customers: true,
+          chillers: true,
+          articles: true,
+          service_ledger: true,
+          orders: true
+        }
+      )
 
       puts report
     end
@@ -21,12 +32,7 @@ namespace :celsius do
       report = Wm3CelsiusBridge.sync(
         limit: limit,
         debug: debug,
-        enabled: {
-          customers: true,
-          chillers: false,
-          articles: false,
-          orders: false
-        }
+        enabled: { customers: true }
       )
 
       puts report
@@ -40,12 +46,7 @@ namespace :celsius do
       report = Wm3CelsiusBridge.sync(
         limit: limit,
         debug: debug,
-        enabled: {
-          customers: false,
-          chillers: true,
-          articles: false,
-          orders: false
-        }
+        enabled: { chillers: true }
       )
 
       puts report
@@ -61,12 +62,23 @@ namespace :celsius do
         last_sync: last_sync,
         limit: limit,
         debug: debug,
-        enabled: {
-          customers: false,
-          chillers: false,
-          articles: true,
-          orders: false
-        }
+        enabled: { articles: true }
+      )
+
+      puts report
+    end
+
+    desc 'Sync service ledger from NAV'
+    task :service_ledger, [:last_sync, :limit, :debug] => :environment do |t, args|
+      debug = args.debug == 'true'
+      limit = args.limit.to_i
+      last_sync = args.last_sync.blank? ? Time.zone.today - 1 : args.last_sync
+
+      report = Wm3CelsiusBridge.sync(
+        last_sync: last_sync,
+        limit: limit,
+        debug: debug,
+        enabled: { service_ledger: true }
       )
 
       puts report
@@ -78,12 +90,7 @@ namespace :celsius do
 
       report = Wm3CelsiusBridge.sync(
         debug: debug,
-        enabled: {
-          customers: false,
-          chillers: false,
-          articles: false,
-          orders: true
-        }
+        enabled: { orders: true }
       )
 
       puts report

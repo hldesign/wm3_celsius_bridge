@@ -12,7 +12,7 @@ module Wm3CelsiusBridge
     end
 
     def call
-      group = find_or_build_group(name: 'Chillers')
+      group = find_or_build_group(name: 'Kylaggregat', url: 'chillers')
       unless group.save
         reporter.error(
           message: "Could not save group #{group.url}",

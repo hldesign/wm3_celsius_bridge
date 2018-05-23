@@ -6,8 +6,8 @@ module Wm3CelsiusBridge
   module ProductImporter
     private
 
-    def find_or_build_group(name:)
-      store.groups.where(url: name.downcase).first_or_initialize.tap do |g|
+    def find_or_build_group(name:, url:)
+      store.groups.where(url: url).first_or_initialize.tap do |g|
         g.name = name
       end
     end
