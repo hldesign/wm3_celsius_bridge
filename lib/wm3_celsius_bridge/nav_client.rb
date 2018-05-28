@@ -185,10 +185,9 @@ module Wm3CelsiusBridge
 
       date = posting_date.is_a?(Date) ? posting_date : Date.parse(posting_date)
 
-      # Filter parameter only accepts US formatted dates.
       {
         "x50009:Filter" => {
-          "x50009:Filter_PostingDate" => date.strftime('%D')
+          "x50009:Filter_PostingDate" => date.strftime('%Y-%m-%d')
         }
       }
     end
