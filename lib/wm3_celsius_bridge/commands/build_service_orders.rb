@@ -153,6 +153,7 @@ module Wm3CelsiusBridge
         line_amount: amount,
         description: desc,
         parts_or_time: 'Parts',
+        line_discount_percent: 100,
       }
 
       ServiceLine.new(service_line_attrs)
@@ -174,7 +175,8 @@ module Wm3CelsiusBridge
           begin
             ServiceLine.new({
               type: 0, # 'Text' type
-              description: line
+              description: line,
+              line_discount_percent: 100,
             })
           rescue StandardError => e
             reporter.error(

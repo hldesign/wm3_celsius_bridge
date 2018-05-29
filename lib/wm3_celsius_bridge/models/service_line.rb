@@ -9,6 +9,7 @@
 #     <element minOccurs="1" maxOccurs="1" name="PartsOrTime" type="string"/>
 #     <element minOccurs="0" maxOccurs="1" name="UnitofMeasure" type="string"/>
 #     <element minOccurs="0" maxOccurs="1" name="LocationCode" type="string"/>
+#     <element minOccurs="1" maxOccurs="1" name="LineDiscountPercent" type="decimal"/>
 #   </sequence>
 # </complexType>
 
@@ -25,5 +26,6 @@ module Wm3CelsiusBridge
     attribute :parts_or_time, Types::Strict::String.enum('Parts', 'Time').optional.default(nil)
     attribute :unitof_measure, Types::OptionalString.constrained(max_size: 10)
     attribute :location_code, Types::OptionalString.constrained(max_size: 10)
+    attribute :line_discount_percent, Types::Strict::Integer
   end
 end
