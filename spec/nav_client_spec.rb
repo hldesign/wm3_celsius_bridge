@@ -156,8 +156,8 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
 
     let(:service_order) do
       sh = Wm3CelsiusBridge::ServiceHeader.new(execution_workshop_cust_no: "1016", serial_no: "abc", order_date: order_date)
-      sl1 = Wm3CelsiusBridge::ServiceLine.new(type: 1, no: "123", quantity: 1, line_amount: 2.0, description: 'desc', parts_or_time: 'Parts')
-      sl2 = Wm3CelsiusBridge::ServiceLine.new(type: 1, no: "456", quantity: 2, line_amount: 3.5, description: 'desc2', parts_or_time: 'Time')
+      sl1 = Wm3CelsiusBridge::ServiceLine.new(type: 1, no: "123", quantity: 1, line_amount: 2.0, description: 'desc', parts_or_time: 'Parts', line_discount_percent: 100)
+      sl2 = Wm3CelsiusBridge::ServiceLine.new(type: 1, no: "456", quantity: 2, line_amount: 3.5, description: 'desc2', parts_or_time: 'Time', line_discount_percent: 100)
       sil = Wm3CelsiusBridge::ServiceItemLine.new(service_lines: [sl1, sl2])
 
       Wm3CelsiusBridge::ServiceOrder.new(id: 1, service_header: sh, service_item_line: sil)
@@ -180,7 +180,8 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
                   "x50010:Quantity" => 1,
                   "x50010:LineAmount" => 2.0,
                   "x50010:Description" => "desc",
-                  "x50010:PartsOrTime" => "Parts"
+                  "x50010:PartsOrTime" => "Parts",
+                  "x50010:LineDiscountPercent" => 100
                 },
                 {
                   "x50010:Type" => 1,
@@ -188,7 +189,8 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
                   "x50010:Quantity" => 2,
                   "x50010:LineAmount" => 3.5,
                   "x50010:Description" => "desc2",
-                  "x50010:PartsOrTime" => "Time"
+                  "x50010:PartsOrTime" => "Time",
+                  "x50010:LineDiscountPercent" => 100
                 }
               ]
             }

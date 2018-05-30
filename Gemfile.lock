@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    wm3_celsius_bridge (0.8.2)
+    wm3_celsius_bridge (0.8.3)
       dry-struct (~> 0.4.0)
       rubyntlm (~> 0.6.2)
       savon (~> 2.11.1)
