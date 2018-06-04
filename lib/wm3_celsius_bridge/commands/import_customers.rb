@@ -50,6 +50,16 @@ module Wm3CelsiusBridge
         return
       end
 
+      cust.dynamic_fields = { 'internal_customer' => { value: customer.internal_cust.to_s } }
+      unless cust.save
+        reporter.error(
+          message: "Could not add dynamic fields to customer #{customer.no}",
+          model: customer,
+          info: cust.errors.full_messages,
+        )
+        return
+      end
+
       create_customer_address(cust, customer)
       create_customer_discount_lists(customer)
 

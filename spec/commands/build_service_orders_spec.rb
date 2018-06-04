@@ -4,8 +4,11 @@ RSpec.describe Wm3CelsiusBridge::BuildServiceOrders do
   let(:result) do
     Wm3CelsiusBridge::BuildServiceOrders.new(
       data: data,
+      reporter: reporter,
     ).call
   end
+
+  let(:reporter) { Wm3CelsiusBridge::EventReporter.new(title: 'BuildServiceOrders spec') }
 
   before do
     allow(Wm3CelsiusBridge::Chiller).to receive(:new) do |arg|
@@ -32,7 +35,7 @@ RSpec.describe Wm3CelsiusBridge::BuildServiceOrders do
           "diagnos": "<text>",
           "correction": "<text>",
           "order_comment": "<text>",
-          "chiller_serial_no": "CH-10022",
+          "chiller_serial_no": "M-077700028BL",
           "correct_owner": "true",
           "correct_license": "true",
           "correct_license_custom": "<string>",

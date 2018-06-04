@@ -21,12 +21,9 @@ module Wm3CelsiusBridge
       order_attrs = {
         id: order.id,
         submitted_at: (Date.strptime(order.completed_at.to_s, "%Y-%m-%d") rescue nil),
-        customer_no: order.customer.present? ? order.customer.number : nil,
         order_no: order.number,
-      }.merge(order.dynamic_field_values
-        .eager_load(:dynamic_field)
-        .pluck('shop_dynamic_fields.name', 'value')
-        .each_with_object({}) { |f, h| h[f[0].to_sym] = f[1] })
+      }.merge(customer_attributes(order.customer))
+      .merge(dynamic_fields_for(order))
 
       serial = order_attrs[:chiller_serial_no]
       chiller = chiller_by_serial(serial)
@@ -56,6 +53,16 @@ module Wm3CelsiusBridge
         .each_with_object({}) { |attr, hash| hash[attr.type_name.to_sym] = attr.value_name }
     end
 
+    def customer_attributes(customer)
+      return {} if customer.nil?
+      attrs = dynamic_fields_for(customer)
+
+      {
+        customer_no: customer.number,
+        internal_customer: attrs[:internal_cust] == 'true',
+      }
+    end
+
     def item_attributes(item)
       {
         id: item.id,
@@ -63,11 +70,15 @@ module Wm3CelsiusBridge
         name: item.name,
         item_price: item.price,
         item_amount: item.amount
-      }.merge(item.dynamic_field_values
+      }.merge(dynamic_fields_for(item))
+        .merge(item_quantity: item.quantity)
+    end
+
+    def dynamic_fields_for(obj)
+      obj.dynamic_field_values
         .eager_load(:dynamic_field)
         .pluck('shop_dynamic_fields.name', 'value')
-        .each_with_object({}) { |f, h| h[f[0].to_sym] = f[1] })
-        .merge(item_quantity: item.quantity)
+        .each_with_object({}) { |f, h| h[f[0].to_sym] = f[1] }
     end
 
     def chiller_by_serial(serial)

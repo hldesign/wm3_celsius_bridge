@@ -14,18 +14,8 @@ module Wm3CelsiusBridge
     # Communication
     attribute :phone_no, Types::StrippedString
 
-    # Other (not verified)
+    # Other
     attribute :last_date_modified, Types::CustomDate
-    # attribute :fax_no, Types::StrippedString
-    # attribute :balance_lcy, Types::CustomFloat
-    # attribute :copy_sellto_addrto_qte_from, Types::StrippedString
-    # attribute :gen_bus_posting_group, Types::Coercible::String
-    # attribute :vat_bus_posting_group, Types::Coercible::String
-    # attribute :customer_posting_group, Types::Coercible::String
-    # attribute :customer_price_group, Types::Coercible::String
-    # attribute :allow_line_disc, Types::Strict::Bool
-    # attribute :application_method, Types::Coercible::String
-    # attribute :payment_terms_code, Types::Coercible::String
-    # attribute :inder_terms_code, Types::Coercible::String
+    attribute :internal_cust, Types::Strict::Bool
   end
 end

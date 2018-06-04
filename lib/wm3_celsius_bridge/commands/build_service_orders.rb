@@ -42,6 +42,14 @@ module Wm3CelsiusBridge
         return
       end
 
+      unless valid_chiller_serial_number?(order[:chiller_serial_no])
+        reporter.error(
+          message: "Invalid chiller serial number (#{order[:chiller_serial_no]}) for WM3 order '#{order[:id]}'",
+          model: order,
+        )
+        return
+      end
+
       header = build_service_header(order)
       return if header.blank?
 
@@ -62,9 +70,14 @@ module Wm3CelsiusBridge
       return
     end
 
+    def valid_chiller_serial_number?(serial_no)
+      serial_no =~ /^(M|Z)-/i
+    end
+
     def build_service_header(order)
       header_attrs = {
         execution_workshop_cust_no: order[:customer_no],
+        bill_to_customer_no: calc_bill_to_customer_no(order),
         serial_no: order[:chiller_serial_no],
         your_reference: order[:ert_ordernr],
         order_no: order[:order_no],
@@ -83,8 +96,24 @@ module Wm3CelsiusBridge
       return
     end
 
+    def calc_bill_to_customer_no(order)
+      base_cust_no = (order[:customer_no] || '').sub(/-.{1,2}$/, '')
+      order_purpose = order[:order_purpose]
+      serial_no = order[:chiller_serial_no]
+
+      if order_purpose != 'warranty'
+        "#{base_cust_no}-2"
+      elsif serial_no =~ /^Z-/i
+        '0007'
+      else
+        '0008'
+      end
+    end
+
     def build_service_item_line(order)
-      service_lines = order[:order_items].map { |item| build_service_line(item) }.compact
+      service_lines = order[:order_items].map do |item|
+        build_service_line(item, internal_customer: order[:internal_customer])
+      end.compact
 
       if service_lines.empty?
         reporter.error(
@@ -122,32 +151,40 @@ module Wm3CelsiusBridge
       return
     end
 
-    def build_service_line(item)
-      if item[:item_type] == 'activity'
-        type = 1 # Unconfirmed
-        no = item[:sku]
-        desc = item[:name]
-        quantity = item[:item_quantity].to_i
-        amount = item[:item_amount].to_f
-
-      elsif item[:item_type] == 'additional'
-        type = 1
+    def build_service_line(item, internal_customer:)
+      # Additional item
+      if item[:item_type] == 'additional'
         no = 'V-9'
         desc = item[:sku] + ' ' + item[:name]
         quantity = item[:quantity].to_i # From dynamic field
         amount = (quantity * item[:price].to_i).to_f # From dynamic field
 
-      else # Article
-        type = 1
-        no = 'V-9'
-        desc = item[:sku] + ' ' + item[:name]
+      # Activity item
+      elsif item[:item_type] == 'activity'
+        no = item[:sku]
+        desc = item[:name]
         quantity = item[:item_quantity].to_i
         amount = item[:item_amount].to_f
 
+      # Article item
+      else
+        # Internal customer
+        if internal_customer
+          no = item[:sku]
+          desc = item[:name]
+
+        # External customer
+        else
+          no = 'V-9'
+          desc = item[:sku] + ' ' + item[:name]
+        end
+
+        quantity = item[:item_quantity].to_i
+        amount = item[:item_amount].to_f
       end
 
       service_line_attrs = {
-        type: type,
+        type: 1,
         no: no,
         quantity: quantity,
         line_amount: amount,

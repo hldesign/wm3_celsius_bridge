@@ -73,6 +73,7 @@
 :customer_disc_group: !ruby/string:Nori::StringWithAttributes
   str: SLUT
   attributes: {}
+:internal_cust: false
 :allow_line_disc: true
 :prices_including_vat: false
 :prepayment: !ruby/string:Nori::StringWithAttributes
