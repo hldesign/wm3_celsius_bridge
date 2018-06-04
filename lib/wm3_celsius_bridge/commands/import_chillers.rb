@@ -33,6 +33,9 @@ module Wm3CelsiusBridge
     attr_reader :store, :chillers, :reporter
 
     def import_chiller(chiller:, group:)
+      # Only import chillers with serial_no "M-*" or "Z-*"
+      return unless valid_serial_number?(chiller.serial_no)
+
       product = find_or_build_product(
         sku: chiller.serial_no,
         name: chiller.model
@@ -68,6 +71,10 @@ module Wm3CelsiusBridge
         info: e.message
       )
       return nil
+    end
+
+    def valid_serial_number?(serial_no)
+      serial_no.present? && serial_no =~ /^(M|Z)-/i
     end
   end
 end
