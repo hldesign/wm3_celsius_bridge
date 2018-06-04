@@ -75,6 +75,7 @@ module Wm3CelsiusBridge
     attribute :customer_no, Types::NonBlankStrippedString # "1915",
     attribute :billto_customer_no, Types::NonBlankStrippedString # "1915",
     attribute :posting_date, Types::MandatoryCustomDate # "08/01/17",
+    attribute :order_date, Types::CustomDate
     attribute :description, Types::StrippedString # "Mellanservice / Inspektion av kylaggregat",
     attribute :charged_qty, Types::Coercible::Float # "-1.5",
     attribute :mileage, Types::CustomFloat # "134,721.00",
