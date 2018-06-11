@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    wm3_celsius_bridge (0.8.3)
+    wm3_celsius_bridge (0.8.5)
       dry-struct (~> 0.4.0)
       rubyntlm (~> 0.6.2)
       savon (~> 2.11.1)
@@ -35,7 +35,7 @@ GEM
       dry-equalizer (~> 0.2)
       dry-types (~> 0.12, >= 0.12.2)
       ice_nine (~> 0.11)
-    dry-types (0.13.1)
+    dry-types (0.13.2)
       concurrent-ruby (~> 1.0)
       dry-container (~> 0.3)
       dry-core (~> 0.4, >= 0.4.4)
