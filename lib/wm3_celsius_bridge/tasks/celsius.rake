@@ -68,7 +68,7 @@ namespace :celsius do
       puts report
     end
 
-    desc 'Sync service ledger from NAV'
+    desc 'Sync service ledger entries from NAV'
     task :service_ledger, [:last_sync, :limit, :debug] => :environment do |t, args|
       debug = args.debug == 'true'
       limit = args.limit.to_i

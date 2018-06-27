@@ -4,6 +4,8 @@ module Wm3CelsiusBridge
   class ImportServiceLedgerEntries
     include ProductImporter
 
+    DOCUMENT_TYPE_WHITELIST = ['Shipment'].freeze
+
     def initialize(store:, entries:, reporter:)
       @entries = entries
       @store = store
@@ -20,9 +22,10 @@ module Wm3CelsiusBridge
         return false
       end
 
-      imported = entries.map do |entry|
-        import_entry(entry: entry, group: group)
-      end.compact
+      imported = entries
+        .select { |entry| DOCUMENT_TYPE_WHITELIST.include?(entry.document_type) }
+        .map { |entry| import_entry(entry: entry, group: group) }
+        .compact
 
       reporter.finish(message: "Imported #{imported.size} of #{entries.size} service ledger entries.")
     end

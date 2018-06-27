@@ -5,7 +5,7 @@ module Wm3CelsiusBridge
   class ImportArticles
     include ProductImporter
 
-    CATEGORY_CODE_WHITELIST = ['MHI RES_DL', 'ZAN RES_DL']
+    CATEGORY_CODE_WHITELIST = ['MHI RES_DL', 'ZAN RES_DL'].freeze
 
     def initialize(store:, articles:, reporter:)
       @articles = articles

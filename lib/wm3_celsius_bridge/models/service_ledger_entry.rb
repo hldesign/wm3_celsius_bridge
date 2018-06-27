@@ -70,6 +70,7 @@ module Wm3CelsiusBridge
   class ServiceLedgerEntry < Dry::Struct
     attribute :no, Types::OptionalString # "A-170211", ca 200 nil, ca 1400 uniq
     attribute :entry_no, Types::MandatoryString.constrained(max_size: 20) # "20041", uniq, counter
+    attribute :document_type, Types::StrippedString # ["Credit Memo", "Shipment", "Invoice"]
     attribute :serial_no_serviced, Types::NonBlankStrippedString # "C-RB650057", ca 1500 nil
     attribute :service_order_no, Types::NonBlankStrippedString # "S101205", ca 1200 nil
     attribute :customer_no, Types::NonBlankStrippedString # "1915",
