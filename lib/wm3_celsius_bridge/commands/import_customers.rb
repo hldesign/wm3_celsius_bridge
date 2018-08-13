@@ -4,8 +4,9 @@ require 'ostruct'
 module Wm3CelsiusBridge
   # The ImportCustomers command imports parsed customers into WM3.
   class ImportCustomers
-    def initialize(customers:, store:, reporter:)
+    def initialize(customers:, include_ids:, store:, reporter:)
       @customers = customers
+      @include_ids = include_ids || []
       @store = store
       @reporter = reporter
     end
@@ -29,9 +30,11 @@ module Wm3CelsiusBridge
 
     private
 
-    attr_reader :customers, :store, :reporter
+    attr_reader :customers, :include_ids, :store, :reporter
 
     def import_customer(customer:, group:)
+      return unless include_customer?(customer)
+
       cust = find_or_build_customer(number: customer.no)
 
       cust.customer_group = group
@@ -70,6 +73,11 @@ module Wm3CelsiusBridge
         info: e.message
       )
       return nil
+    end
+
+    def include_customer?(customer)
+      return true if include_ids.empty?
+      include_ids.include?(customer.no)
     end
 
     def create_customer_discount_lists(customer)

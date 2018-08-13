@@ -12,12 +12,23 @@ namespace :celsius do
         last_sync: last_sync,
         limit: limit,
         debug: debug,
-        enabled: {
-          customers: true,
-          chillers: true,
-          articles: true,
-          service_ledger: true,
-          orders: true
+        sync_configs: {
+          customers: {
+            enabled: true,
+            include_ids: []
+          },
+          chillers: {
+            enabled: true
+          },
+          articles: {
+            enabled: true
+          },
+          service_ledger: {
+            enabled: true
+          },
+          orders: {
+            enabled: true
+          }
         }
       )
 
@@ -32,7 +43,12 @@ namespace :celsius do
       report = Wm3CelsiusBridge.sync(
         limit: limit,
         debug: debug,
-        enabled: { customers: true }
+        sync_configs: {
+          customers: {
+            enabled: true,
+            include_ids: []
+          }
+        }
       )
 
       puts report
@@ -46,7 +62,11 @@ namespace :celsius do
       report = Wm3CelsiusBridge.sync(
         limit: limit,
         debug: debug,
-        enabled: { chillers: true }
+        sync_configs: {
+          chillers: {
+            enabled: true
+          }
+        }
       )
 
       puts report
@@ -62,7 +82,11 @@ namespace :celsius do
         last_sync: last_sync,
         limit: limit,
         debug: debug,
-        enabled: { articles: true }
+        sync_configs: {
+          articles: {
+            enabled: true
+          }
+        }
       )
 
       puts report
@@ -78,7 +102,11 @@ namespace :celsius do
         last_sync: last_sync,
         limit: limit,
         debug: debug,
-        enabled: { service_ledger: true }
+        sync_configs: {
+          service_ledger: {
+            enabled: true
+          }
+        }
       )
 
       puts report
@@ -90,7 +118,11 @@ namespace :celsius do
 
       report = Wm3CelsiusBridge.sync(
         debug: debug,
-        enabled: { orders: true }
+        sync_configs: {
+          orders: {
+            enabled: true
+          }
+        }
       )
 
       puts report

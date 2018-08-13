@@ -38,8 +38,10 @@ require 'wm3_celsius_bridge/railtie' if defined?(Rails)
 #
 # ==== Attributes
 #
-# * +debug+ - Debug logging.
-# * +limit+ - Max amount of chillers to import.
+# * +debug+         - Debug logging.
+# * +limit+         - Max amount of chillers to import.
+# * +last_sync+     - Only sync items changed after last_sync.
+# * +sync_configs+  - Configure individual syncs.
 #
 # ==== Examples
 #
@@ -47,8 +49,11 @@ require 'wm3_celsius_bridge/railtie' if defined?(Rails)
 #     debug: true,
 #     limit: 1000,
 #     last_sync: '2018-01-01',
-#     enabled: {
-#       chillers: true
+#     sync_configs: {
+#       customers: {
+#         enabled: true,
+#         include_ids: ['1234', '5678']
+#       }
 #     }
 #   )
 module Wm3CelsiusBridge
@@ -56,19 +61,30 @@ module Wm3CelsiusBridge
     debug: false,
     limit: 0,
     last_sync: Time.zone.today - 1,
-    enabled: {})
+    sync_configs: {})
 
     logger = Wm3CelsiusBridge.logger
     client = NavClient.new(debug: debug)
     subdomain = Wm3CelsiusBridge.config.subdomain
 
-    enabled_syncs = {
-      customers: false,
-      chillers: false,
-      articles: false,
-      service_ledger: false,
-      orders: false,
-    }.merge(enabled)
+    default_sync_configs = {
+      customers: {
+        enabled: false,
+        include_ids: []
+      },
+      chillers: {
+        enabled: false
+      },
+      articles: {
+        enabled: false
+      },
+      service_ledger: {
+        enabled: false
+      },
+      orders: {
+        enabled: false
+      }
+    }
 
     site = Site.where(subdomain: subdomain).first
     if site.nil?
@@ -87,7 +103,7 @@ module Wm3CelsiusBridge
       store: store,
       limit: limit,
       last_sync: last_sync,
-      enabled_syncs: enabled_syncs
+      sync_configs: default_sync_configs.merge(sync_configs)
     ).call
 
     logger.info("Printing sync report.\n\n#{report}")

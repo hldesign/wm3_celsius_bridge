@@ -6,10 +6,11 @@ module Wm3CelsiusBridge
   #
   # ==== Attributes
   #
-  # * +client+ - A client to request data from NAV.
-  # * +store+ - Storage for parsed NAV items.
-  # * +limit+ - Max amount of NAV items to import.
-  # * +enabled_syncs+ - Enable/disable syncs.
+  # * +client+        - A client to request data from NAV.
+  # * +store+         - Storage for parsed NAV items.
+  # * +limit+         - Max amount of NAV items to import.
+  # * +last_sync+     - Only sync items changed after last_sync.
+  # * +sync_configs+  - Configure individual syncs.
   #
   # ==== Examples
   #
@@ -20,12 +21,23 @@ module Wm3CelsiusBridge
   #     client: client,
   #     store: store,
   #     limit: 100,
-  #     enabled_syncs: {
-  #       customers: true,
-  #       chillers: true,
-  #       articles: true,
-  #       service_ledger: true,
-  #       orders: true
+  #     sync_configs: {
+  #       customers: {
+  #         enabled: true,
+  #         include_ids: ['1234', '5678']
+  #       },
+  #       chillers: {
+  #         enabled: true,
+  #       },
+  #       articles: {
+  #         enabled: true,
+  #       },
+  #       service_ledger: {
+  #         enabled: true,
+  #       },
+  #       orders: {
+  #         enabled: true
+  #       }
   #     }
   #   ).call
   class SyncWorker
@@ -34,32 +46,32 @@ module Wm3CelsiusBridge
       store:,
       limit: 0,
       last_sync: Time.zone.today - 1,
-      enabled_syncs:)
+      sync_configs:)
 
       @client = client
       @store = store
       @limit = limit
       @last_sync = last_sync
-      @enabled_syncs = enabled_syncs
+      @sync_configs = sync_configs
     end
 
     def call
       @reporter = build_reporter
 
       # Note that import order matters.
-      sync_customers if enabled_syncs[:customers]
-      sync_chillers if enabled_syncs[:chillers]
-      sync_articles if enabled_syncs[:articles]
-      sync_service_ledger_entries if enabled_syncs[:service_ledger]
+      sync_customers if sync_configs[:customers][:enabled]
+      sync_chillers if sync_configs[:chillers][:enabled]
+      sync_articles if sync_configs[:articles][:enabled]
+      sync_service_ledger_entries if sync_configs[:service_ledger][:enabled]
 
-      export_service_orders if enabled_syncs[:orders]
+      export_service_orders if sync_configs[:orders][:enabled]
 
       reporter
     end
 
     private
 
-    attr_reader :client, :store, :limit, :last_sync, :enabled_syncs, :reporter
+    attr_reader :client, :store, :limit, :last_sync, :sync_configs, :reporter
 
     def sync_customers
       main_reporter = reporter.sub_report(title: 'Import customers')
@@ -106,6 +118,7 @@ module Wm3CelsiusBridge
         limited_customers = limit > 0 ? customers.take(limit) : customers
         ImportCustomers.new(
           customers: limited_customers,
+          include_ids: sync_configs[:customers][:include_ids],
           store: store,
           reporter: sub_reporter,
         ).call
