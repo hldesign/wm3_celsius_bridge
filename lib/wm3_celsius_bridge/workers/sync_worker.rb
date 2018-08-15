@@ -254,9 +254,20 @@ module Wm3CelsiusBridge
       end
 
       sub_reporter = main_reporter.sub_report(title: 'Parse fetched service ledger data')
+
+      entry_document_type_whitelist = ['Shipment'].freeze
+      entry_type_blacklist = ['Resource'].freeze
+
+      filtered_data = resp.data
+        .select { |item| entry_document_type_whitelist.include?(item[:document_type]) }
+        .reject { |item| entry_type_blacklist.include?(item[:type]) }
+
+      removed_entry_count = resp.data.size - filtered_data.size
+      sub_reporter.info(message: "Removed #{removed_entry_count} service ledger entries based on filter settings.")
+
       begin
         entries = ParseItems.new(
-          data: resp.data,
+          data: filtered_data,
           item_class: ServiceLedgerEntry,
           reporter: sub_reporter
         ).call

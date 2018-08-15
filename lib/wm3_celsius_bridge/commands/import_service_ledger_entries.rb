@@ -4,8 +4,6 @@ module Wm3CelsiusBridge
   class ImportServiceLedgerEntries
     include ProductImporter
 
-    DOCUMENT_TYPE_WHITELIST = ['Shipment'].freeze
-
     def initialize(store:, entries:, reporter:)
       @entries = entries
       @store = store
@@ -23,7 +21,6 @@ module Wm3CelsiusBridge
       end
 
       imported = entries
-        .select { |entry| DOCUMENT_TYPE_WHITELIST.include?(entry.document_type) }
         .map { |entry| import_entry(entry: entry, group: group) }
         .compact
 
@@ -66,7 +63,7 @@ module Wm3CelsiusBridge
       true
     rescue StandardError => e
       reporter.error(
-        message: "Could not import service ledger entry (serial_no=#{entry.serial_no})",
+        message: "Could not import service ledger entry (entry_no=#{entry.entry_no})",
         info: e.message
       )
       return nil

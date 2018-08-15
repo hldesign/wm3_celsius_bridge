@@ -52,5 +52,9 @@ module Wm3CelsiusBridge
     OptionalDate = Types::Strict::Date.optional.default(nil)
     OptionalInt = Types::Strict::Integer.optional.default(nil)
     OptionalFloat = Strict::Float.optional.default(nil)
+    ChillerSerialNo = Types::String.constructor do |*args|
+      val = String(*args).strip
+      val.end_with?("BL") && !val.start_with?("M-") ? "M-#{val}" : val
+    end
   end
 end

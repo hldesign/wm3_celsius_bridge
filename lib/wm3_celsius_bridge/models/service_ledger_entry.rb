@@ -68,21 +68,22 @@
 
 module Wm3CelsiusBridge
   class ServiceLedgerEntry < Dry::Struct
-    attribute :no, Types::OptionalString # "A-170211", ca 200 nil, ca 1400 uniq
-    attribute :entry_no, Types::MandatoryString.constrained(max_size: 20) # "20041", uniq, counter
-    attribute :document_type, Types::StrippedString # ["Credit Memo", "Shipment", "Invoice"]
-    attribute :serial_no_serviced, Types::NonBlankStrippedString # "C-RB650057", ca 1500 nil
-    attribute :service_order_no, Types::NonBlankStrippedString # "S101205", ca 1200 nil
-    attribute :customer_no, Types::NonBlankStrippedString # "1915",
-    attribute :billto_customer_no, Types::NonBlankStrippedString # "1915",
-    attribute :posting_date, Types::MandatoryCustomDate # "08/01/17",
+    attribute :entry_no, Types::MandatoryString.constrained(max_size: 20)
+    attribute :type, Types::StrippedString
+    attribute :document_type, Types::StrippedString
     attribute :order_date, Types::CustomDate
-    attribute :description, Types::StrippedString # "Mellanservice / Inspektion av kylaggregat",
-    attribute :charged_qty, Types::Coercible::Float # "-1.5",
-    attribute :mileage, Types::CustomFloat # "134,721.00",
-    attribute :runtime_total, Types::CustomFloat # "37,066.00",
-    attribute :runtime_day, Types::CustomFloat # "16,746.00",
-    attribute :runtime_night, Types::CustomFloat # "4,689.00",
-    attribute :unitof_measure_code, Types::OptionalString
+    attribute :no, Types::StrippedString
+    attribute :description, Types::StrippedString
+    attribute :quantity, Types::CustomFloat
+    attribute :unitof_measure_code, Types::StrippedString
+    attribute :mileage, Types::CustomFloat
+    attribute :runtime_total, Types::CustomFloat
+    attribute :runtime_day, Types::CustomFloat
+    attribute :runtime_night, Types::CustomFloat
+    attribute :service_order_no, Types::StrippedString
+    attribute :posting_date, Types::MandatoryCustomDate
+    attribute :serial_no_serviced, Types::ChillerSerialNo.constrained(min_size: 1)
+    attribute :customer_no, Types::StrippedString
+    attribute :billto_customer_no, Types::StrippedString
   end
 end
