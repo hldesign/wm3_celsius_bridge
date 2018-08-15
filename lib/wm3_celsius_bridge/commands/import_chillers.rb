@@ -21,7 +21,13 @@ module Wm3CelsiusBridge
         return false
       end
 
-      imported = chillers.map do |chiller|
+      filtered_chillers = chillers
+        .select { |chiller| valid_serial_number?(chiller.serial_no) }
+
+      removed_count = chillers.size - filtered_chillers.size
+      reporter.info(message: "Removed #{removed_count} chillers based on filter settings.")
+
+      imported = filtered_chillers.map do |chiller|
         import_chiller(chiller: chiller, group: group)
       end.compact
 
@@ -33,9 +39,6 @@ module Wm3CelsiusBridge
     attr_reader :store, :chillers, :reporter
 
     def import_chiller(chiller:, group:)
-      # Only import chillers with serial_no "M-*" or "Z-*"
-      return unless valid_serial_number?(chiller.serial_no)
-
       product = find_or_build_product(
         sku: chiller.serial_no,
         name: chiller.model
