@@ -20,7 +20,7 @@ module Wm3CelsiusBridge
 
     attribute :type, Types::Strict::Integer # Item type
     attribute :no, Types::OptionalString.constrained(max_size: 20)
-    attribute :quantity, Types::OptionalInt
+    attribute :quantity, Types::OptionalFloat
     attribute :line_amount, Types::OptionalFloat
     attribute :description, Types::MandatoryString.constrained(max_size: 100)
     attribute :parts_or_time, Types::Strict::String.enum('Parts', 'Time').optional.default(nil)

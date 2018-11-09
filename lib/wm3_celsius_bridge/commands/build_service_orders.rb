@@ -156,14 +156,14 @@ module Wm3CelsiusBridge
       if item[:item_type] == 'additional'
         no = 'V-9'
         desc = item[:sku] + ' ' + item[:name]
-        quantity = item[:quantity].to_i # From dynamic field
+        quantity = item[:quantity].to_f # From dynamic field
         amount = (quantity * item[:price].to_i).to_f # From dynamic field
 
       # Activity item
       elsif item[:item_type] == 'activity'
         no = item[:sku]
         desc = item[:name]
-        quantity = item[:item_quantity].to_i
+        quantity = item[:item_quantity].to_f
         amount = item[:item_amount].to_f
 
       # Article item
@@ -179,7 +179,7 @@ module Wm3CelsiusBridge
           desc = item[:sku] + ' ' + item[:name]
         end
 
-        quantity = item[:item_quantity].to_i
+        quantity = item[:item_quantity].to_f
         amount = item[:item_amount].to_f
       end
 
