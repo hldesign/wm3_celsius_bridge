@@ -97,7 +97,7 @@ module Wm3CelsiusBridge
     end
 
     def calc_bill_to_customer_no(order)
-      base_cust_no = (order[:chiller][:customer_no] || '').sub(/-.{1,2}$/, '')
+      base_cust_no = (order[:chiller][:customer_no] || '')[0..3]
       order_purpose = order[:order_purpose]
       serial_no = order[:chiller_serial_no]
 
