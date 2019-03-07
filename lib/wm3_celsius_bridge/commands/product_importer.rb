@@ -68,17 +68,35 @@ module Wm3CelsiusBridge
         return
       end
 
-      product_property = product.product_properties.where(
-        property: property,
-        property_value: property_value
-      ).first_or_create
+      # There can be only one ProductProperty referencing the same Property
+      product_properties = product.product_properties.where(property: property)
+      product_properties.destroy_all if product_properties.count > 1
 
-      if product_property.new_record?
-        reporter.error(
-          message: "Could not create product property with name '#{property.name}' and value #{property_value.value}",
-          info: product_property.errors.full_messages,
-        )
+      if product_properties.empty?
+        product_property = product.product_properties.where(
+          property: property,
+          property_value: property_value
+        ).create
+
+        if product_property.new_record?
+          reporter.error(
+            message: "Could not create product property with name '#{property.name}' and value #{property_value.value}",
+            info: product_property.errors.full_messages,
+          )
+        end
+
+      else
+        product_property = product_properties.first
+        product_property.property_value = property_value
+
+        unless product_property.save
+          reporter.error(
+            message: "Could not update product property '#{property.name}' with value #{property_value.value}",
+            info: product_property.errors.full_messages,
+          )
+        end
       end
+
     end
   end
 end
