@@ -209,6 +209,7 @@ module Wm3CelsiusBridge
         .map { |_, v| (v || '').scan(/.{1,50}/) }
         .flatten
         .map do |line|
+          next if line.blank?
           begin
             ServiceLine.new({
               type: 0, # 'Text' type
