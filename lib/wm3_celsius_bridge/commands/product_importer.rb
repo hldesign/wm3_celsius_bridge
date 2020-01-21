@@ -55,18 +55,7 @@ module Wm3CelsiusBridge
         return
       end
 
-      property_value = store.property_values.where(
-        property: property,
-        value: value.to_s
-      ).first_or_create
-
-      if property_value.new_record?
-        reporter.error(
-          message: "Could not create property value '#{value}' on property #{property.name} and product #{product.id}",
-          info: property_value.errors.full_messages,
-        )
-        return
-      end
+      property_value = Shop::PropertyValue.get(store.id, property.id, value)
 
       # There can be only one ProductProperty referencing the same Property
       product_properties = product.product_properties.where(property: property)
