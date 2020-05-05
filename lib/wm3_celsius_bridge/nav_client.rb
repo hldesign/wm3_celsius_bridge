@@ -25,10 +25,9 @@ module Wm3CelsiusBridge
       config = Wm3CelsiusBridge.config
 
       @client = Savon.client do
-        ntlm [
-          config.user_name,
-          config.password,
-          config.user_domain
+        basic_auth [
+          "#{config.user_domain}\\#{config.user_name}",
+          config.password
         ]
         endpoint config.endpoint
         namespace_identifier :wsm
