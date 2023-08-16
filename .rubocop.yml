@@ -1,13 +1,43 @@
-inherit_from:
-  - .rubocop_todo.yml
+require:
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rake
+  - rubocop-rspec
 
 AllCops:
   DisplayCopNames: true
   DisplayStyleGuide: true
-  TargetRubyVersion: 2.3
+  NewCops: enable
 
-Rails:
-  Enabled: true
+Layout/LineLength:
+  Max: 120
 
 Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: double_quotes
+  ConsistentQuotesInMultiline: true
+
+Metrics/BlockLength:
+  Max: 80
+  Exclude: 
+    - 'spec/**/*'
+    - 'test/**/*'
+    - 'lib/wm3_celsius_bridge/configuration.rb'
+
+Rails/Date:
   Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+  Exclude:
+    - 'spec/**/*'
+    - 'test/**/*'
+    - 'lib/wm3_celsius_bridge/configuration.rb'
+
+Style/RaiseArgs:
+  EnforcedStyle: compact
+  Exclude:
+    - 'spec/commands/parse_chillers_spec.rb'

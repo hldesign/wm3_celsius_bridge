@@ -2,15 +2,15 @@
 
 RSpec.describe Wm3CelsiusBridge::ParseItems do
   let(:result) do
-    Wm3CelsiusBridge::ParseItems.new(
+    described_class.new(
       data: data,
-      item_class: Wm3CelsiusBridge::Chiller,
+      item_class: Wm3CelsiusBridge::Chiller
     ).call
   end
 
   before do
     allow(Wm3CelsiusBridge::Chiller).to receive(:new) do |arg|
-      arg[:valid] ? arg : raise(ArgumentError.new('Invalid arg.'))
+      arg[:valid] ? arg : raise(ArgumentError.new("Invalid arg."))
     end
   end
 

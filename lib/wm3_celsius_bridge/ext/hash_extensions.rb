@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Wm3CelsiusBridge
   module HashExtensions
     refine Hash do
@@ -25,7 +27,7 @@ module Wm3CelsiusBridge
       end
 
       def pascalcase(value)
-        value.to_s.split('_').map{|e| e.capitalize}.join
+        value.to_s.split("_").map(&:capitalize).join
       end
     end
   end

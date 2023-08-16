@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Wm3CelsiusBridge::Chiller do
-  let(:chiller) { Wm3CelsiusBridge::Chiller.new(data) }
+  let(:chiller) { described_class.new(data) }
 
   context "with valid data" do
     let(:data) { YAML.load_file("spec/fixtures/chiller_valid_data.yml") }

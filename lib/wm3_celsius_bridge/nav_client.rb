@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'savon'
-require 'ostruct'
-require 'date'
+require "savon"
+require "ostruct"
+require "date"
 
 module Wm3CelsiusBridge
   # The NavClient Class retrieves data
@@ -33,10 +33,10 @@ module Wm3CelsiusBridge
         namespace_identifier :wsm
         namespace "urn:microsoft-dynamics-schemas/codeunit/WSManagement"
         namespaces({
-          "xmlns:x50004" => "urn:microsoft-dynamics-nav/xmlports/x50004",
-          "xmlns:x50009" => "urn:microsoft-dynamics-nav/xmlports/x50009",
-          "xmlns:x50010" => "urn:microsoft-dynamics-nav/xmlports/x50010"
-        })
+                     "xmlns:x50004" => "urn:microsoft-dynamics-nav/xmlports/x50004",
+                     "xmlns:x50009" => "urn:microsoft-dynamics-nav/xmlports/x50009",
+                     "xmlns:x50010" => "urn:microsoft-dynamics-nav/xmlports/x50010"
+                   })
         convert_request_keys_to :none
         element_form_default :qualified
         open_timeout SOAP_TIMEOUT
@@ -65,7 +65,8 @@ module Wm3CelsiusBridge
 
     def contacts
       response = call(:Contacts, wSContacts: {})
-      dig_contacts_response(response, :contacts_result, :w_s_contacts, :contact_business_relation)
+      dig_contacts_response(response, :contacts_result, :w_s_contacts,
+                            :contact_business_relation)
     end
 
     def prices
@@ -76,12 +77,13 @@ module Wm3CelsiusBridge
     def service_ledger_entries(posting_date: Date.today - 1)
       filter = service_ledger_entries_filter(posting_date)
       response = call(:ServiceLedgerEntries, wSServiceLedgerEntries: filter)
-      dig_response(response, :service_ledger_entries_result, :w_s_service_ledger_entries, :service_ledger_entry)
+      dig_response(response, :service_ledger_entries_result, :w_s_service_ledger_entries,
+                   :service_ledger_entry)
     end
 
     def parts_and_service_types(modified_after: Date.today - 1)
       filter = parts_and_service_type_filter(modified_after)
-      response = call(:PartsAndServiceTypes, partsServiceTypes: filter )
+      response = call(:PartsAndServiceTypes, partsServiceTypes: filter)
       dig_response(response, :parts_and_service_types_result, :parts_service_types, :part)
     end
 
@@ -114,11 +116,11 @@ module Wm3CelsiusBridge
     end
 
     def success(data)
-      OpenStruct.new("ok?": true, data: data)
+      OpenStruct.new(ok?: true, data: data)
     end
 
     def failure(message)
-      OpenStruct.new("ok?": false, message: message)
+      OpenStruct.new(ok?: false, message: message)
     end
 
     def dig_response(response, *path)
@@ -133,15 +135,15 @@ module Wm3CelsiusBridge
       # Result is nil when no filter matches was found.
       # Result is a Hash when one match was found.
       # Result is an Array otherwise.
-      result = data.dig(last_path)
+      result = data[last_path]
 
       parsed_result = if result.nil?
-        []
-      elsif result.is_a?(Hash)
-        [result]
-      else
-        result
-      end
+                        []
+                      elsif result.is_a?(Hash)
+                        [result]
+                      else
+                        result
+                      end
 
       success(parsed_result)
     end
@@ -150,7 +152,7 @@ module Wm3CelsiusBridge
       response = dig_response(contacts_response, *path)
       return response unless response.ok?
 
-      data = response.data.map { |item| item.dig(:contacts, :contact) }.flatten(1)
+      data = response.data.flat_map { |item| item.dig(:contacts, :contact) }
       if data.nil?
         failure("Unexpected NAV response structure. Could not find path [:contacts, :contact]")
       else
@@ -164,17 +166,17 @@ module Wm3CelsiusBridge
       service_lines = payload[:service_item_line][:service_lines]
       payload[:service_item_line][:service_lines] = { service_line: service_lines }
 
-      payload.pascalcase_keys.prefix_keys('x50010:')
+      payload.pascalcase_keys.prefix_keys("x50010:")
     end
-
 
     def parts_and_service_type_filter(modified_after)
       return {} if modified_after.nil?
+
       date = modified_after.is_a?(Date) ? modified_after : Date.parse(modified_after)
 
       {
         "x50004:Filter" => {
-          "x50004:Filter_ModifiedDateAfter" => date.strftime('%Y-%m-%d')
+          "x50004:Filter_ModifiedDateAfter" => date.strftime("%Y-%m-%d")
         }
       }
     end
@@ -186,7 +188,7 @@ module Wm3CelsiusBridge
 
       {
         "x50009:Filter" => {
-          "x50009:Filter_PostingDate" => date.strftime('%Y-%m-%d')
+          "x50009:Filter_PostingDate" => date.strftime("%Y-%m-%d")
         }
       }
     end

@@ -11,18 +11,17 @@ module Wm3CelsiusBridge
     end
 
     def call
-      group = find_or_build_group(name: 'Servicetransaktioner', url: 'chiller-services')
+      group = find_or_build_group(name: "Servicetransaktioner", url: "chiller-services")
       unless group.save
         reporter.error(
           message: "Could not save group #{group.url}",
-          info: group.errors.full_messages,
+          info: group.errors.full_messages
         )
         return false
       end
 
       imported = entries
-        .map { |entry| import_entry(entry: entry, group: group) }
-        .compact
+                 .filter_map { |entry| import_entry(entry: entry, group: group) }
 
       reporter.finish(message: "Imported #{imported.size} of #{entries.size} service ledger entries.")
     end
@@ -40,7 +39,7 @@ module Wm3CelsiusBridge
         reporter.error(
           message: "Could not update product #{product.id}",
           model: entry,
-          info: product.errors.full_messages,
+          info: product.errors.full_messages
         )
         return
       end
@@ -50,7 +49,7 @@ module Wm3CelsiusBridge
         reporter.error(
           message: "Could not create or update product group for #{product.id}",
           info: product.errors.full_messages,
-          model: entry,
+          model: entry
         )
         return
       end
@@ -66,7 +65,7 @@ module Wm3CelsiusBridge
         message: "Could not import service ledger entry (entry_no=#{entry.entry_no})",
         info: e.message
       )
-      return nil
+      nil
     end
   end
 end

@@ -43,11 +43,11 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
       end
 
       it "fails to request customers" do
-        expect(response).to_not be_ok
+        expect(response).not_to be_ok
       end
 
       it "returns an error message" do
-        expect(error_message).to_not be_blank
+        expect(error_message).not_to be_blank
       end
     end
 
@@ -59,11 +59,11 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
       end
 
       it "fails to request customers" do
-        expect(response).to_not be_ok
+        expect(response).not_to be_ok
       end
 
       it "returns an error message" do
-        expect(error_message).to_not be_blank
+        expect(error_message).not_to be_blank
       end
     end
   end
@@ -100,7 +100,9 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
 
   describe "#parts_and_service_types", soap: true do
     let(:response) { subject.parts_and_service_types(modified_after: "2017-12-14") }
-    let(:fixture) { File.read("spec/fixtures/soap_responses/parts_and_service_types_3_elements_success.xml") }
+    let(:fixture) do
+      File.read("spec/fixtures/soap_responses/parts_and_service_types_3_elements_success.xml")
+    end
 
     before do
       msg = {
@@ -134,7 +136,9 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
     end
 
     context "reply contains one element" do
-      let(:fixture) { File.read("spec/fixtures/soap_responses/parts_and_service_types_1_element_success.xml") }
+      let(:fixture) do
+        File.read("spec/fixtures/soap_responses/parts_and_service_types_1_element_success.xml")
+      end
 
       it "fetches list of parts and service types" do
         expect(data.size).to eq(1)
@@ -142,7 +146,9 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
     end
 
     context "reply contains no elements" do
-      let(:fixture) { File.read("spec/fixtures/soap_responses/parts_and_service_types_no_elements_success.xml") }
+      let(:fixture) do
+        File.read("spec/fixtures/soap_responses/parts_and_service_types_no_elements_success.xml")
+      end
 
       it "fetches list of parts and service types" do
         expect(data).to eq([])
@@ -155,9 +161,12 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
     let(:order_date) { Date.today }
 
     let(:service_order) do
-      sh = Wm3CelsiusBridge::ServiceHeader.new(execution_workshop_cust_no: "1016", serial_no: "abc", order_date: order_date)
-      sl1 = Wm3CelsiusBridge::ServiceLine.new(type: 1, no: "123", quantity: 1.0, line_amount: 2.0, description: 'desc', parts_or_time: 'Parts', line_discount_percent: 100)
-      sl2 = Wm3CelsiusBridge::ServiceLine.new(type: 1, no: "456", quantity: 2.0, line_amount: 3.5, description: 'desc2', parts_or_time: 'Time', line_discount_percent: 100)
+      sh = Wm3CelsiusBridge::ServiceHeader.new(execution_workshop_cust_no: "1016",
+                                               serial_no: "abc", order_date: order_date)
+      sl1 = Wm3CelsiusBridge::ServiceLine.new(type: 1, no: "123", quantity: 1.0,
+                                              line_amount: 2.0, description: "desc", parts_or_time: "Parts", line_discount_percent: 100)
+      sl2 = Wm3CelsiusBridge::ServiceLine.new(type: 1, no: "456", quantity: 2.0,
+                                              line_amount: 3.5, description: "desc2", parts_or_time: "Time", line_discount_percent: 100)
       sil = Wm3CelsiusBridge::ServiceItemLine.new(service_lines: [sl1, sl2])
 
       Wm3CelsiusBridge::ServiceOrder.new(id: 1, service_header: sh, service_item_line: sil)
@@ -200,8 +209,10 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
       }
     end
 
-    context "successful request" do
-      let(:fixture) { File.read("spec/fixtures/soap_responses/import_service_order_success.xml") }
+    context "when request succeeds" do
+      let(:fixture) do
+        File.read("spec/fixtures/soap_responses/import_service_order_success.xml")
+      end
 
       before do
         savon.expects(:ImportServiceOrder).with(message: request_message).returns(fixture)
@@ -216,12 +227,14 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
       end
 
       it "returns success string" do
-        expect(response.data).to eq('ok')
+        expect(response.data).to eq("ok")
       end
     end
 
-    context "failed request" do
-      let(:fixture) { File.read("spec/fixtures/soap_responses/import_service_order_failure.xml") }
+    context "when request fails" do
+      let(:fixture) do
+        File.read("spec/fixtures/soap_responses/import_service_order_failure.xml")
+      end
 
       before do
         response = { code: 500, headers: {}, body: fixture }
@@ -229,11 +242,11 @@ RSpec.describe Wm3CelsiusBridge::NavClient do
       end
 
       it "fails to request customers" do
-        expect(response).to_not be_ok
+        expect(response).not_to be_ok
       end
 
       it "returns an error message" do
-        expect(error_message).to_not be_blank
+        expect(error_message).not_to be_blank
       end
     end
   end

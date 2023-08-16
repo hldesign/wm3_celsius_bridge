@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
-require 'dry-struct'
+require "dry-struct"
 
 module Wm3CelsiusBridge
   # The Types module defines data types
   # used when parsing data from NAV.
+  # rubocop:disable Lint/SuppressedException
   module Types
-    include ::Dry::Types.module
+    include ::Dry.Types
 
     # StrippedString strips whitespace from data
     StrippedString = Types::String.constructor { |*args| String(*args).strip }
@@ -36,7 +37,7 @@ module Wm3CelsiusBridge
     # before coercing into float. Ex:
     # "11,333.90" => "11333.90" => 11333.9
     CustomFloat = Types::Float.constructor do |arg|
-      val = (arg || "").gsub(/[^0-9\.]/, '')
+      val = (arg || "").gsub(/[^0-9\.]/, "")
       Types::Coercible::Float[val]
     end
 
@@ -48,7 +49,7 @@ module Wm3CelsiusBridge
 
     # ImportServiceOrder types
     MandatoryString = Types::Strict::String
-    OptionalString = Types::Strict::String.optional.default('')
+    OptionalString = Types::Strict::String.optional.default("")
     OptionalDate = Types::Strict::Date.optional.default(nil)
     OptionalInt = Types::Strict::Integer.optional.default(nil)
     OptionalFloat = Strict::Float.optional.default(nil)
@@ -57,4 +58,5 @@ module Wm3CelsiusBridge
       val.end_with?("BL") && !val.start_with?("M-") ? "M-#{val}" : val
     end
   end
+  # rubocop:enable Lint/SuppressedException
 end

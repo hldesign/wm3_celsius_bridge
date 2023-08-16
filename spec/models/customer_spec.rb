@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require 'wm3_celsius_bridge/models/customer'
+require "wm3_celsius_bridge/models/customer"
 
 RSpec.describe Wm3CelsiusBridge::Customer do
-  let(:customer) { Wm3CelsiusBridge::Customer.new(data) }
+  let(:customer) { described_class.new(data) }
 
   context "with valid data" do
     let(:data) { YAML.load_file("spec/fixtures/customer_valid_data.yml") }
 
     it "parses customer data" do
-      expect { customer }.to_not raise_error
+      expect { customer }.not_to raise_error
     end
   end
 

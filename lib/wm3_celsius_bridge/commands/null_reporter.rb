@@ -2,10 +2,9 @@
 
 module Wm3CelsiusBridge
   class NullReporter
-    def initialize(*args)
-    end
+    def initialize(*args); end
 
-    def method_missing(*args)
+    def method_missing(*_args)
       self
     end
   end

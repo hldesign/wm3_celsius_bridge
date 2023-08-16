@@ -3,6 +3,7 @@
 require "bundler/setup"
 require "savon/mock/spec_helper"
 require "wm3_celsius_bridge"
+require "pry"
 
 # Silence celsius logger during tests
 Wm3CelsiusBridge.logger = Logger.new(nil)

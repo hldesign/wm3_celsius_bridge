@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'singleton'
+require "singleton"
 
 module Wm3CelsiusBridge
   # Configuration class for Wm3CelsiusBridge. This allows a
@@ -19,11 +19,11 @@ module Wm3CelsiusBridge
     include Singleton
 
     @@defaults = {
-      user_name: '',
-      user_domain: '',
-      password: '',
-      endpoint: '',
-      subdomain: ''
+      user_name: "",
+      user_domain: "",
+      password: "",
+      endpoint: "",
+      subdomain: ""
     }
 
     attr_accessor :user_name, :user_domain, :password, :endpoint, :subdomain
