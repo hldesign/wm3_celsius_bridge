@@ -28,5 +28,9 @@ module Wm3CelsiusBridge
     attribute :unitof_measure, Types::OptionalString.constrained(max_size: 10)
     attribute :location_code, Types::OptionalString.constrained(max_size: 10)
     attribute :line_discount_percent, Types::Strict::Integer
+
+    def to_h
+      to_hash
+    end
   end
 end
