@@ -16,16 +16,21 @@
 module Wm3CelsiusBridge
   class ServiceLine < Dry::Struct
     include OmitBlankAttributes
-    constructor_type :strict_with_defaults
+    # constructor_type :strict_with_defaults
 
     attribute :type, Types::Strict::Integer # Item type
     attribute :no, Types::OptionalString.constrained(max_size: 20)
     attribute :quantity, Types::OptionalFloat
     attribute :line_amount, Types::OptionalFloat
     attribute :description, Types::MandatoryString.constrained(max_size: 100)
-    attribute :parts_or_time, Types::Strict::String.enum('Parts', 'Time').optional.default(nil)
+    attribute :parts_or_time,
+              Types::Strict::String.enum("Parts", "Time").optional.default(nil)
     attribute :unitof_measure, Types::OptionalString.constrained(max_size: 10)
     attribute :location_code, Types::OptionalString.constrained(max_size: 10)
     attribute :line_discount_percent, Types::Strict::Integer
+
+    def to_h
+      to_hash
+    end
   end
 end

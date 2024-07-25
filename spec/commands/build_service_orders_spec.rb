@@ -2,17 +2,17 @@
 
 RSpec.describe Wm3CelsiusBridge::BuildServiceOrders do
   let(:result) do
-    Wm3CelsiusBridge::BuildServiceOrders.new(
+    described_class.new(
       data: data,
-      reporter: reporter,
+      reporter: reporter
     ).call
   end
 
-  let(:reporter) { Wm3CelsiusBridge::EventReporter.new(title: 'BuildServiceOrders spec') }
+  let(:reporter) { Wm3CelsiusBridge::EventReporter.new(title: "BuildServiceOrders spec") }
 
   before do
     allow(Wm3CelsiusBridge::Chiller).to receive(:new) do |arg|
-      arg[:valid] ? arg : raise(ArgumentError.new('Invalid arg.'))
+      arg[:valid] ? arg : raise(ArgumentError.new("Invalid arg."))
     end
   end
 
@@ -20,81 +20,81 @@ RSpec.describe Wm3CelsiusBridge::BuildServiceOrders do
     let(:data) do
       [
         {
-          "id": 62163,
-          "submitted_at": Date.parse('2018-04-01'),
-          "order_no": "O12345678",
-          "customer_no": "0001",
-          "ert_ordernr": "ert-order-nr",
-          "reparation_date": "2018-04-01",
-          "uptime_diesel": "12",
-          "order_purpose": "warranty",
-          "jour": "true",
-          "meter_indication": "1000",
-          "uptime_night": "34",
-          "reason": "<string>",
-          "diagnos": "<text>",
-          "correction": "<text>",
-          "order_comment": "<text>",
-          "chiller_serial_no": "M-077700028BL",
-          "correct_owner": "true",
-          "correct_license": "true",
-          "correct_license_custom": "<string>",
-          "chiller": {
-            "low_pressure_guard": "0.0",
-            "no": "10022",
-            "gwp": "14119.0",
-            "customer_no": "1474",
-            "installation_date": "2010-12-29",
-            "dateof_last_seepagecontrol": "2012-06-11",
-            "dateof_last_service": "2012-06-11",
-            "warranty_ending_date_parts": "2012-12-29",
-            "high_pressure_guard": "32.0",
-            "safety_pressure": "35.0",
-            "coolants_volume": "3.6",
-            "co2_coefficient": "50828.4",
-            "reg_no": "JLB 003",
-            "serial_no": "M-077700028BL",
-            "model": "MITSUBISHI TNW 7 EA",
-            "coolants_type": "R404A"
+          id: 62_163,
+          submitted_at: Date.parse("2018-04-01"),
+          order_no: "O12345678",
+          customer_no: "0001",
+          ert_ordernr: "ert-order-nr",
+          reparation_date: "2018-04-01",
+          uptime_diesel: "12",
+          order_purpose: "warranty",
+          jour: "true",
+          meter_indication: "1000",
+          uptime_night: "34",
+          reason: "<string>",
+          diagnos: "<text>",
+          correction: "<text>",
+          order_comment: "<text>",
+          chiller_serial_no: "M-077700028BL",
+          correct_owner: "true",
+          correct_license: "true",
+          correct_license_custom: "<string>",
+          chiller: {
+            low_pressure_guard: "0.0",
+            no: "10022",
+            gwp: "14119.0",
+            customer_no: "1474",
+            installation_date: "2010-12-29",
+            dateof_last_seepagecontrol: "2012-06-11",
+            dateof_last_service: "2012-06-11",
+            warranty_ending_date_parts: "2012-12-29",
+            high_pressure_guard: "32.0",
+            safety_pressure: "35.0",
+            coolants_volume: "3.6",
+            co2_coefficient: "50828.4",
+            reg_no: "JLB 003",
+            serial_no: "M-077700028BL",
+            model: "MITSUBISHI TNW 7 EA",
+            coolants_type: "R404A"
           },
-          "order_items": [
+          order_items: [
             {
-              "id": 77873,
-              "sku": "M-PSA011H011",
-              "name": "LABEL,CAUTI",
-              "price": "0.0",
-              "amount": "0.0",
-              "item_type": "article",
-              "quantity": 2
+              id: 77_873,
+              sku: "M-PSA011H011",
+              name: "LABEL,CAUTI",
+              price: "0.0",
+              amount: "0.0",
+              item_type: "article",
+              quantity: 2
             },
             {
-              "id": 77875,
-              "sku": "M-851029",
-              "name": "Motorvärmare 220 Volt TU100/TU85/TFV",
-              "price": "0.0",
-              "amount": "0.0",
-              "item_type": "article",
-              "quantity": 2
+              id: 77_875,
+              sku: "M-851029",
+              name: "Motorvärmare 220 Volt TU100/TU85/TFV",
+              price: "0.0",
+              amount: "0.0",
+              item_type: "article",
+              quantity: 2
             },
             {
-              "id": 77874,
-              "sku": "SP-A01",
-              "name": "Refrigerant recovery",
-              "price": "0.0",
-              "amount": "0.0",
-              "comment": "a comment 2",
-              "item_type": "activity",
-              "hours": "0.5",
-              "quantity": 2
+              id: 77_874,
+              sku: "SP-A01",
+              name: "Refrigerant recovery",
+              price: "0.0",
+              amount: "0.0",
+              comment: "a comment 2",
+              item_type: "activity",
+              hours: "0.5",
+              quantity: 2
             },
             {
-              "id": 77876,
-              "sku": "custom SKU 15",
-              "name": "custom name 11",
-              "price": "23",
-              "amount": "0.0",
-              "item_type": "additional",
-              "quantity": 1
+              id: 77_876,
+              sku: "custom SKU 15",
+              name: "custom name 11",
+              price: "23",
+              amount: "0.0",
+              item_type: "additional",
+              quantity: 1
             }
           ]
         }

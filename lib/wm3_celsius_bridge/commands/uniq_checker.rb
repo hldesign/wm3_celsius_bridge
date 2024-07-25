@@ -31,13 +31,14 @@ module Wm3CelsiusBridge
       result = {}
       store.each do |name, props|
         props.each do |value, items|
-          if items.size > 1
-            count += 1
-            result[name] ||= {}
-            result[name][value] = items
-            items.each do |item|
-              reporter.warning(message: "Found duplicate for #{name} value '#{value}'.", model: item)
-            end
+          next unless items.size > 1
+
+          count += 1
+          result[name] ||= {}
+          result[name][value] = items
+          items.each do |item|
+            reporter.warning(message: "Found duplicate for #{name} value '#{value}'.",
+                             model: item)
           end
         end
       end

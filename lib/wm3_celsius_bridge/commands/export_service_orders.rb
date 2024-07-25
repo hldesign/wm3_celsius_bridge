@@ -2,7 +2,6 @@
 
 module Wm3CelsiusBridge
   class ExportServiceOrders
-
     def initialize(store:, client:, orders:, reporter: NullReporter.new)
       @store = store
       @client = client
@@ -11,7 +10,7 @@ module Wm3CelsiusBridge
     end
 
     def call
-      exported = orders.map { |order| export_order(order) }.compact
+      exported = orders.filter_map { |order| export_order(order) }
       reporter.finish(message: "Exported #{exported.size} of #{orders.size} orders.")
     end
 
@@ -30,24 +29,24 @@ module Wm3CelsiusBridge
       reporter.error(
         message: "Failure when calling NAV for WM3 order '#{order.id}'.",
         info: resp.message,
-        model: order,
+        model: order
       )
 
       mark_order_failure(order.id)
 
-      return nil
+      nil
     rescue StandardError => e
       reporter.error(
         message: "Could not export order '#{order.id}'.",
         info: e.message,
         model: order
       )
-      return nil
+      nil
     end
 
     def mark_order_sucess(order_id, nav_order_id)
       store.orders.where(id: order_id).update_all(
-        state: 'nav_registration_success',
+        state: "nav_registration_success",
         state_updated_at: DateTime.now,
         number_two: nav_order_id
       )
@@ -55,7 +54,7 @@ module Wm3CelsiusBridge
 
     def mark_order_failure(order_id)
       store.orders.where(id: order_id).update_all(
-        state: 'nav_registration_failure',
+        state: "nav_registration_failure",
         state_updated_at: DateTime.now
       )
     end

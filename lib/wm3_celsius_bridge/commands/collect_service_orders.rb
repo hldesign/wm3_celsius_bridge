@@ -8,7 +8,7 @@ module Wm3CelsiusBridge
     end
 
     def call
-      collected_orders = filtered_orders.map { |o| order_attributes(o) }.compact
+      collected_orders = filtered_orders.filter_map { |o| order_attributes(o) }
       reporter.finish(message: "Collected #{collected_orders.size} WM3 orders of #{filtered_orders.count} available.")
       collected_orders
     end
@@ -20,17 +20,21 @@ module Wm3CelsiusBridge
     def order_attributes(order)
       order_attrs = {
         id: order.id,
-        submitted_at: (Date.strptime(order.completed_at.to_s, "%Y-%m-%d") rescue nil),
-        order_no: order.number,
+        submitted_at: begin
+          Date.strptime(order.completed_at.to_s, "%Y-%m-%d")
+        rescue StandardError
+          nil
+        end,
+        order_no: order.number
       }.merge(customer_attributes(order.customer))
-      .merge(dynamic_fields_for(order))
+                    .merge(dynamic_fields_for(order))
 
       serial = order_attrs[:chiller_serial_no]
       chiller = chiller_by_serial(serial)
       if chiller.nil?
         reporter.error(
           message: "Could not find Chiller '#{serial}' for WM3 order '#{order.id}'.",
-          model: order,
+          model: order
         )
         return
       end
@@ -38,13 +42,12 @@ module Wm3CelsiusBridge
       order_attrs
         .tap { |attrs| attrs[:chiller] = chiller_attributes(chiller) }
         .merge(order_items: order.order_items.map { |item| item_attributes(item) })
-
     rescue StandardError => e
       reporter.error(
         message: "Could not collect data for WM3 order '#{order.id}'.",
         info: e.message
       )
-      return nil
+      nil
     end
 
     def chiller_attributes(chiller)
@@ -55,11 +58,12 @@ module Wm3CelsiusBridge
 
     def customer_attributes(customer)
       return {} if customer.nil?
+
       attrs = dynamic_fields_for(customer)
 
       {
         customer_no: customer.number,
-        internal_customer: attrs[:internal_cust] == 'true',
+        internal_customer: attrs[:internal_cust] == "true"
       }
     end
 
@@ -76,9 +80,9 @@ module Wm3CelsiusBridge
 
     def dynamic_fields_for(obj)
       obj.dynamic_field_values
-        .eager_load(:dynamic_field)
-        .pluck('shop_dynamic_fields.name', 'value')
-        .each_with_object({}) { |f, h| h[f[0].to_sym] = f[1] }
+         .eager_load(:dynamic_field)
+         .pluck("shop_dynamic_fields.name", "value")
+         .each_with_object({}) { |f, h| h[f[0].to_sym] = f[1] }
     end
 
     def chiller_by_serial(serial)
@@ -86,11 +90,12 @@ module Wm3CelsiusBridge
     end
 
     def filtered_orders
-      @filtered_orders ||= relation.where(state: 'certified_for_payment')
+      @filtered_orders ||= relation.where(state: "certified_for_payment")
     end
 
     def relation
-      store.orders.eager_load(:customer, order_items: { dynamic_field_values: :dynamic_field }, dynamic_field_values: :dynamic_field)
+      store.orders.eager_load(:customer,
+                              order_items: { dynamic_field_values: :dynamic_field }, dynamic_field_values: :dynamic_field)
     end
   end
 end

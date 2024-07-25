@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'ostruct'
+
+require "ostruct"
 
 module Wm3CelsiusBridge
   # The ImportCustomers command imports parsed customers into WM3.
@@ -12,18 +13,18 @@ module Wm3CelsiusBridge
     end
 
     def call
-      group = find_or_build_customer_group(name: 'Slutkunder')
+      group = find_or_build_customer_group(name: "Slutkunder")
       unless group.save
         reporter.error(
           message: "Could not save customer group #{group.name}",
-          info: group.errors.full_messages,
+          info: group.errors.full_messages
         )
         return false
       end
 
-      imported = customers.map do |customer|
+      imported = customers.filter_map do |customer|
         import_customer(customer: customer, group: group)
-      end.compact
+      end
 
       reporter.finish(message: "Imported #{imported.size} of #{customers.size} customers.")
     end
@@ -48,17 +49,17 @@ module Wm3CelsiusBridge
         reporter.error(
           message: "Could not create or update customer #{customer.no}",
           model: customer,
-          info: cust.errors.full_messages,
+          info: cust.errors.full_messages
         )
         return
       end
 
-      cust.dynamic_fields = { 'internal_customer' => { value: customer.internal_cust.to_s } }
+      cust.dynamic_fields = { "internal_customer" => { value: customer.internal_cust.to_s } }
       unless cust.save
         reporter.error(
           message: "Could not add dynamic fields to customer #{customer.no}",
           model: customer,
-          info: cust.errors.full_messages,
+          info: cust.errors.full_messages
         )
         return
       end
@@ -72,11 +73,12 @@ module Wm3CelsiusBridge
         message: "Could not import customer (no=#{customer.no})",
         info: e.message
       )
-      return nil
+      nil
     end
 
     def include_customer?(customer)
       return true if include_ids.empty?
+
       include_ids.include?(customer.no)
     end
 
@@ -89,18 +91,18 @@ module Wm3CelsiusBridge
         reporter.warning(
           message: "Could not create customer discount list '#{jour_list_name}' for customer #{customer.no}",
           model: customer,
-          info: list.errors.full_messages,
+          info: list.errors.full_messages
         )
       end
 
       list = store.discount_lists.where(name: no_jour_list_name).first_or_initialize
-      unless list.save
-        reporter.warning(
-          message: "Could not create customer discount list '#{no_jour_list_name}' for customer #{customer.no}",
-          model: customer,
-          info: list.errors.full_messages,
-        )
-      end
+      return if list.save
+
+      reporter.warning(
+        message: "Could not create customer discount list '#{no_jour_list_name}' for customer #{customer.no}",
+        model: customer,
+        info: list.errors.full_messages
+      )
     end
 
     def create_customer_address(customer, customer_data)
@@ -112,13 +114,13 @@ module Wm3CelsiusBridge
         a.phone = customer_data.phone_no
       end
 
-      unless address.save
-        reporter.warning(
-          message: "Could not create or update address for customer #{customer_data.no}",
-          model: customer_data,
-          info: address.errors.full_messages,
-        )
-      end
+      return if address.save
+
+      reporter.warning(
+        message: "Could not create or update address for customer #{customer_data.no}",
+        model: customer_data,
+        info: address.errors.full_messages
+      )
     end
 
     def find_or_build_customer_group(name:)

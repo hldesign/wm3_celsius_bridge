@@ -2,11 +2,11 @@
 
 namespace :celsius do
   namespace :sync do
-    desc 'Sync all data from NAV'
-    task :all, [:last_sync, :limit, :debug] => :environment do |t, args|
-      debug = args.debug == 'true'
+    desc "Sync all data from NAV"
+    task :all, %i[last_sync limit debug] => :environment do |_t, args|
+      debug = args.debug == "true"
       limit = args.limit.to_i
-      last_sync = args.last_sync.blank? ? Time.zone.today - 1 : args.last_sync
+      last_sync = (args.last_sync.presence || (Date.today - 1))
 
       report = Wm3CelsiusBridge.sync(
         last_sync: last_sync,
@@ -35,9 +35,9 @@ namespace :celsius do
       puts report
     end
 
-    desc 'Sync customers from NAV'
-    task :customers, [:limit, :debug] => :environment do |t, args|
-      debug = args.debug == 'true'
+    desc "Sync customers from NAV"
+    task :customers, %i[limit debug] => :environment do |_t, args|
+      debug = args.debug == "true"
       limit = args.limit.to_i
 
       report = Wm3CelsiusBridge.sync(
@@ -54,9 +54,9 @@ namespace :celsius do
       puts report
     end
 
-    desc 'Sync chillers from NAV'
-    task :chillers, [:limit, :debug] => :environment do |t, args|
-      debug = args.debug == 'true'
+    desc "Sync chillers from NAV"
+    task :chillers, %i[limit debug] => :environment do |_t, args|
+      debug = args.debug == "true"
       limit = args.limit.to_i
 
       report = Wm3CelsiusBridge.sync(
@@ -72,11 +72,11 @@ namespace :celsius do
       puts report
     end
 
-    desc 'Sync articles from NAV'
-    task :articles, [:last_sync, :limit, :debug] => :environment do |t, args|
-      debug = args.debug == 'true'
+    desc "Sync articles from NAV"
+    task :articles, %i[last_sync limit debug] => :environment do |_t, args|
+      debug = args.debug == "true"
       limit = args.limit.to_i
-      last_sync = args.last_sync.blank? ? Time.zone.today - 1 : args.last_sync
+      last_sync = (args.last_sync.presence || (Date.today - 1))
 
       report = Wm3CelsiusBridge.sync(
         last_sync: last_sync,
@@ -92,11 +92,11 @@ namespace :celsius do
       puts report
     end
 
-    desc 'Sync service ledger entries from NAV'
-    task :service_ledger, [:last_sync, :limit, :debug] => :environment do |t, args|
-      debug = args.debug == 'true'
+    desc "Sync service ledger entries from NAV"
+    task :service_ledger, %i[last_sync limit debug] => :environment do |_t, args|
+      debug = args.debug == "true"
       limit = args.limit.to_i
-      last_sync = args.last_sync.blank? ? Time.zone.today - 1 : args.last_sync
+      last_sync = (args.last_sync.presence || (Date.today - 1))
 
       report = Wm3CelsiusBridge.sync(
         last_sync: last_sync,
@@ -112,9 +112,9 @@ namespace :celsius do
       puts report
     end
 
-    desc 'Export service orders to NAV'
-    task :service_orders, [:debug] => :environment do |t, args|
-      debug = args.debug == 'true'
+    desc "Export service orders to NAV"
+    task :service_orders, [:debug] => :environment do |_t, args|
+      debug = args.debug == "true"
 
       report = Wm3CelsiusBridge.sync(
         debug: debug,

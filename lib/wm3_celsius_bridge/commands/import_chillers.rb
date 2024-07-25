@@ -12,24 +12,24 @@ module Wm3CelsiusBridge
     end
 
     def call
-      group = find_or_build_group(name: 'Kylaggregat', url: 'chillers')
+      group = find_or_build_group(name: "Kylaggregat", url: "chillers")
       unless group.save
         reporter.error(
           message: "Could not save group #{group.url}",
-          info: group.errors.full_messages,
+          info: group.errors.full_messages
         )
         return false
       end
 
       filtered_chillers = chillers
-        .select { |chiller| valid_serial_number?(chiller.serial_no) }
+                          .select { |chiller| valid_serial_number?(chiller.serial_no) }
 
       removed_count = chillers.size - filtered_chillers.size
       reporter.info(message: "Removed #{removed_count} chillers based on filter settings.")
 
-      imported = filtered_chillers.map do |chiller|
+      imported = filtered_chillers.filter_map do |chiller|
         import_chiller(chiller: chiller, group: group)
-      end.compact
+      end
 
       reporter.finish(message: "Imported #{imported.size} of #{chillers.size} chillers.")
     end
@@ -47,7 +47,7 @@ module Wm3CelsiusBridge
         reporter.error(
           message: "Could not update product #{product.id}",
           model: chiller,
-          info: product.errors.full_messages,
+          info: product.errors.full_messages
         )
         return
       end
@@ -57,7 +57,7 @@ module Wm3CelsiusBridge
         reporter.error(
           message: "Could not create or update product group for #{product.id}",
           info: product.errors.full_messages,
-          model: chiller,
+          model: chiller
         )
         return
       end
@@ -73,7 +73,7 @@ module Wm3CelsiusBridge
         message: "Could not import chiller (serial_no=#{chiller.serial_no})",
         info: e.message
       )
-      return nil
+      nil
     end
 
     def valid_serial_number?(serial_no)

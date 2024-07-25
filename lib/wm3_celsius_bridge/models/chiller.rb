@@ -15,7 +15,7 @@ module Wm3CelsiusBridge
     attribute :customer_no, Types::NonBlankStrippedString
 
     # Details
-    attribute :installation_date, Types::CustomDate
+    attribute :installation_date, Types::CustomDate.optional.default(nil)
 
     # Properties
     attribute :model, Types::NonBlankStrippedString
@@ -28,8 +28,8 @@ module Wm3CelsiusBridge
     attribute :co2_coefficient, Types::CustomFloat
 
     # History
-    attribute :dateof_last_service, Types::CustomDate
-    attribute :dateof_last_seepagecontrol, Types::CustomDate
-    attribute :dateof_last_temp_control, Types::CustomDate
+    attribute :dateof_last_service, Types::CustomDate.optional.default(nil)
+    attribute :dateof_last_seepagecontrol, Types::CustomDate.optional.default(nil)
+    attribute :dateof_last_temp_control, Types::CustomDate.optional.default(nil)
   end
 end

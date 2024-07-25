@@ -8,7 +8,7 @@ module Wm3CelsiusBridge
     end
 
     def call
-      orders = data.map { |o| build_service_order(o) }.compact
+      orders = data.filter_map { |o| build_service_order(o) }
       reporter.finish(message: "Built #{orders.size} NAV orders of #{data.size} WM3 orders.")
       orders
     end
@@ -21,7 +21,7 @@ module Wm3CelsiusBridge
       if order[:id].blank?
         reporter.error(
           message: "Missing order ID for WM3 order.",
-          model: order,
+          model: order
         )
         return
       end
@@ -29,7 +29,7 @@ module Wm3CelsiusBridge
       if order[:chiller].blank?
         reporter.error(
           message: "Missing chiller data for WM3 order '#{order[:id]}'",
-          model: order,
+          model: order
         )
         return
       end
@@ -37,7 +37,7 @@ module Wm3CelsiusBridge
       if order[:order_items].blank?
         reporter.error(
           message: "Missing order items for WM3 order '#{order[:id]}'",
-          model: order,
+          model: order
         )
         return
       end
@@ -45,7 +45,7 @@ module Wm3CelsiusBridge
       unless valid_chiller_serial_number?(order[:chiller_serial_no])
         reporter.error(
           message: "Invalid chiller serial number (#{order[:chiller_serial_no]}) for WM3 order '#{order[:id]}'",
-          model: order,
+          model: order
         )
         return
       end
@@ -65,9 +65,9 @@ module Wm3CelsiusBridge
       reporter.error(
         message: "Could not build NAV order from WM3 order '#{order[:id]}'.",
         info: e.message,
-        model: order,
+        model: order
       )
-      return
+      nil
     end
 
     def valid_chiller_serial_number?(serial_no)
@@ -81,9 +81,13 @@ module Wm3CelsiusBridge
         serial_no: order[:chiller_serial_no],
         your_reference: order[:ert_ordernr],
         order_no: order[:order_no],
-        order_date: (Date.strptime(order[:reparation_date], "%Y-%m-%d") rescue nil),
+        order_date: begin
+          Date.strptime(order[:reparation_date], "%Y-%m-%d")
+        rescue StandardError
+          nil
+        end,
         reg_no: order[:chiller][:reg_no],
-        model: order[:chiller][:model],
+        model: order[:chiller][:model]
       }
 
       ServiceHeader.new(header_attrs)
@@ -91,47 +95,47 @@ module Wm3CelsiusBridge
       reporter.error(
         message: "Could not build NAV service header from WM3 order '#{order[:id]}'.",
         info: e.message,
-        model: order,
+        model: order
       )
-      return
+      nil
     end
 
     def calc_bill_to_customer_no(order)
-      base_cust_no = (order[:chiller][:customer_no] || '')[0..3]
+      base_cust_no = (order[:chiller][:customer_no] || "")[0..3]
       order_purpose = order[:order_purpose]
       serial_no = order[:chiller_serial_no]
 
-      if order_purpose != 'warranty'
+      if order_purpose != "warranty"
         "#{base_cust_no}-2"
-      elsif serial_no =~ /^Z-/i
-        '0007'
+      elsif /^Z-/i.match?(serial_no)
+        "0007"
       else
-        '0008'
+        "0008"
       end
     end
 
     def build_service_item_line(order)
-      service_lines = order[:order_items].map do |item|
+      service_lines = order[:order_items].filter_map do |item|
         build_service_line(item, internal_customer: order[:internal_customer])
-      end.compact
+      end
 
       if service_lines.empty?
         reporter.error(
           message: "Could not build any NAV service lines from WM3 order '#{order[:id]}'.",
-          model: order,
+          model: order
         )
         return
       end
 
       text_service_lines = build_text_service_lines(order)
 
-        # attribute :mileage, Types::OptionalFloat
+      # attribute :mileage, Types::OptionalFloat
       # attribute :runtime_total, Types::OptionalFloat
-        # attribute :runtime_day, Types::OptionalFloat
-        # attribute :runtime_night, Types::OptionalFloat
-        # attribute :reg_no, Types::OptionalString
+      # attribute :runtime_day, Types::OptionalFloat
+      # attribute :runtime_night, Types::OptionalFloat
+      # attribute :reg_no, Types::OptionalString
       # attribute :warranty, Types::Strict::Bool.optional.default(nil)
-        # attribute :service_lines, Types.Array(ServiceLine).constrained(min_size: 1)
+      # attribute :service_lines, Types.Array(ServiceLine).constrained(min_size: 1)
 
       item_line_attrs = {
         mileage: order[:meter_indication].to_f,
@@ -146,21 +150,21 @@ module Wm3CelsiusBridge
       reporter.error(
         message: "Could not build NAV service item line from WM3 order '#{order[:id]}'.",
         info: e.message,
-        model: order,
+        model: order
       )
-      return
+      nil
     end
 
     def build_service_line(item, internal_customer:)
       # Additional item
-      if item[:item_type] == 'additional'
-        no = 'V-9'
-        desc = item[:sku] + ' ' + item[:name]
+      if item[:item_type] == "additional"
+        no = "V-9"
+        desc = "#{item[:sku]} #{item[:name]}"
         quantity = item[:quantity].to_f # From dynamic field
         amount = (quantity * item[:price].to_i).to_f # From dynamic field
 
       # Activity item
-      elsif item[:item_type] == 'activity'
+      elsif item[:item_type] == "activity"
         no = item[:sku]
         desc = item[:name]
         quantity = item[:item_quantity].to_f
@@ -175,8 +179,8 @@ module Wm3CelsiusBridge
 
         # External customer
         else
-          no = 'V-9'
-          desc = item[:sku] + ' ' + item[:name]
+          no = "V-9"
+          desc = "#{item[:sku]} #{item[:name]}"
         end
 
         quantity = item[:item_quantity].to_f
@@ -189,8 +193,8 @@ module Wm3CelsiusBridge
         quantity: quantity,
         line_amount: amount,
         description: desc,
-        parts_or_time: 'Parts',
-        line_discount_percent: 100,
+        parts_or_time: "Parts",
+        line_discount_percent: 100
       }
 
       ServiceLine.new(service_line_attrs)
@@ -198,32 +202,33 @@ module Wm3CelsiusBridge
       reporter.error(
         message: "Could not build NAV service line from WM3 order item '#{item[:id]}'.",
         info: e.message,
-        model: item,
+        model: item
       )
-      return
+      nil
     end
 
     def build_text_service_lines(order)
       order
-        .select { |k| [:reason, :diagnos, :correction].include?(k) }
-        .map { |_, v| (v || '').scan(/.{1,50}/) }
+        .select { |k| %i[reason diagnos correction].include?(k) }
+        .map { |_, v| (v || "").scan(/.{1,50}/) }
         .flatten
-        .map do |line|
+        .filter_map do |line|
           next if line.blank?
+
           begin
             ServiceLine.new({
-              type: 0, # 'Text' type
-              description: line,
-              line_discount_percent: 100,
-            })
+                              type: 0, # 'Text' type
+                              description: line,
+                              line_discount_percent: 100
+                            })
           rescue StandardError => e
             reporter.error(
               message: "Could not build NAV text service line from WM3 order '#{order[:id]}'.",
               info: e.message,
-              model: item,
+              model: item
             )
           end
-        end.compact
+        end
     end
   end
 end

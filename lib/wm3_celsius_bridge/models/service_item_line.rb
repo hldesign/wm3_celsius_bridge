@@ -15,7 +15,7 @@
 module Wm3CelsiusBridge
   class ServiceItemLine < Dry::Struct
     include OmitBlankAttributes
-    constructor_type :strict_with_defaults
+    # constructor_type :strict_with_defaults
 
     attribute :mileage, Types::OptionalFloat
     attribute :runtime_total, Types::OptionalFloat

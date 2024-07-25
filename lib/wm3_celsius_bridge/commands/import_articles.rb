@@ -5,7 +5,7 @@ module Wm3CelsiusBridge
   class ImportArticles
     include ProductImporter
 
-    CATEGORY_CODE_WHITELIST = ['MHI RES_DL', 'ZAN RES_DL'].freeze
+    CATEGORY_CODE_WHITELIST = ["MHI RES_DL", "ZAN RES_DL"].freeze
 
     def initialize(store:, articles:, reporter:)
       @articles = articles
@@ -14,19 +14,18 @@ module Wm3CelsiusBridge
     end
 
     def call
-      group = find_or_build_group(name: 'Reservdelar', url: 'articles')
+      group = find_or_build_group(name: "Reservdelar", url: "articles")
       unless group.save
         reporter.error(
           message: "Could not save group #{group.url}",
-          info: group.errors.full_messages,
+          info: group.errors.full_messages
         )
         return false
       end
 
       imported = articles
-        .select { |a| CATEGORY_CODE_WHITELIST.include?(a.item_category_code) }
-        .map { |a| import_article(article: a, group: group) }
-        .compact
+                 .select { |a| CATEGORY_CODE_WHITELIST.include?(a.item_category_code) }
+                 .filter_map { |a| import_article(article: a, group: group) }
 
       reporter.finish(message: "Imported #{imported.size} of #{articles.size} articles.")
     end
@@ -44,7 +43,7 @@ module Wm3CelsiusBridge
         reporter.error(
           message: "Could not update product #{product.id}",
           model: article,
-          info: product.errors.full_messages,
+          info: product.errors.full_messages
         )
         return
       end
@@ -54,7 +53,7 @@ module Wm3CelsiusBridge
         reporter.error(
           message: "Could not create or update product group for #{product.id}",
           model: article,
-          info: product_group.errors.full_messages,
+          info: product_group.errors.full_messages
         )
         return
       end
@@ -70,7 +69,7 @@ module Wm3CelsiusBridge
         message: "Could not import article (no=#{article.no})",
         info: e.message
       )
-      return nil
+      nil
     end
   end
 end

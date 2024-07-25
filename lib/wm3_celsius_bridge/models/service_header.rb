@@ -17,7 +17,7 @@
 module Wm3CelsiusBridge
   class ServiceHeader < Dry::Struct
     include OmitBlankAttributes
-    constructor_type :strict_with_defaults
+    # constructor_type :strict_with_defaults
 
     attribute :execution_workshop_cust_no, Types::MandatoryString.constrained(max_size: 20)
     attribute :bill_to_customer_no, Types::OptionalString.constrained(max_size: 20)

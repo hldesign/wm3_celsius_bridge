@@ -44,7 +44,7 @@ module Wm3CelsiusBridge
       unless property.save
         reporter.error(
           message: "Could not create or update property '#{name}' on product #{product.id}",
-          info: property.errors.full_messages,
+          info: property.errors.full_messages
         )
         return
       end
@@ -70,7 +70,7 @@ module Wm3CelsiusBridge
         if product_property.new_record?
           reporter.error(
             message: "Could not create product property with name '#{property.name}' and value #{property_value.value}",
-            info: product_property.errors.full_messages,
+            info: product_property.errors.full_messages
           )
         end
 
@@ -81,11 +81,10 @@ module Wm3CelsiusBridge
         unless product_property.save
           reporter.error(
             message: "Could not update product property '#{property.name}' with value #{property_value.value}",
-            info: product_property.errors.full_messages,
+            info: product_property.errors.full_messages
           )
         end
       end
-
     end
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Site
-  def self.where(*args)
+  def self.where(*_args)
     [new]
   end
 

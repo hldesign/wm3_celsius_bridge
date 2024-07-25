@@ -2,13 +2,13 @@
 
 RSpec.describe Wm3CelsiusBridge::UniqChecker do
   let(:result) do
-    Wm3CelsiusBridge::UniqChecker.new(
+    described_class.new(
       models: models,
-      prop_names: prop_names,
+      prop_names: prop_names
     ).call
   end
 
-  let(:prop_names) { [:id, :serial_no] }
+  let(:prop_names) { %i[id serial_no] }
 
   context "with unique data" do
     let(:models) do
@@ -35,13 +35,13 @@ RSpec.describe Wm3CelsiusBridge::UniqChecker do
 
     it "finds one duplicate" do
       expect(result).to eq({
-        id: {
-          "1" => [
-            { id: "1", serial_no: "11", name: "model1" },
-            { id: "1", serial_no: "33", name: "model3" }
-          ]
-        }
-      })
+                             id: {
+                               "1" => [
+                                 { id: "1", serial_no: "11", name: "model1" },
+                                 { id: "1", serial_no: "33", name: "model3" }
+                               ]
+                             }
+                           })
     end
   end
 
@@ -56,13 +56,13 @@ RSpec.describe Wm3CelsiusBridge::UniqChecker do
 
     it "finds one duplicate" do
       expect(result).to eq({
-        serial_no: {
-          "11" => [
-            { id: "1", serial_no: "11", name: "model1" },
-            { id: "2", serial_no: "11", name: "model2" }
-          ]
-        }
-      })
+                             serial_no: {
+                               "11" => [
+                                 { id: "1", serial_no: "11", name: "model1" },
+                                 { id: "2", serial_no: "11", name: "model2" }
+                               ]
+                             }
+                           })
     end
   end
 
@@ -77,19 +77,19 @@ RSpec.describe Wm3CelsiusBridge::UniqChecker do
 
     it "finds two duplicates" do
       expect(result).to eq({
-        id: {
-          "1" => [
-            { id: "1", serial_no: "11", name: "model1" },
-            { id: "1", serial_no: "22", name: "model2" }
-          ]
-        },
-        serial_no: {
-          "22" => [
-            { id: "1", serial_no: "22", name: "model2" },
-            { id: "3", serial_no: "22", name: "model3" }
-          ]
-        }
-      })
+                             id: {
+                               "1" => [
+                                 { id: "1", serial_no: "11", name: "model1" },
+                                 { id: "1", serial_no: "22", name: "model2" }
+                               ]
+                             },
+                             serial_no: {
+                               "22" => [
+                                 { id: "1", serial_no: "22", name: "model2" },
+                                 { id: "3", serial_no: "22", name: "model3" }
+                               ]
+                             }
+                           })
     end
   end
 end

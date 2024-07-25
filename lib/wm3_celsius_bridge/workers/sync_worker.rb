@@ -44,9 +44,9 @@ module Wm3CelsiusBridge
     def initialize(
       client:,
       store:,
-      limit: 0,
-      last_sync: Time.zone.today - 1,
-      sync_configs:)
+      sync_configs:, limit: 0,
+      last_sync: Date.today - 1
+    )
 
       @client = client
       @store = store
@@ -74,9 +74,9 @@ module Wm3CelsiusBridge
     attr_reader :client, :store, :limit, :last_sync, :sync_configs, :reporter
 
     def sync_customers
-      main_reporter = reporter.sub_report(title: 'Import customers')
+      main_reporter = reporter.sub_report(title: "Import customers")
 
-      sub_reporter = main_reporter.sub_report(title: 'Fetch customers from NAV')
+      sub_reporter = main_reporter.sub_report(title: "Fetch customers from NAV")
       begin
         resp = client.customers
         unless resp.ok?
@@ -89,19 +89,19 @@ module Wm3CelsiusBridge
         return
       end
 
-      sub_reporter = main_reporter.sub_report(title: 'Parse fetched customer data')
+      sub_reporter = main_reporter.sub_report(title: "Parse fetched customer data")
       begin
         customers = ParseItems.new(
           data: resp.data,
           item_class: Customer,
-          reporter: sub_reporter,
+          reporter: sub_reporter
         ).call
       rescue StandardError => e
         sub_reporter.error(message: e.message)
         return
       end
 
-      sub_reporter = main_reporter.sub_report(title: 'Check unique constraints')
+      sub_reporter = main_reporter.sub_report(title: "Check unique constraints")
       begin
         UniqChecker.new(
           models: customers,
@@ -113,25 +113,25 @@ module Wm3CelsiusBridge
         return
       end
 
-      sub_reporter = main_reporter.sub_report(title: 'Store parsed customer data')
+      sub_reporter = main_reporter.sub_report(title: "Store parsed customer data")
       begin
-        limited_customers = limit > 0 ? customers.take(limit) : customers
+        limited_customers = limit.positive? ? customers.take(limit) : customers
         ImportCustomers.new(
           customers: limited_customers,
           include_ids: sync_configs[:customers][:include_ids],
           store: store,
-          reporter: sub_reporter,
+          reporter: sub_reporter
         ).call
       rescue StandardError => e
         sub_reporter.error(message: e.message)
-        return
+        nil
       end
     end
 
     def sync_chillers
-      main_reporter = reporter.sub_report(title: 'Import chillers')
+      main_reporter = reporter.sub_report(title: "Import chillers")
 
-      sub_reporter = main_reporter.sub_report(title: 'Fetch chillers from NAV')
+      sub_reporter = main_reporter.sub_report(title: "Fetch chillers from NAV")
       begin
         resp = client.chillers
         unless resp.ok?
@@ -144,7 +144,7 @@ module Wm3CelsiusBridge
         return
       end
 
-      sub_reporter = main_reporter.sub_report(title: 'Parse fetched chiller data')
+      sub_reporter = main_reporter.sub_report(title: "Parse fetched chiller data")
       begin
         chillers = ParseItems.new(
           data: resp.data,
@@ -156,11 +156,11 @@ module Wm3CelsiusBridge
         return
       end
 
-      sub_reporter = main_reporter.sub_report(title: 'Check unique constraints')
+      sub_reporter = main_reporter.sub_report(title: "Check unique constraints")
       begin
         UniqChecker.new(
           models: chillers,
-          prop_names: [:no, :serial_no],
+          prop_names: %i[no serial_no],
           reporter: sub_reporter
         ).call
       rescue StandardError => e
@@ -168,25 +168,25 @@ module Wm3CelsiusBridge
         return
       end
 
-      sub_reporter = main_reporter.sub_report(title: 'Store parsed chiller data')
+      sub_reporter = main_reporter.sub_report(title: "Store parsed chiller data")
       begin
-        limited_chillers = limit > 0 ? chillers.take(limit) : chillers
+        limited_chillers = limit.positive? ? chillers.take(limit) : chillers
         ImportChillers.new(
           store: store,
           chillers: limited_chillers,
-          reporter: sub_reporter,
+          reporter: sub_reporter
         ).call
       rescue StandardError => e
         sub_reporter.error(message: e.message)
-        return
+        nil
       end
     end
 
     def sync_articles
-      main_reporter = reporter.sub_report(title: 'Import articles')
+      main_reporter = reporter.sub_report(title: "Import articles")
 
-      sub_reporter = main_reporter.sub_report(title: 'Fetch articles from NAV')
-        .start(message: "Filter articles modified after #{last_sync}")
+      sub_reporter = main_reporter.sub_report(title: "Fetch articles from NAV")
+                                  .start(message: "Filter articles modified after #{last_sync}")
       begin
         resp = client.parts_and_service_types(modified_after: last_sync)
         unless resp.ok?
@@ -199,19 +199,19 @@ module Wm3CelsiusBridge
         return
       end
 
-      sub_reporter = main_reporter.sub_report(title: 'Parse fetched article data')
+      sub_reporter = main_reporter.sub_report(title: "Parse fetched article data")
       begin
         articles = ParseItems.new(
           data: resp.data,
           item_class: Article,
-          reporter: sub_reporter,
+          reporter: sub_reporter
         ).call
       rescue StandardError => e
         sub_reporter.error(message: e.message)
         return
       end
 
-      sub_reporter = main_reporter.sub_report(title: 'Check unique constraints')
+      sub_reporter = main_reporter.sub_report(title: "Check unique constraints")
       begin
         UniqChecker.new(
           models: articles,
@@ -223,24 +223,24 @@ module Wm3CelsiusBridge
         return
       end
 
-      sub_reporter = main_reporter.sub_report(title: 'Store parsed article data')
+      sub_reporter = main_reporter.sub_report(title: "Store parsed article data")
       begin
-        limited_articles = limit > 0 ? articles.take(limit) : articles
+        limited_articles = limit.positive? ? articles.take(limit) : articles
         ImportArticles.new(
           store: store,
           articles: limited_articles,
-          reporter: sub_reporter,
+          reporter: sub_reporter
         ).call
       rescue StandardError => e
         sub_reporter.error(message: e.message)
-        return
+        nil
       end
     end
 
     def sync_service_ledger_entries
-      main_reporter = reporter.sub_report(title: 'Import service ledger')
+      main_reporter = reporter.sub_report(title: "Import service ledger")
 
-      sub_reporter = main_reporter.sub_report(title: 'Fetch service ledger from NAV')
+      sub_reporter = main_reporter.sub_report(title: "Fetch service ledger from NAV")
       begin
         resp = client.service_ledger_entries(posting_date: last_sync)
         unless resp.ok?
@@ -253,14 +253,14 @@ module Wm3CelsiusBridge
         return
       end
 
-      sub_reporter = main_reporter.sub_report(title: 'Parse fetched service ledger data')
+      sub_reporter = main_reporter.sub_report(title: "Parse fetched service ledger data")
 
-      entry_document_type_whitelist = ['Shipment'].freeze
-      entry_type_blacklist = ['Resource'].freeze
+      entry_document_type_whitelist = ["Shipment"].freeze
+      entry_type_blacklist = ["Resource"].freeze
 
       filtered_data = resp.data
-        .select { |item| entry_document_type_whitelist.include?(item[:document_type]) }
-        .reject { |item| entry_type_blacklist.include?(item[:type]) }
+                          .select { |item| entry_document_type_whitelist.include?(item[:document_type]) }
+                          .reject { |item| entry_type_blacklist.include?(item[:type]) }
 
       removed_entry_count = resp.data.size - filtered_data.size
       sub_reporter.info(message: "Removed #{removed_entry_count} service ledger entries based on filter settings.")
@@ -276,62 +276,62 @@ module Wm3CelsiusBridge
         return
       end
 
-      sub_reporter = main_reporter.sub_report(title: 'Store parsed service ledger data')
+      sub_reporter = main_reporter.sub_report(title: "Store parsed service ledger data")
       begin
-        limited_entries = limit > 0 ? entries.take(limit) : entries
+        limited_entries = limit.positive? ? entries.take(limit) : entries
         ImportServiceLedgerEntries.new(
           store: store,
           entries: limited_entries,
-          reporter: sub_reporter,
+          reporter: sub_reporter
         ).call
       rescue StandardError => e
         sub_reporter.error(message: e.message)
-        return
+        nil
       end
     end
 
     def export_service_orders
-      main_reporter = reporter.sub_report(title: 'Export service orders')
+      main_reporter = reporter.sub_report(title: "Export service orders")
 
-      sub_reporter = main_reporter.sub_report(title: 'Collect service orders from Celsius')
+      sub_reporter = main_reporter.sub_report(title: "Collect service orders from Celsius")
       begin
         celsius_orders = CollectServiceOrders.new(
           store: store,
-          reporter: sub_reporter,
+          reporter: sub_reporter
         ).call
       rescue StandardError => e
         sub_reporter.error(message: e.message)
         return
       end
 
-      sub_reporter = main_reporter.sub_report(title: 'Build NAV service orders')
+      sub_reporter = main_reporter.sub_report(title: "Build NAV service orders")
       begin
         nav_orders = BuildServiceOrders.new(
           data: celsius_orders,
-          reporter: sub_reporter,
+          reporter: sub_reporter
         ).call
       rescue StandardError => e
         sub_reporter.error(message: e.message)
         return
       end
 
-      sub_reporter = main_reporter.sub_report(title: 'Export service orders to NAV')
+      sub_reporter = main_reporter.sub_report(title: "Export service orders to NAV")
       begin
-        resp = ExportServiceOrders.new(
+        ExportServiceOrders.new(
           store: store,
           client: client,
           orders: nav_orders,
-          reporter: sub_reporter,
+          reporter: sub_reporter
         ).call
       rescue StandardError => e
         sub_reporter.error(message: e.message)
-        return
+        nil
       end
     end
 
     def build_reporter
-      EventReporter.new(title: 'CELSIUS: NAV sync summary')
-        .start(message: "Called with: last_sync=#{last_sync} limit=#{limit}")
+      EventReporter.new(title: "CELSIUS: NAV sync summary")
+                   .start(message: "Called with: last_sync=#{last_sync} limit=#{limit}")
     end
   end
 end

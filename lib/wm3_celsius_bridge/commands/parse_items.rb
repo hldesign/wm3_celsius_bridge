@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'ostruct'
+
+require "ostruct"
 
 module Wm3CelsiusBridge
   # The ParseItems command parses data fetched from NAV.
@@ -11,7 +12,7 @@ module Wm3CelsiusBridge
     end
 
     def call
-      parsed_items = data.map { |c| parse_item(c) }.compact
+      parsed_items = data.filter_map { |c| parse_item(c) }
       reporter.finish(message: "Parsed #{parsed_items.size} of #{data.size} #{item_class.name}.")
       parsed_items
     end
@@ -26,9 +27,9 @@ module Wm3CelsiusBridge
       reporter.error(
         message: "Could not parse item (no=#{data[:no]})",
         info: e.message,
-        model: data,
+        model: data
       )
-      return nil
+      nil
     end
   end
 end
